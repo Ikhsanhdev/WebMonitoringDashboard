@@ -1,0 +1,218 @@
+@{
+    ViewData["Title"] = "Tabel Monitoring";
+    @* var i = 1; *@
+    @* var j = 1; *@
+
+    @* var onlinepos = Model.Where(item => item.DeviceStatus == "online").ToList(); *@
+    @* var offlinepos = Model.Where(item => item.DeviceStatus == "offline").ToList(); *@
+}
+
+<main id="main" class="main">
+      <div class="pagetitle">
+        <h1>Tabel Monitoring</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item active">Tabel Monitoring</li>
+          </ol>
+        </nav>
+      </div>
+</main>
+
+@model IEnumerable<Api>
+
+@* <div class="col-12">
+    <div class="card recent-sales overflow-auto">
+        <div class="card-body">
+            <h5 class="card-title">POS ONLINE</span></h5>
+            <table id="onpos" class="display table table-bordered">
+                <thead>
+                    <tr class="table-warning">
+                        <th>No</th>
+                        <th>Device ID</th>
+                        <th>Station</th>
+                        <th>Tma</th>
+                        <th>Reading At</th>
+                        <th>Tipe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in onlinepos) {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.Slug</td>
+                            <td>@item.DeviceId</td>
+                            <td>@item.DeviceStatus</td>
+                            <td>@item.OrganizationCode</td>
+                            <td>@item.LastReadingAt</td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br>
+<br> *@
+
+<div class="card">
+    <div class="card-body">
+        <div class="row no-gutters">
+            <div class="col">
+                <h6>Nama Balai :</h6>
+                <div class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Pos Balai
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-light">
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col">
+                <h6>Tipe Pos :</h6>
+                <div class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tipe Pos
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-light">
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col">
+                <h6>Status :</h6>
+                <div class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                        Status
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-light">
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-success me-md-2" type="button">Submit</button>
+                    <button class="btn btn-danger" type="button">Reset</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="col-12">
+    <div class="card recent-sales overflow-auto">
+        <div class="card-body">
+            <h5 class="card-title">POS OFFLINE</span></h5>
+            <table id="offpos" class="display table table-bordered">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="text-center">No</th>
+                        <th class="text-center">Nama Pos</th>
+                        <th class="text-center">Tipe</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Reading At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* @foreach (var item in offlinepos) {
+                        <tr>
+                            <td class="text-center">@j</td>
+                            <td class="text-left">@item.Slug</td>
+                            <td class="text-center">@item.DeviceId</td>
+                            <td class="text-center">
+                                @if (item.DeviceStatus == "online") {
+                                    <span class="badge badge-success">Online</span>
+                                }
+                                else if (item.DeviceStatus == "offline") {
+                                    <span class="badge badge-danger">Offline</span>
+                                }
+                                else {
+                                    <span class="badge badge-secondary">Unknown</span>
+                                }
+                            </td>
+                            <td class="text-center">@item.LastReadingAt</td>
+                        </tr>
+                        j++;
+                    } *@
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var dataTable = $('#offpos').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/Api/GetList",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
+                    { "data": "slug", "name": "Slug", "autoWidth": true },
+                    { "data": "deviceId", "name": "DeviceId", "autoWidth": true, "className": "text-center" },
+                    { 
+                        "data": "deviceStatus",
+                        "name": "DeviceStatus",
+                        "autoWidth": true,
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // Custom rendering based on deviceStatus
+                            return data === "offline" ? "<span style='color:red;'>Offline</span>" : "<span style='color:green;'>Online</span>";
+                        }
+                    },
+                    { "data": "lastReadingAt", "name": "LastReadingAt", "autoWidth": true, "className": "text-center" },
+                ],
+                "initComplete": function (settings, json) {
+                    console.log('DataTables initialized successfully.');
+                    addCustomFilter();
+                },
+                "error": function (xhr, error, thrown) {
+                    // Handle errors during data retrieval
+                    console.log('DataTables error:', error);
+                }
+            });
+
+            function addCustomFilter() {
+                // Create custom filter for deviceStatus
+                var select = $('<select><option value=""></option><option value="offline">Offline</option><option value="online">Online</option></select>')
+                    .appendTo($('#offpos_filter').empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        dataTable.column(3).search(val ? '^' + val + '$' : '', true, false).draw();
+                    });
+
+                // Trigger initial filtering based on the URL parameter (if any)
+                var urlParams = new URLSearchParams(window.location.search);
+                var statusParam = urlParams.get('status');
+                if (statusParam) {
+                    select.val(statusParam).trigger('change');
+                }
+            }
+        });
+    </script>
+}
+
+

@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Home | Dashboard";
+}
+
+@* @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    $('#offpos').DataTable();
+                    console.log("document");
+                });
+            </script>
+        } *@
+
+@model IEnumerable<Api>
+
+
+<main id="main" class="main">
+      <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+      <!-- End Page Title -->
+
+      <section class="section dashboard">
+            <div class="row">
+                <!-- Kartu Sebelah Kiri -->
+                <div class="col-md-3">
+                    <!-- Duga Air Card -->
+                    <div class="card info-duga">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Pos Duga Air</h5>
+                            <div class="text-center">
+                                <h6>145</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Curah Hujan Card -->
+                    <div class="card info-curah">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Pos Curah Hujan</h5>
+                            <div class="text-center">
+                                <h6>225</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kartu Sebelah Kanan -->
+                <div class="col-md-3">
+                    <!-- Klimatologi Card -->
+                    <div class="card info-klimatologi">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Pos Klimatologi</h5>
+                            <div class="text-center">
+                                <h6>10</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Klimatologi Card -->
+                    <div class="card info-total">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Total Pos</h5>
+                            <div class="text-center">
+                                <h6>380</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <br>
+        <br>
+
+        <div class="card mb-3">
+          <div class="card-header" style="background: #a3c2e0;">
+              <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i> SUMMARY</h4>
+          </div>
+          <div class="card-body">
+              <div class="table-responsive">
+                  <table id="offpos" class="display table table-sm table-bordered">
+                      <thead style="background: #eed388;">
+                          <tr>
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Nama Balai</th>
+                            <th class="text-center">Total Pos</th>
+                            <th class="text-center">Pos Online</th>
+                            <th class="text-center">Pos Offline</th>
+                            <th class="text-center">Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @foreach (var item in Model) {
+                            <tr>
+                                <td class="text-center">@j</td>
+                                <td class="text-left">@item.balaiName</td>
+                                <td class="text-center">@item.JumlahPos</td>
+                                <td class="text-center">@item.JumlahPosOnline</td>
+                                <td class="text-center">@item.JumlahPosOffline</td>
+                                <th class="text-center"><a asp-controller="Api" asp-action="Tabel"><i class="bi bi-eye"></i></a></th>
+                            </tr>
+                            j++;
+                        } *@
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                $('#offpos').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "/Api/GetList",
+                        "type": "POST",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
+                        { "data": "balaiName", "name": "BalaiName", "autoWidth": true },
+                        { "data": "jumlahPos", "name": "JumlahPos", "autoWidth": true, "className": "text-center" },
+                        { "data": "jumlahPosOnline", "name": "JumlahPosOnline", "autoWidth": true, "className": "text-center" },
+                        { "data": "jumlahPosOffline", "name": "JumlahPosOffline", "autoWidth": true, "className": "text-center" },
+                        {
+                            "data": "balaiName",
+                            "render": function (data) {
+                                return '<a href="/Api/Tabel/' + data + '"><i class="bi bi-eye"></i></a>';
+                            },
+                            "orderable": false,
+                            "searchable": false,
+                            "className": "text-center"
+                        }
+                    ]
+                });
+            });
+            </script>
+        }
+
+       
