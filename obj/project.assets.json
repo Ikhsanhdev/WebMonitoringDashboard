@@ -10965,11 +10965,16 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\BagjaX\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\M_Aziz\\.nuget\\packages\\": {}
+>>>>>>> 121be84e92e38e2be7fc189280761d770ad631f8
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "D:\\Dotnet\\WebMonitoringDashboard\\menyala.csproj",
       "projectName": "menyala",
       "projectPath": "D:\\Dotnet\\WebMonitoringDashboard\\menyala.csproj",
@@ -10979,6 +10984,16 @@
       "configFilePaths": [
         "C:\\Users\\BagjaX\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+=======
+      "projectUniqueName": "D:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+      "projectName": "menyala",
+      "projectPath": "D:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+      "packagesPath": "C:\\Users\\M_Aziz\\.nuget\\packages\\",
+      "outputPath": "D:\\dotnet\\WebMonitoringDashboard\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\M_Aziz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> 121be84e92e38e2be7fc189280761d770ad631f8
       ],
       "originalTargetFrameworks": [
         "net8.0"

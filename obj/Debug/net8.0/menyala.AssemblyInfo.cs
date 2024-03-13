@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("menyala")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7b654082b883c958fe96c2b265f14b314dc2b69")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5eb38ad6f72e1db5860cc3f06a0f34ea9f3aa897")]
+>>>>>>> 121be84e92e38e2be7fc189280761d770ad631f8
 [assembly: System.Reflection.AssemblyProductAttribute("menyala")]
 [assembly: System.Reflection.AssemblyTitleAttribute("menyala")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
