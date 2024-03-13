@@ -1,4 +1,5 @@
-var maps = L.map('map').setView([-6.89921, 107.711404], 13);
+// Inisialisasi peta
+var maps = L.map('maps').setView([-2.81921, 118.707], 5);
 
 // Tambahkan tile layer OSM
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

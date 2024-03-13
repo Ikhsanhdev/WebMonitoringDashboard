@@ -38,9 +38,33 @@
   padding: 0;
 }
 
+.dashboard .info-online h6 {
+  font-size: 28px;
+  color: #2eca6a;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard .info-offline h6 {
+  font-size: 28px;
+  color: #db1514;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
 .dashboard .info-total h6 {
   font-size: 28px;
   color: #f59517;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard .info-instansi h6 {
+  font-size: 28px;
+  color: #17f5b2;
   font-weight: 500;
   margin: 0;
   padding: 0;
@@ -52,6 +76,11 @@
 
 /* Untuk membuat peta responsif */
 #map {
+  width: 100%;
+  height: 500px; /* Sesuaikan tinggi sesuai kebutuhan */
+}
+
+#maps {
   width: 100%;
   height: 500px; /* Sesuaikan tinggi sesuai kebutuhan */
 }

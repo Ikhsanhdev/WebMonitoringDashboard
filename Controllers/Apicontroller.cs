@@ -151,32 +151,33 @@ public class ApiController : Controller
             return Json(new { TotalPos = 0 });
         }
     }
-[HttpPost]
-public async Task<IActionResult> GetTotalInstansi()
-{
-    try
-    {
-        // Panggil metode untuk mendapatkan data dari API
-        var apiResponse = await GetDataFromApi();
 
-        if (apiResponse == null)
+    [HttpPost]
+    public async Task<IActionResult> GetTotalInstansi()
+    {
+        try
         {
-            // Jika respons API null, kembalikan total pos 0
+            // Panggil metode untuk mendapatkan data dari API
+            var apiResponse = await GetDataFromApi();
+
+            if (apiResponse == null)
+            {
+                // Jika respons API null, kembalikan total pos 0
+                return Json(new { TotalInstansi = 0 });
+            }
+
+            // Hitung total pos menggunakan operasi Distinct pada balaiName
+            int totalInstansi = apiResponse.Select(a => a.balaiName).Distinct().Count();
+
+            return Json(new { TotalInstansi = totalInstansi });
+        }
+        catch (Exception ex)
+        {
+            // Handle exception
+            Console.WriteLine(ex.Message);
             return Json(new { TotalInstansi = 0 });
         }
-
-        // Hitung total pos menggunakan operasi Distinct pada balaiName
-        int totalInstansi = apiResponse.Select(a => a.balaiName).Distinct().Count();
-
-        return Json(new { TotalInstansi = totalInstansi });
     }
-    catch (Exception ex)
-    {
-        // Handle exception
-        Console.WriteLine(ex.Message);
-        return Json(new { TotalInstansi = 0 });
-    }
-}
 
     [HttpPost]
     public async Task<IActionResult> GetTotalDugaAir()
@@ -204,6 +205,7 @@ public async Task<IActionResult> GetTotalInstansi()
             return Json(new { TotalDugaAir = 0 });
         }
     }
+
     [HttpPost]
     public async Task<IActionResult> GetTotalCurahHujan()
     {
@@ -258,7 +260,7 @@ public async Task<IActionResult> GetTotalInstansi()
         }
     }
 
- [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> GetTotalOnline()
     {
         try
@@ -284,6 +286,7 @@ public async Task<IActionResult> GetTotalInstansi()
             return Json(new { TotalOnline = 0 });
         }
     }
+    
     [HttpPost]
     public async Task<IActionResult> GetTotalOffline()
     {
@@ -308,8 +311,10 @@ public async Task<IActionResult> GetTotalInstansi()
             // Handle exception
             Console.WriteLine(ex.Message);
             return Json(new { TotalOffline = 0 });
-        }
-    }
+        }
+    }
+
+
     [HttpGet]
     public ActionResult GetLastUpdateTime()
     {
