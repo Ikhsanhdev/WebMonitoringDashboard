@@ -151,7 +151,6 @@ public class ApiController : Controller
             return Json(new { TotalPos = 0 });
         }
     }
-<<<<<<< HEAD
 [HttpPost]
 public async Task<IActionResult> GetTotalInstansi()
 {
@@ -178,8 +177,6 @@ public async Task<IActionResult> GetTotalInstansi()
         return Json(new { TotalInstansi = 0 });
     }
 }
-=======
->>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
 
     [HttpPost]
     public async Task<IActionResult> GetTotalDugaAir()
@@ -261,7 +258,6 @@ public async Task<IActionResult> GetTotalInstansi()
         }
     }
 
-<<<<<<< HEAD
  [HttpPost]
     public async Task<IActionResult> GetTotalOnline()
     {
@@ -314,9 +310,6 @@ public async Task<IActionResult> GetTotalInstansi()
             return Json(new { TotalOffline = 0 });
         }
     }
-=======
-
->>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
     [HttpGet]
     public ActionResult GetLastUpdateTime()
     {
