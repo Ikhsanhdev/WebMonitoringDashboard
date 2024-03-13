@@ -66,6 +66,7 @@
     </section> *@
 
     <section class="section dashboard">
+<<<<<<< HEAD
     <div class="row">
         <!-- Kartu Sebelah Kiri -->
         <div class="col-md-4">
@@ -169,10 +170,22 @@
                         <h5 class="card-title text-center">Total Pos Online</h5>
                         <div class="text-center">
                             <h6 id="totalPosOnline"> 100 </h6>
+=======
+        <div class="row">
+            <!-- Kartu Sebelah Kiri -->
+            <div class="col-md-3">
+                <!-- Duga Air Card -->
+                <div class="card info-duga">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Pos Duga Air</h5>
+                        <div class="text-center">
+                            <h6 id="totalDugaAir"></h6>
+>>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
                         </div>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
         </div>
          <div class="col-md-4">
                 <!-- Curah Hujan Card -->
@@ -206,6 +219,56 @@
         </div>
         <div class="card-body">
             <div id="map" style="width: 100%; height: 100vh; margin: 0 auto;"></div>
+=======
+
+            <div class="col-md-3">
+                <!-- Curah Hujan Card -->
+                <div class="card info-curah">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Pos Curah Hujan</h5>
+                        <div class="text-center">
+                            <h6 id="totalCurahHujan"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kartu Sebelah Kanan -->
+            <div class="col-md-3">
+                <!-- Klimatologi Card -->
+                <div class="card info-klimatologi">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Pos Klimatologi</h5>
+                        <div class="text-center">
+                            <h6 id ="totalKlimatologi"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <!-- Klimatologi Card -->
+                <div class="card info-total">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Total Pos</h5>
+                        <div class="text-center">
+                            <h6 id="totalPos"></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <br>
+
+    <div class="card mb-3">
+        <div class="card-header" style="background: #a3c2e0;">
+            <h4 class="card-title mb-0 text-white text-center"><i class="fa fa-water me-1"></i>Peta Indonesia</h4>
+        </div>
+        <div class="card-body">
+            <div id="maps" style="width: 100%; height: 100vh; margin: 0 auto;"></div>
+>>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
         </div>
     </div>
 
@@ -213,7 +276,11 @@
 
     <div class="card mb-3">
         <div class="card-header" style="background: #a3c2e0;">
+<<<<<<< HEAD
             <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i> SUMMARY</h4>
+=======
+            <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i>SUMMARY</h4>
+>>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -221,12 +288,20 @@
                     <thead>
                         <tr>
                             <th class="text-center">No.</th>
+<<<<<<< HEAD
                             <th class="text-center">Nama Balai</th>
+=======
+                            <th class="text-center">Nama Instansi</th>
+>>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
                             <th class="text-center">Instansi</th>
                             <th class="text-center">Pos Online</th>
                             <th class="text-center">Pos Offline</th>
                             <th class="text-center">Total Pos</th>
+<<<<<<< HEAD
                             <th class="text-center"></th>
+=======
+                            <th class="text-center">Detail</th>
+>>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
                         </tr>
                     </thead>
                     <tbody>
@@ -301,6 +376,7 @@
                         $('#totalKlimatologi').text('Error');
                     }
                 });
+<<<<<<< HEAD
                  $.ajax({
                     url: '/Api/GetTotalOnline',
                     type: 'POST',
@@ -340,6 +416,8 @@
                         $('#totalInstansi').text('Error');
                     }
                 });
+=======
+>>>>>>> 85722dcb50c141700dc2a504177b47f1a479bd23
                 }
 
                 // Panggil fungsi untuk memperbarui jumlah pos saat halaman dimuat
