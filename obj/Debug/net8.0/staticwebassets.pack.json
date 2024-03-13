@@ -241,6 +241,10 @@
       "PackagePath": "staticwebassets\\assets\\js\\app.js"
     },
     {
+      "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\js\\apps.js",
+      "PackagePath": "staticwebassets\\assets\\js\\apps.js"
+    },
+    {
       "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\js\\hujan_ringan.json",
       "PackagePath": "staticwebassets\\assets\\js\\hujan_ringan.json"
     },

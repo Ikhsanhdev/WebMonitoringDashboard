@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "TcXgHejqceYa0bKtmtsC6cbyXxOG2puVU9JLPxYzGgM=",
+  "Hash": "EzJ2ROLt2WXbBABAaUtz/8zaxky1uqCXyweHMjjSW0I=",
   "Source": "menyala",
   "BasePath": "_content/menyala",
   "Mode": "Default",
@@ -1174,6 +1174,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\js\\app.js"
+    },
+    {
+      "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\js\\apps.js",
+      "SourceId": "menyala",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\",
+      "BasePath": "_content/menyala",
+      "RelativePath": "assets/js/apps.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\js\\apps.js"
     },
     {
       "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\js\\hujan_ringan.json",
