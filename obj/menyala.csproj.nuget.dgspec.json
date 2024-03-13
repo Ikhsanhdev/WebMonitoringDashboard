@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\dotnet\\menyala\\menyala.csproj": {}
+    "D:\\dotnet\\WebMonitoringDashboard\\menyala.csproj": {}
   },
   "projects": {
-    "C:\\dotnet\\menyala\\menyala.csproj": {
+    "D:\\dotnet\\WebMonitoringDashboard\\menyala.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\dotnet\\menyala\\menyala.csproj",
+        "projectUniqueName": "D:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
         "projectName": "menyala",
-        "projectPath": "C:\\dotnet\\menyala\\menyala.csproj",
-        "packagesPath": "C:\\Users\\ikhsa\\.nuget\\packages\\",
-        "outputPath": "C:\\dotnet\\menyala\\obj\\",
+        "projectPath": "D:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+        "packagesPath": "C:\\Users\\M_Aziz\\.nuget\\packages\\",
+        "outputPath": "D:\\dotnet\\WebMonitoringDashboard\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ikhsa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\M_Aziz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
