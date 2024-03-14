@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\Dotnet\WebMonitoringDashboard
 build_property._RazorSourceGeneratorDebug = 
 
+[D:/Dotnet/WebMonitoringDashboard/Views/Api/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Dotnet/WebMonitoringDashboard/Views/Api/ErrorView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXEVycm9yVmlldy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

@@ -21,7 +21,7 @@ public class ApiController : Controller
         return View();
     }
 
-    public async Task<IActionResult> Tabel()
+    public async Task<IActionResult> Detail()
     {
         return View();
     }
@@ -63,6 +63,8 @@ public class ApiController : Controller
                     a.jumlahPosOnline.ToString().Contains(searchValue) ||
                     a.jumlahPosOffline.ToString().Contains(searchValue) ||
                     a.slug.Contains(searchValue) ||
+                    a.stationType.Contains(searchValue) ||
+                    a.organizationCode.Contains(searchValue) ||
                     a.deviceId.Contains(searchValue) ||
                     (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
                     a.lastReadingAt?.ToString().Contains(searchValue) == true)
@@ -77,22 +79,25 @@ public class ApiController : Controller
 
             // Grouping and calculating aggregated values
             var groupedData = filteredData
-                .GroupBy(a => a.balaiName)
-                .Select(g => new Api
-                {
-                    balaiName = g.Key,
-                    jumlahPos = g.Count(),
-                    jumlahPosOnline = g.Count(p => p.deviceStatus == "online"),
-                    jumlahPosOffline = g.Count(p => p.deviceStatus == "offline"),
+            .GroupBy(a => a.balaiName)
+            .Select(g => new Api
+            {
+                balaiName = g.Key,
+                jumlahPos = g.Count(),
+                jumlahPosOnline = g.Count(p => p.deviceStatus == "online"),
+                jumlahPosOffline = g.Count(p => p.deviceStatus == "offline"),
 
-                    slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Select(p => p.slug).FirstOrDefault() : null,
-                    subDomain = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Select(p => p.subDomain).FirstOrDefault() : null,
-                    name = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Select(p => p.name).FirstOrDefault() : null,
-                    deviceId = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Select(p => p.deviceId).FirstOrDefault() : null,
-                    deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
-                    lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : default(DateTime?)
-                })
-                .ToList();
+                slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
+                subDomain = g.FirstOrDefault(p => p.deviceStatus == "offline")?.subDomain,
+                name = g.FirstOrDefault(p => p.deviceStatus == "offline")?.name,
+                stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
+                organizationCode = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.organizationCode) : g.Max(p => p.organizationCode),
+                deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
+                lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
+            })
+            .ToList();
+
+
 
             // Paging
             var result = new DataTableResult<Api>
@@ -124,7 +129,7 @@ public class ApiController : Controller
             });
         }
     }
-
+    
     [HttpPost]
     public async Task<IActionResult> GetTotalPos()
     {

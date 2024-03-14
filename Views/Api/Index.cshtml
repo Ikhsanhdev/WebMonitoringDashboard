@@ -177,7 +177,7 @@
 
     <div class="card mb-3">
         <div class="card-header" style="background: #a3c2e0;">
-            <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i> SUMMARY</h4>
+            <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i>SUMMARY</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -190,7 +190,6 @@
                             <th class="text-center">Pos Online</th>
                             <th class="text-center">Pos Offline</th>
                             <th class="text-center">Total Pos</th>
-                            <th class="text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -373,11 +372,11 @@
                      },
                     { "data": "jumlahPosOnline", "name": "JumlahPosOnline", "autoWidth": true, "className": "text-center" },
                     { "data": "jumlahPosOffline", "name": "JumlahPosOffline", "autoWidth": true, "className": "text-center" },
-                    { "data": "jumlahPos", "name": "JumlahPos", "autoWidth": true, "className": "text-center" },
+                    @* { "data": "jumlahPos", "name": "JumlahPos", "autoWidth": true, "className": "text-center" }, *@
                     {
-                        "data": "balaiName",
-                        "render": function (data) {
-                            return '<a href="/Api/Tabel/' + data + '"><i class="bi bi-eye"></i></a>';
+                        "data": "jumlahPos",
+                        "render": function (data, type, row) {
+                            return '<a href="/Api/Detail/' + row.balaiName + '">' + data + '</a>';
                         },
                         "orderable": false,
                         "searchable": false,

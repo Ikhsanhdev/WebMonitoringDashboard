@@ -1,0 +1,237 @@
+@{
+    ViewData["Title"] = "Tabel Monitoring";
+    @* var i = 1; *@
+    @* var j = 1; *@
+
+    @* var onlinepos = Model.Where(item => item.DeviceStatus == "online").ToList(); *@
+    @* var offlinepos = Model.Where(item => item.DeviceStatus == "offline").ToList(); *@
+}
+
+@model IEnumerable<Api>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Tabel Monitoring</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Tabel Monitoring</li>
+            </ol>
+        </nav>
+    </div>
+
+    @* <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <h5 class="card-title">POS ONLINE</span></h5>
+                <table id="onpos" class="display table table-bordered">
+                    <thead>
+                        <tr class="table-warning">
+                            <th>No</th>
+                            <th>Device ID</th>
+                            <th>Station</th>
+                            <th>Tma</th>
+                            <th>Reading At</th>
+                            <th>Tipe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in onlinepos) {
+                            <tr>
+                                <td>@i</td>
+                                <td>@item.Slug</td>
+                                <td>@item.DeviceId</td>
+                                <td>@item.DeviceStatus</td>
+                                <td>@item.OrganizationCode</td>
+                                <td>@item.LastReadingAt</td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br> *@
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row no-gutters">
+                <div class="col">
+                    <h6>Nama Balai :</h6>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Pos Balai
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-light">
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h6>Tipe Pos :</h6>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tipe Pos
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-light">
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h6>Status :</h6>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                            Status
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-light">
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                            <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-success me-md-2" type="button">Submit</button>
+                        <button class="btn btn-danger" type="button">Reset</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="card mb-3">
+        <div class="card-header" style="background: #db1514;">
+            <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i>OFFLINE</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="offpos" class="display table table-sm table-bordered table-responsive-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Organisasi</th>
+                            <th class="text-center">Nama Pos</th>
+                            <th class="text-center">Tipe</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Reading At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Your data rows go here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="lastUpdateTime" style="margin-top: 10px; color: gray;"></div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <!-- Include jQuery and Moment.js -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- Include DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Function to refresh DataTable and update last update time
+            function refreshDataTable() {
+                $('#offpos').DataTable().ajax.reload(null, false);
+                updateLastUpdateTime();
+            }
+
+            // Function to update last update time
+            function updateLastUpdateTime() {
+                var now = new Date();
+                var formattedTime = moment(now).format("DD-MM-YYYY HH:mm:ss");
+
+                // Get the last update time from the Ajax response
+                $.ajax({
+                    url: '/Api/GetLastUpdateTime', // Replace with the appropriate URL
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        var lastUpdateTimeString = response.lastUpdateTime; // Replace with the correct property name
+                        if (lastUpdateTimeString) {
+                            var lastUpdateTime = moment(lastUpdateTimeString);
+                            formattedTime = lastUpdateTime.format("DD-MM-YYYY HH:mm:ss");
+                        }
+
+                        // Use the correct ID here
+                        $('#lastUpdateTime').text('Last Updated : ' + formattedTime);
+                    },
+                    error: function (error) {
+                        console.error('Error getting last update time:', error);
+                    }
+                });
+            }
+
+            var dataTable = $('#offpos').DataTable({
+                @* "processing": true, *@
+                "serverSide": true,
+                "info": true,
+                "infoCallback": function (settings, start, end, max, total, pre) {
+                    return "Showing " + (start) + " to " + end + " of " + total + " entries";
+                },
+                "ajax": {
+                    "url": "/Api/GetList",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
+                    { "data": "organizationCode", "name": "OrganizationCode", "autoWidth": true },
+                    { "data": "slug", "name": "Slug", "autoWidth": true },
+                    { "data": "stationType", "name": "StationType", "autoWidth": true, "className": "text-center" },
+                    { 
+                        "data": "deviceStatus",
+                        "name": "DeviceStatus",
+                        "autoWidth": true,
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // Custom rendering based on deviceStatus
+                            return data === "offline" ? "<span style='color:red;'>Offline</span>" : "<span style='color:green;'>Online</span>";
+                        }
+                    },
+                    { "data": "lastReadingAt", "name": "LastReadingAt", "autoWidth": true, "className": "text-center" },
+                ],
+                "initComplete": function (settings, json) {
+                    console.log('DataTables initialized successfully.');
+                    addCustomFilter();
+                },
+                "error": function (xhr, error, thrown) {
+                    // Handle errors during data retrieval
+                    console.log('DataTables error:', error);
+                }
+            });
+
+            // Set up auto-refresh using setInterval
+            var autoRefreshInterval = setInterval(function () {
+                refreshDataTable();
+            }, 300000); // 5 minutes in milliseconds
+
+            // Stop auto-refresh when the page is unloaded
+            $(window).on('beforeunload', function () {
+                clearInterval(autoRefreshInterval);
+            });
+
+            // Initial update of last update time
+            updateLastUpdateTime();
+        });
+    </script>
+}
