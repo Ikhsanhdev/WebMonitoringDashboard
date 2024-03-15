@@ -17,55 +17,67 @@
     </div>
 
     <!-- End Page Title -->
-    @* <section>
+    <section>
         <div class="container">
             <div class="row">
-                <!-- Kartu Sebelah Kiri -->
-                <div class="col-md-3">
-                    <!-- Duga Air Card -->
+                <div class="col-md-4 col-sm-6">
                     <div class="counter blue">
-                        <div class="counter-content">
-                            <div class="counter-value"></div>
-                        </div>
-                        <h3 id="totalDugaAir">Pos Duga Air</h3>
+                        <span id="totalDugaAir" class="counter-value"></span>
+                        <h3>Pos Duga Air</h3>
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <!-- Curah Hujan Card -->
+                <div class="col-md-4 col-sm-6">
                     <div class="counter green">
-                        <div class="counter-content">
-                           <div class="counter-value"></div>
-                        </div>
-                        <h3 id="totalCurahHujan">Pos Curah Hujan</h3>
+                        <span id="totalCurahHujan" class="counter-value"></span>
+                        <h3>Pos Curah Hujan</h3>
                     </div>
                 </div>
 
-                <!-- Kartu Sebelah Kanan -->
-                <div class="col-md-3">
-                    <!-- Klimatologi Card -->
+                <div class="col-md-4 col-sm-6">
                     <div class="counter red">
-                        <div class="counter-content">
-                            <div class="counter-value"></div>
-                        </div>
-                        <h3 id="totalKlimatologi">Pos Klimatologi</h3>
+                        <span id="totalKlimatologi" class="counter-value"></span>
+                        <h3>Pos Klimatologi</h3>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="counter green">
+                        <span id="totalOnline" class="counter-value"></span>
+                        <h3>Total Pos Online</h3>
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <!-- Total Pos Card -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="counter red">
+                        <span id="totalOffline" class="counter-value"></span>
+                        <h3>Total Pos Offline</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
                     <div class="counter orange">
-                        <div class="counter-content">
-                            <div class="counter-value" ></div>
-                        </div>
-                        <h3 id="totalPos">Total Pos</h3>
+                        <span id="totalPos" class="counter-value"></span>
+                        <h3>Total Pos</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="counter cyan">
+                        <span id="totalInstansi" class="counter-value"></span>
+                        <h3>Total Instansi</h3>
                     </div>
                 </div>
             </div>
         </div>
-    </section> *@
+    </section>
 
-    <section class="section dashboard">
+
+    @* <section class="section dashboard">
         <div class="row">
             <!-- Kartu Sebelah Kiri -->
             <div class="col-md-4">
@@ -160,7 +172,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> *@
 
     <br>
 
@@ -360,8 +372,8 @@
                     {
                         "data": "name",
                         "render": function (data, type, row) {
-                            if(row.subDomain !== null) {
-                                return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank">' + row.name + '</a>';
+                            if (row.subDomain !== null) {
+                                return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.name + '</a>';
                             } else {
                                 return '';
                             }
@@ -369,14 +381,13 @@
                         "orderable": false,
                         "searchable": false,
                         "className": "text-center"
-                     },
+                    },
                     { "data": "jumlahPosOnline", "name": "JumlahPosOnline", "autoWidth": true, "className": "text-center" },
                     { "data": "jumlahPosOffline", "name": "JumlahPosOffline", "autoWidth": true, "className": "text-center" },
-                    @* { "data": "jumlahPos", "name": "JumlahPos", "autoWidth": true, "className": "text-center" }, *@
                     {
                         "data": "jumlahPos",
                         "render": function (data, type, row) {
-                            return '<a href="/Api/Detail/' + row.balaiName + '">' + data + '</a>';
+                            return '<a href="/Api/Detail/' + row.balaiName + '" style="text-decoration: none;">' + data + '</a>';
                         },
                         "orderable": false,
                         "searchable": false,
@@ -400,7 +411,7 @@
         });
     </script>
 
-    <script>
+    @* <script>
         $(document).ready(function(){
             $('.counter-value').each(function(){
                 $(this).prop('Counter', 0).animate({
@@ -414,5 +425,5 @@
                 });
             });
         });
-    </script> 
+    </script>  *@
 }
