@@ -208,16 +208,8 @@
                             return data === "offline" ? "<span style='color:red;'>Offline</span>" : "<span style='color:green;'>Online</span>";
                         }
                     },
-                    { "data": "lastReadingAt", "name": "LastReadingAt", "autoWidth": true, "className": "text-center" },
-                ],
-                "initComplete": function (settings, json) {
-                    console.log('DataTables initialized successfully.');
-                    addCustomFilter();
-                },
-                "error": function (xhr, error, thrown) {
-                    // Handle errors during data retrieval
-                    console.log('DataTables error:', error);
-                }
+                    { "data": "lastReadingAt", "name": "LastReadingAt", "autoWidth": true, "className": "text-center" }
+                ]
             });
 
             // Set up auto-refresh using setInterval

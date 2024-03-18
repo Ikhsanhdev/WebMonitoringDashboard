@@ -405,7 +405,6 @@ public class ApiController : Controller
             });
         }
     }
-
     private async Task<List<Api>> GetDataFromApi()
     {
         string apiUrl = "http://localhost:5000/Station/All";
