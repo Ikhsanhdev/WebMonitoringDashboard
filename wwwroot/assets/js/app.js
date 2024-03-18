@@ -2,9 +2,9 @@
 var map = L.map('map').setView([-6.89921, 107.707], 13);
 
 // Tambahkan tile layer OSM
-// L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-// }).addTo(map);
+L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="http://higertech.com">Higertech</a>',
+}).addTo(map);
 
 // S. Musi
 var musi = L.polygon(
@@ -17,6 +17,26 @@ var musi = L.polygon(
   }
 ).addTo(map);
 
+musi.setStyle({
+  weight: 8,
+  opacity: 1,
+});
+
+var musi = L.marker([-6.926, 107.621678], {
+  icon: L.divIcon({
+    className: 'custom-icon',
+    html: '<img src="/assets/img/arah.png" style="transform: rotate(0deg); width: 80px; height: 30px;">',
+  }),
+}).addTo(map);
+
+var musi = L.marker([-6.92491, 107.689404], {
+  icon: L.divIcon({
+    className: 'text-label',
+    iconSize: [100, 40],
+    html: '<div style="transform: rotate(0deg); color: black; font-weight: bold; font-size: 13px;">S. Musi</div>',
+  }),
+}).addTo(map);
+
 var musi1 = L.polygon(
   [
     [-6.88521, 107.709404], //atas
@@ -27,7 +47,27 @@ var musi1 = L.polygon(
   }
 ).addTo(map);
 
-var musi1 = L.marker([-6.88121, 107.719404], {
+musi1.setStyle({
+  weight: 8,
+  opacity: 1,
+});
+
+var musi1 = L.marker([-6.902, 107.707404], {
+  icon: L.divIcon({
+    className: 'custom-icon',
+    html: '<img src="/assets/img/arah.png" style="transform: rotate(-90deg); width: 80px; height: 30px;">',
+  }),
+}).addTo(map);
+
+var musi1 = L.marker([-6.90521, 107.709404], {
+  icon: L.divIcon({
+    className: 'text-label',
+    iconSize: [100, 40],
+    html: '<div style="transform: rotate(-90deg); color: black; font-weight: bold; font-size: 13px;">S. Musi</div>',
+  }),
+}).addTo(map);
+
+var musi1 = L.marker([-6.88221, 107.719404], {
   icon: L.icon({
     iconUrl: '/assets/img/ampera.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [80, 140], // Ukuran icon
@@ -38,12 +78,32 @@ musi1.addTo(map);
 var musi3 = L.polygon(
   [
     [-6.88521, 107.709404], //kiri
-    [-6.88521, 107.788104], //kanan
+    [-6.88521, 107.7878], //kanan
   ],
   {
     color: 'grey',
   }
 ).addTo(map);
+
+musi3.setStyle({
+  weight: 8,
+  opacity: 1,
+});
+
+var musi3 = L.marker([-6.87721, 107.738], {
+  icon: L.divIcon({
+    className: 'custom-icon',
+    html: '<img src="/assets/img/arah.png" style="transform: rotate(0deg); width: 80px; height: 30px;">',
+  }),
+}).addTo(map);
+
+var musi3 = L.marker([-6.8868, 107.742], {
+  icon: L.divIcon({
+    className: 'text-label',
+    iconSize: [100, 40],
+    html: '<div style="transform: rotate(0deg); color: black; font-weight: bold; font-size: 13px;">S. Musi</div>',
+  }),
+}).addTo(map);
 
 var musi4 = L.polygon(
   [
@@ -99,7 +159,7 @@ var musi8 = L.polygon(
 var hitam = L.polygon(
   [
     [-6.91053, 107.623878], //atas
-    [-6.92321, 107.623878], //bawah
+    [-6.92251, 107.623878], //bawah
   ],
   {
     color: 'blue',
@@ -128,7 +188,7 @@ var hitam = L.marker([-6.9149, 107.626378], {
 var rengas = L.polygon(
   [
     [-6.91053, 107.628878], //atas
-    [-6.92321, 107.628878], //bawah
+    [-6.92251, 107.628878], //bawah
   ],
   {
     color: 'blue',
@@ -157,7 +217,7 @@ var rengas = L.marker([-6.9149, 107.631178], {
 var lacak = L.polygon(
   [
     [-6.91053, 107.633878], //atas
-    [-6.92321, 107.633878], //bawah
+    [-6.92251, 107.633878], //bawah
   ],
   {
     color: 'blue',
@@ -186,7 +246,7 @@ var lacak = L.marker([-6.9149, 107.636278], {
 var danau = L.polygon(
   [
     [-6.91053, 107.638878], //atas
-    [-6.92321, 107.638878], //bawah
+    [-6.92251, 107.638878], //bawah
   ],
   {
     color: 'blue',
@@ -214,8 +274,8 @@ var danau = L.marker([-6.9149, 107.641278], {
 // S. Ijuk
 var ijuk = L.polygon(
   [
-    [-6.93621, 107.641378],
-    [-6.92321, 107.641378], //bawah
+    [-6.93621, 107.641378], //bawah
+    [-6.92391, 107.641378], //atas
   ],
   {
     color: 'blue',
@@ -242,7 +302,7 @@ var ijuk = L.marker([-6.92921, 107.643878], {
 var tenang = L.polygon(
   [
     [-6.91053, 107.643878], //atas
-    [-6.92321, 107.643878], //bawah
+    [-6.92251, 107.643878], //bawah
   ],
   {
     color: 'blue',
@@ -269,7 +329,7 @@ var tenang = L.marker([-6.9149, 107.646278], {
 var kebala = L.polygon(
   [
     [-6.91053, 107.648878], //atas
-    [-6.92321, 107.648878], //bawah
+    [-6.92251, 107.648878], //bawah
   ],
   {
     color: 'blue',
@@ -295,8 +355,8 @@ var kebala = L.marker([-6.9133, 107.653678], {
 // S. Pedado
 var pedado = L.polygon(
   [
-    [-6.92321, 107.651378], //atas
-    [-6.93621, 107.651378], //bawah
+    [-6.93621, 107.651378], //atas
+    [-6.92391, 107.651378], //bawah
   ],
   {
     color: 'blue',
@@ -323,14 +383,14 @@ var pedado = L.marker([-6.929, 107.653678], {
 var lambidaro = L.polygon(
   [
     [-6.90553, 107.658878], //atas
-    [-6.92321, 107.658878], //bawah
+    [-6.92251, 107.658878], //bawah
   ],
   {
     color: 'blue',
   }
 ).addTo(map);
 
-var lambidaro = L.marker([-6.92421, 107.665878], {
+var lambidaro = L.marker([-6.92521, 107.665878], {
   icon: L.icon({
     iconUrl: '/assets/img/jembatan.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [45, 65], // Ukuran icon
@@ -421,8 +481,8 @@ var sekanak1 = L.marker([-6.89721, 107.686504], {
 
 var sekanak2 = L.polygon(
   [
-    [-6.89321, 107.689404], //kanan
-    [-6.89321, 107.709404], //kiri
+    [-6.89321, 107.689404], //kiri
+    [-6.89321, 107.708804], //kanan
   ],
   {
     color: 'blue',
@@ -440,7 +500,7 @@ var siti = L.polygon(
   }
 ).addTo(map);
 
-var siti = L.marker([-6.88821, 107.671804], {
+var siti = L.marker([-6.88821, 107.672804], {
   icon: L.icon({
     iconUrl: '/assets/img/tambak.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [45, 40], // Ukuran icon
@@ -459,7 +519,7 @@ var kambang = L.polygon(
   }
 ).addTo(map);
 
-var sekanak2 = L.marker([-6.901, 107.694404], {
+var sekanak2 = L.marker([-6.8999, 107.695404], {
   icon: L.icon({
     iconUrl: '/assets/img/tambak.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [45, 40], // Ukuran icon
@@ -467,7 +527,7 @@ var sekanak2 = L.marker([-6.901, 107.694404], {
 });
 sekanak2.addTo(map);
 
-var sekanak2 = L.marker([-6.901, 107.686404], {
+var sekanak2 = L.marker([-6.8999, 107.687404], {
   icon: L.icon({
     iconUrl: '/assets/img/tambak.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [45, 40], // Ukuran icon
@@ -479,7 +539,7 @@ sekanak2.addTo(map);
 var kedukan = L.polygon(
   [
     [-6.92, 107.679404], //atas
-    [-6.92321, 107.678404], //bawah
+    [-6.92251, 107.678404], //bawah
   ],
   {
     color: 'red',
@@ -489,14 +549,14 @@ var kedukan = L.polygon(
 var kedukan1 = L.polygon(
   [
     [-6.92, 107.696404], //atas
-    [-6.92321, 107.697404], //bawah
+    [-6.92251, 107.697404], //bawah
   ],
   {
     color: 'red',
   }
 ).addTo(map);
 
-var kedukan1 = L.marker([-6.9239, 107.703404], {
+var kedukan1 = L.marker([-6.9249, 107.703404], {
   icon: L.icon({
     iconUrl: '/assets/img/jembatan1.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [40, 55], // Ukuran icon
@@ -533,7 +593,7 @@ var kedukan2 = L.marker([-6.92, 107.691], {
 // S. Keramasan
 var keramasan = L.polygon(
   [
-    [-6.92321, 107.679404], //atas
+    [-6.92391, 107.679404], //atas
     [-6.94321, 107.679404], //bawah
   ],
   {
@@ -587,7 +647,7 @@ var gantung = L.marker([-6.94221, 107.670978], {
 // S. Ogan
 var ogan = L.polygon(
   [
-    [-6.92321, 107.697104], //atas
+    [-6.92391, 107.697104], //atas
     [-6.94321, 107.697104], //bawah
   ],
   {
@@ -659,27 +719,32 @@ var circlekedukann = L.circle([-6.93221, 107.751804], {
 var kedukann1 = L.polygon(
   [
     [-6.92521, 107.751804], //atas
-    [-6.93221, 107.751804], //bawah
+    [-6.94021, 107.751804], //bawah
   ],
   {
     color: 'red',
   }
 ).addTo(map);
 
-var kedukann2 = L.polygon(
-  [
-    [-6.94021, 107.751804], //bawah
-    [-6.93221, 107.751804], //atas
-  ],
-  {
-    color: 'red',
-  }
-).addTo(map);
+kedukann1.setStyle({
+  weight: 20,
+  opacity: 0.7,
+});
+
+// var kedukann2 = L.polygon(
+//   [
+//     [-6.94021, 107.751804], //bawah
+//     [-6.93221, 107.751804], //atas
+//   ],
+//   {
+//     color: 'red',
+//   }
+// ).addTo(map);
 
 // S. Kedukan Ulu
 var kedukanulu = L.polygon(
   [
-    [-6.91321, 107.709404], //kiri
+    [-6.91321, 107.710104], //kiri
     [-6.91321, 107.724104], //kanan
   ],
   {
@@ -732,7 +797,7 @@ var kedukanulu1 = L.marker([-6.93721, 107.725804], {
 // S. Aur
 var aur = L.polygon(
   [
-    [-6.88521, 107.728404], //atas
+    [-6.88591, 107.728404], //atas
     [-6.90421, 107.728404], //bawah
   ],
   {
@@ -759,7 +824,7 @@ var aur = L.marker([-6.89521, 107.731704], {
 // S. Bendung
 var bendung = L.polygon(
   [
-    [-6.88521, 107.730804], //bawah
+    [-6.88451, 107.730804], //bawah
     [-6.86021, 107.730804], //atas
   ],
   {
@@ -809,7 +874,7 @@ var bendung1 = L.polygon(
   }
 ).addTo(map);
 
-var bendung1 = L.marker([-6.87221, 107.742804], {
+var bendung1 = L.marker([-6.87221, 107.741804], {
   icon: L.icon({
     iconUrl: '/assets/img/tambak.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [45, 40], // Ukuran icon
@@ -856,7 +921,7 @@ bendung3.addTo(map);
 // S. Sriguna
 var sriguna = L.polygon(
   [
-    [-6.88521, 107.735404], //atas
+    [-6.88591, 107.735404], //atas
     [-6.90421, 107.735404], //bawah
   ],
   {
@@ -880,7 +945,7 @@ var sriguna = L.marker([-6.89521, 107.739104], {
 // });
 // sriguna.addTo(map);
 
-var sriguna = L.marker([-6.88621, 107.746404], {
+var sriguna = L.marker([-6.88721, 107.746404], {
   icon: L.icon({
     iconUrl: '/assets/img/jembatan2.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [40, 55], // Ukuran icon
@@ -891,7 +956,7 @@ sriguna.addTo(map);
 // S. Lawang Kidul
 var lawang = L.polygon(
   [
-    [-6.88521, 107.755804], //bawah
+    [-6.88451, 107.755804], //bawah
     [-6.86821, 107.755804], //atas
   ],
   {
@@ -918,7 +983,7 @@ var lawang = L.marker([-6.875, 107.759204], {
 // S. Buah
 var buah = L.polygon(
   [
-    [-6.88521, 107.762804], //bawah
+    [-6.88451, 107.762804], //bawah
     [-6.86821, 107.762804], //atas
   ],
   {
@@ -945,7 +1010,7 @@ var buah = L.marker([-6.8758, 107.766204], {
 // S. Juaro
 var juaro = L.polygon(
   [
-    [-6.88521, 107.769804], //bawah
+    [-6.88451, 107.769804], //bawah
     [-6.86821, 107.769804], //atas
   ],
   {
@@ -972,7 +1037,7 @@ var juaro = L.marker([-6.8772, 107.772204], {
 // S. Komering
 var komering = L.polygon(
   [
-    [-6.88521, 107.772504], //atas
+    [-6.88591, 107.772504], //atas
     [-6.91321, 107.772504], //bawah
   ],
   {
@@ -1026,7 +1091,7 @@ var prupian = L.marker([-6.896, 107.764804], {
 // S. Batang
 var batang = L.polygon(
   [
-    [-6.88521, 107.774804], //bawah
+    [-6.88451, 107.774804], //bawah
     [-6.86821, 107.774804], //atas
   ],
   {
@@ -1053,7 +1118,7 @@ var batang = L.marker([-6.8774, 107.777204], {
 // S. Selincah
 var selincah = L.polygon(
   [
-    [-6.88521, 107.779804], //bawah
+    [-6.88451, 107.779804], //bawah
     [-6.86821, 107.779804], //atas
   ],
   {

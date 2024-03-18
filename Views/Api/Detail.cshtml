@@ -126,7 +126,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Organisasi</th>
                             <th class="text-center">Nama Pos</th>
-                            <th class="text-center">Tipe</th>
+                            @* <th class="text-center">Tipe</th> *@
                             <th class="text-center">Status</th>
                             <th class="text-center">Reading At</th>
                         </tr>
@@ -182,14 +182,14 @@
             }
 
             var dataTable = $('#offpos').DataTable({
-                @* "processing": true, *@
+                "processing": true,
                 "serverSide": true,
                 "info": true,
                 "infoCallback": function (settings, start, end, max, total, pre) {
                     return "Showing " + (start) + " to " + end + " of " + total + " entries";
                 },
                 "ajax": {
-                    "url": "/Api/GetList",
+                    "url": "/Api/GetDetail",
                     "type": "POST",
                     "datatype": "json"
                 },
@@ -197,7 +197,7 @@
                     { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
                     { "data": "organizationCode", "name": "OrganizationCode", "autoWidth": true },
                     { "data": "slug", "name": "Slug", "autoWidth": true },
-                    { "data": "stationType", "name": "StationType", "autoWidth": true, "className": "text-center" },
+                    @* { "data": "stationType", "name": "StationType", "autoWidth": true, "className": "text-center" }, *@
                     { 
                         "data": "deviceStatus",
                         "name": "DeviceStatus",

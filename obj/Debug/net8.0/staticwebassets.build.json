@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "EzJ2ROLt2WXbBABAaUtz/8zaxky1uqCXyweHMjjSW0I=",
+  "Hash": "UD27h6vxSkOMDWAXfdmOMH0+k3Yd9fY5HxWNEwKNQUU=",
   "Source": "menyala",
   "BasePath": "_content/menyala",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\apple-touch-icon.png"
+    },
+    {
+      "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\arah.png",
+      "SourceId": "menyala",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\",
+      "BasePath": "_content/menyala",
+      "RelativePath": "assets/img/arah.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\arah.png"
     },
     {
       "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\aur.png",
