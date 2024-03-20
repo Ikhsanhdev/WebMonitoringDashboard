@@ -10965,26 +10965,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\BagjaX\\.nuget\\packages\\": {}
+    "C:\\Users\\ikhsa\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Dotnet\\WebMonitoringDashboard\\menyala.csproj",
+      "projectUniqueName": "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
       "projectName": "menyala",
-      "projectPath": "D:\\Dotnet\\WebMonitoringDashboard\\menyala.csproj",
-      "packagesPath": "C:\\Users\\BagjaX\\.nuget\\packages\\",
-      "outputPath": "D:\\Dotnet\\WebMonitoringDashboard\\obj\\",
+      "projectPath": "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+      "packagesPath": "C:\\Users\\ikhsa\\.nuget\\packages\\",
+      "outputPath": "C:\\dotnet\\WebMonitoringDashboard\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\BagjaX\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\ikhsa\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -10997,6 +10995,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -11055,16 +11058,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file D:\\Dotnet\\WebMonitoringDashboard\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }

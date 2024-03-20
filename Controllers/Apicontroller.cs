@@ -58,16 +58,16 @@ public class ApiController : Controller
                 (string.IsNullOrEmpty(searchValue) || 
                     a.balaiName.Contains(searchValue) ||
                     a.name.Contains(searchValue) ||
-                    a.subDomain.Contains(searchValue) ||
+                    a.subDomain.Contains(searchValue) ||
                     a.jumlahPos.ToString().Contains(searchValue) ||
                     a.jumlahPosOnline.ToString().Contains(searchValue) ||
                     a.jumlahPosOffline.ToString().Contains(searchValue) ||
-                    a.slug.Contains(searchValue) ||
-                    a.stationType.Contains(searchValue) ||
-                    a.organizationCode.Contains(searchValue) ||
-                    a.deviceId.Contains(searchValue) ||
-                    (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
-                    a.lastReadingAt?.ToString().Contains(searchValue) == true)
+                    // a.slug.Contains(searchValue) ||
+                    // a.stationType.Contains(searchValue) ||
+                    a.organizationCode.Contains(searchValue)) 
+                    // a.deviceId.Contains(searchValue) ||
+                    // (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
+                    // a.lastReadingAt?.ToString().Contains(searchValue) == true)
                 )
                 .ToList();
 
@@ -87,13 +87,13 @@ public class ApiController : Controller
                 jumlahPosOnline = g.Count(p => p.deviceStatus == "online"),
                 jumlahPosOffline = g.Count(p => p.deviceStatus == "offline"),
 
-                slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
+                // slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
                 subDomain = g.FirstOrDefault(p => p.deviceStatus == "offline")?.subDomain,
                 name = g.FirstOrDefault(p => p.deviceStatus == "offline")?.name,
-                stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
+                // stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
                 organizationCode = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.organizationCode) : g.Max(p => p.organizationCode),
-                deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
-                lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
+                // deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
+                // lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
             })
             .ToList();
 
@@ -497,6 +497,51 @@ public class ApiController : Controller
 
             default:
                 return data;
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ProcessDataDashboard() {
+        try {
+            var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
+            var start = int.Parse(Request.Form["start"].FirstOrDefault());
+            var length = int.Parse(Request.Form["length"].FirstOrDefault());
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+            var apiResponse = await GetDataFromApi();
+
+            var groupedData = apiResponse
+                .GroupBy(d => new { d.balaiName, d.name, d.subDomain, d.organizationCode })
+                .Select(group => new Api
+                {
+                    balaiName = group.Key.balaiName,
+                    name = group.Key.name,
+                    subDomain = group.Key.subDomain,
+                    organizationCode = group.Key.organizationCode,
+                    jumlahPos = group.Count(),
+                    jumlahPosOffline = group.Count(d => d.deviceStatus == "offline"),
+                    jumlahPosOnline = group.Count(d => d.deviceStatus == "online")
+                }).ToList();
+
+            var result = new DataTableResult<Api> {
+                draw = draw,
+                recordsTotal = apiResponse.Count(),
+                recordsFiltered = groupedData.Count(),
+                data = groupedData.Skip(start).Take(length).ToList()
+            };
+
+            var nomorColumn = start + 1;
+            result.data.ForEach(item =>
+            {
+                item.nomor = nomorColumn;
+                nomorColumn++;
+            });
+
+            return Json(result);
+        } catch (Exception ex) {
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
 }

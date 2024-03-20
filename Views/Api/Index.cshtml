@@ -76,104 +76,6 @@
         </div>
     </section>
 
-
-    @* <section class="section dashboard">
-        <div class="row">
-            <!-- Kartu Sebelah Kiri -->
-            <div class="col-md-4">
-                <!-- Duga Air Card -->
-                <div class="card info-duga">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Pos Duga Air</h5>
-                        <div class="text-center">
-                            <h6 id="totalDugaAir"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <!-- Curah Hujan Card -->
-                <div class="card info-curah">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Pos Curah Hujan</h5>
-                        <div class="text-center">
-                            <h6 id="totalCurahHujan"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kartu Sebelah Kanan -->
-            <div class="col-md-4">
-                <!-- Klimatologi Card -->
-                <div class="card info-klimatologi">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Pos Klimatologi</h5>
-                        <div class="text-center">
-                            <h6 id="totalKlimatologi"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="row">
-            <!-- Kartu Sebelah Kiri -->
-            <div class="col-md-3">
-                <!-- Total Pos Online Card -->
-                <div class="card info-online">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Pos Online</h5>
-                        <div class="text-center">
-                            <h6 id="totalOnline"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <!-- Total Pos Offline Card -->
-                <div class="card info-offline">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Pos Offline</h5>
-                        <div class="text-center">
-                            <h6 id="totalOffline"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kartu Sebelah Kanan -->
-            <div class="col-md-3">
-                <!-- Total Pos Card -->
-                <div class="card info-total">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Pos</h5>
-                        <div class="text-center">
-                            <h6 id="totalPos"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Kartu Sebelah Kanan -->
-            <div class="col-md-3">
-                <!-- Total Instansi Card -->
-                <div class="card info-instansi">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Instansi</h5>
-                        <div class="text-center">
-                            <h6 id="totalInstansi"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> *@
-
     <br>
 
     <div class="card mb-3">
@@ -362,7 +264,7 @@
                     return "Showing " + (start) + " to " + end + " of " + total + " entries";
                 },
                 "ajax": {
-                    "url": "/Api/GetList",
+                    "url": "/Api/ProcessDataDashboard",
                     "type": "POST",
                     "datatype": "json"
                 },
@@ -372,11 +274,7 @@
                     {
                         "data": "name",
                         "render": function (data, type, row) {
-                            if (row.subDomain !== null) {
-                                return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.name + '</a>';
-                            } else {
-                                return '';
-                            }
+                            return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.name + '</a>';
                         },
                         "orderable": false,
                         "searchable": false,
