@@ -1,9 +1,6 @@
 @{
     ViewData["Title"] = "Tabel Monitoring";
-    @* var i = 1; *@
-    @* var j = 1; *@
 
-    @* var onlinepos = Model.Where(item => item.DeviceStatus == "online").ToList(); *@
     @* var offlinepos = Model.Where(item => item.DeviceStatus == "offline").ToList(); *@
 }
 
@@ -19,42 +16,6 @@
             </ol>
         </nav>
     </div>
-
-    @* <div class="col-12">
-        <div class="card recent-sales overflow-auto">
-            <div class="card-body">
-                <h5 class="card-title">POS ONLINE</span></h5>
-                <table id="onpos" class="display table table-bordered">
-                    <thead>
-                        <tr class="table-warning">
-                            <th>No</th>
-                            <th>Device ID</th>
-                            <th>Station</th>
-                            <th>Tma</th>
-                            <th>Reading At</th>
-                            <th>Tipe</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in onlinepos) {
-                            <tr>
-                                <td>@i</td>
-                                <td>@item.Slug</td>
-                                <td>@item.DeviceId</td>
-                                <td>@item.DeviceStatus</td>
-                                <td>@item.OrganizationCode</td>
-                                <td>@item.LastReadingAt</td>
-                            </tr>
-                            i++;
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <br>
-    <br> *@
 
     <div class="card">
         <div class="card-body">

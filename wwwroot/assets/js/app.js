@@ -75,6 +75,14 @@ var musi1 = L.marker([-6.88221, 107.719404], {
 });
 musi1.addTo(map);
 
+var musi1 = L.marker([-6.87521, 107.699404], {
+  icon: L.icon({
+    iconUrl: '/assets/img/masjid.png', // Ganti dengan path atau URL icon yang sesuai
+    iconSize: [80, 100], // Ukuran icon
+  }),
+});
+musi1.addTo(map);
+
 var musi3 = L.polygon(
   [
     [-6.88521, 107.709404], //kiri
@@ -438,6 +446,14 @@ var lambidaro2 = L.marker([-6.89721, 107.664178], {
   icon: L.icon({
     iconUrl: '/assets/img/tambak.png', // Ganti dengan path atau URL icon yang sesuai
     iconSize: [45, 40], // Ukuran icon
+  }),
+});
+lambidaro2.addTo(map);
+
+var lambidaro2 = L.marker([-6.86621, 107.664878], {
+  icon: L.icon({
+    iconUrl: '/assets/img/bbws.png', // Ganti dengan path atau URL icon yang sesuai
+    iconSize: [60, 85], // Ukuran icon
   }),
 });
 lambidaro2.addTo(map);
@@ -1141,3 +1157,27 @@ var selincah = L.marker([-6.8774, 107.782204], {
 //   }),
 // });
 // selincah.addTo(map);
+
+// Laut
+var laut = L.polygon(
+  [
+    [-6.84721, 107.796504], //atas
+    [-6.942, 107.796504], //bawah
+  ],
+  {
+    color: 'cyan',
+  }
+).addTo(map);
+
+laut.setStyle({
+  weight: 25,
+  opacity: 1,
+});
+
+var laut = L.marker([-6.88121, 107.796504], {
+  icon: L.divIcon({
+    className: 'text-label',
+    iconSize: [100, 40],
+    html: '<div style="transform: rotate(-90deg); color: black; font-weight: bold; font-size: 13px;">LAUT</div>',
+  }),
+}).addTo(map);

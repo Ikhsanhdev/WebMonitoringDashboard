@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "UD27h6vxSkOMDWAXfdmOMH0+k3Yd9fY5HxWNEwKNQUU=",
+  "Hash": "G24LAhgA3aB9WNpeYTZ/RbUuYpZkYNlVz6bnbHmA9JQ=",
   "Source": "menyala",
   "BasePath": "_content/menyala",
   "Mode": "Default",
@@ -167,6 +167,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\batang.png"
+    },
+    {
+      "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\bbws.png",
+      "SourceId": "menyala",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\",
+      "BasePath": "_content/menyala",
+      "RelativePath": "assets/img/bbws.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\bbws.png"
     },
     {
       "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\bendung.png",
@@ -623,6 +642,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\logo.png"
+    },
+    {
+      "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\masjid.png",
+      "SourceId": "menyala",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\",
+      "BasePath": "_content/menyala",
+      "RelativePath": "assets/img/masjid.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\masjid.png"
     },
     {
       "Identity": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\messages-1.jpg",

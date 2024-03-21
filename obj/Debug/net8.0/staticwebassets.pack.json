@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\batang.png"
     },
     {
+      "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\bbws.png",
+      "PackagePath": "staticwebassets\\assets\\img\\bbws.png"
+    },
+    {
       "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\bendung.png",
       "PackagePath": "staticwebassets\\assets\\img\\bendung.png"
     },
@@ -123,6 +127,10 @@
     {
       "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\logo.png",
       "PackagePath": "staticwebassets\\assets\\img\\logo.png"
+    },
+    {
+      "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\masjid.png",
+      "PackagePath": "staticwebassets\\assets\\img\\masjid.png"
     },
     {
       "Id": "D:\\Dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\messages-1.jpg",

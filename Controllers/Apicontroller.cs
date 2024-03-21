@@ -71,12 +71,6 @@ public class ApiController : Controller
                 )
                 .ToList();
 
-            // Sorting
-            if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
-            {
-                filteredData = SortData(filteredData, sortColumn, sortColumnDirection);
-            }
-
             // Grouping and calculating aggregated values
             var groupedData = filteredData
             .GroupBy(a => a.balaiName)
@@ -88,16 +82,14 @@ public class ApiController : Controller
                 jumlahPosOffline = g.Count(p => p.deviceStatus == "offline"),
 
                 slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
-                subDomain = g.FirstOrDefault(p => p.deviceStatus == "offline")?.subDomain,
-                name = g.FirstOrDefault(p => p.deviceStatus == "offline")?.name,
+                subDomain = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.subDomain) : g.Max(p => p.subDomain),
+                name = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.name) : g.Max(p => p.name),
                 stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
                 organizationCode = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.organizationCode) : g.Max(p => p.organizationCode),
                 deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
                 lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
             })
             .ToList();
-
-
 
             // Paging
             var result = new DataTableResult<Api>
@@ -129,205 +121,85 @@ public class ApiController : Controller
             });
         }
     }
-    
-    [HttpPost]
-    public async Task<IActionResult> GetTotalPos()
+
+    private async Task<List<Api>> GetDataFromApi()
     {
-        try
-        {
-            // Panggil metode untuk mendapatkan data dari API
-            var apiResponse = await GetDataFromApi();
+        string apiUrl = "http://localhost:5000/Station/All";
+        string username = "m0n1tor_st4tion";
+        string password = "H1gertech.1dua3";
 
-            if (apiResponse == null)
+        using (HttpClient client = new HttpClient())
+        {
+            var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
             {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalPos = 0 });
+                string responseData = await response.Content.ReadAsStringAsync();
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseData);
+                return apiResponse?.Data?.ToList() ?? new List<Api>();
             }
-
-            // Hitung total pos menggunakan metode Count()
-            int totalPos = apiResponse.Count();
-
-            return Json(new { TotalPos = totalPos });
-        }
-        catch (Exception ex)
-        {
-            // Handle exception
-            Console.WriteLine(ex.Message);
-            return Json(new { TotalPos = 0 });
+            else
+            {
+                // Handle errors appropriately
+                return new List<Api>();
+            }
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetTotalInstansi()
+    public async Task<IActionResult> GetTotalData(string totalType)
     {
         try
         {
-            // Panggil metode untuk mendapatkan data dari API
             var apiResponse = await GetDataFromApi();
 
             if (apiResponse == null)
             {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalInstansi = 0 });
+                // Jika respons API null, kembalikan total 0
+                return Json(new { Total = 0 });
             }
 
-            // Hitung total pos menggunakan operasi Distinct pada balaiName
-            int totalInstansi = apiResponse.Select(a => a.balaiName).Distinct().Count();
+            int total = 0;
 
-            return Json(new { TotalInstansi = totalInstansi });
+            switch (totalType.ToLower())
+            {
+                case "totalpos":
+                    total = apiResponse.Count();
+                    break;
+                case "totalinstansi":
+                    total = apiResponse.Select(a => a.balaiName).Distinct().Count();
+                    break;
+                case "totaldugaair":
+                    total = apiResponse.Count(a => a.stationType == "AWLR" || a.stationType == "AWLR_ARR");
+                    break;
+                case "totalcurahhujan":
+                    total = apiResponse.Count(a => a.stationType == "ARR" || a.stationType == "AWLR_ARR");
+                    break;
+                case "totalklimatologi":
+                    total = apiResponse.Count(a => a.stationType == "AWS");
+                    break;
+                case "totalonline":
+                    total = apiResponse.Count(a => a.deviceStatus == "online");
+                    break;
+                case "totaloffline":
+                    total = apiResponse.Count(a => a.deviceStatus == "offline");
+                    break;
+                default:
+                    // Jika totalType tidak valid, kembalikan total 0
+                    total = 0;
+                    break;
+            }
+
+            return Json(new { Total = total });
         }
         catch (Exception ex)
         {
             // Handle exception
             Console.WriteLine(ex.Message);
-            return Json(new { TotalInstansi = 0 });
+            return Json(new { Total = 0 });
         }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> GetTotalDugaAir()
-    {
-        try
-        {
-            // Panggil metode untuk mendapatkan data dari API
-            var apiResponse = await GetDataFromApi();
-
-            if (apiResponse == null)
-            {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalDugaAir = 0 });
-            }
-
-            // Hitung total pos menggunakan metode Count()
-            int totalDugaAir = apiResponse.Count(a => a.stationType == "AWLR" || a.stationType == "AWLR_ARR");
-
-            return Json(new { TotalDugaAir = totalDugaAir });
-        }
-        catch (Exception ex)
-        {
-            // Handle exception
-            Console.WriteLine(ex.Message);
-            return Json(new { TotalDugaAir = 0 });
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> GetTotalCurahHujan()
-    {
-        try
-        {
-            // Panggil metode untuk mendapatkan data dari API
-            var apiResponse = await GetDataFromApi();
-
-            if (apiResponse == null)
-            {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalCurahHujan = 0 });
-            }
-
-            // Hitung total pos menggunakan metode Count()
-            int totalCurahHujan = apiResponse.Count(a => a.stationType == "ARR" || a.stationType == "AWLR_ARR");
-
-            return Json(new { TotalCurahHujan = totalCurahHujan });
-        }
-        catch (Exception ex)
-        {
-            // Handle exception
-            Console.WriteLine(ex.Message);
-            return Json(new { TotalCurahHujan = 0 });
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> GetTotalKlimatologi()
-    {
-        try
-        {
-            // Panggil metode untuk mendapatkan data dari API
-            var apiResponse = await GetDataFromApi();
-
-            if (apiResponse == null)
-            {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalKlimatologi = 0 });
-            }
-
-            // Hitung total pos menggunakan metode Count()
-            int totalKlimatologi = apiResponse.Count(a => a.stationType == "AWS");
-
-            return Json(new { TotalKlimatologi = totalKlimatologi });
-        }
-        catch (Exception ex)
-        {
-            // Handle exception
-            Console.WriteLine(ex.Message);
-            return Json(new { TotalKlimatologi = 0 });
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> GetTotalOnline()
-    {
-        try
-        {
-            // Panggil metode untuk mendapatkan data dari API
-            var apiResponse = await GetDataFromApi();
-
-            if (apiResponse == null)
-            {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalOnline = 0 });
-            }
-
-            // Hitung total pos menggunakan metode Count()
-            int totalOnline = apiResponse.Count(a => a.deviceStatus == "online");
-
-            return Json(new { TotalOnline = totalOnline });
-        }
-        catch (Exception ex)
-        {
-            // Handle exception
-            Console.WriteLine(ex.Message);
-            return Json(new { TotalOnline = 0 });
-        }
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> GetTotalOffline()
-    {
-        try
-        {
-            // Panggil metode untuk mendapatkan data dari API
-            var apiResponse = await GetDataFromApi();
-
-            if (apiResponse == null)
-            {
-                // Jika respons API null, kembalikan total pos 0
-                return Json(new { TotalOffline = 0 });
-            }
-
-            // Hitung total pos menggunakan metode Count()
-            int totalOffline = apiResponse.Count(a => a.deviceStatus == "offline");
-
-            return Json(new { TotalOffline = totalOffline });
-        }
-        catch (Exception ex)
-        {
-            // Handle exception
-            Console.WriteLine(ex.Message);
-            return Json(new { TotalOffline = 0 });
-        }
-    }
-
-
-    [HttpGet]
-    public ActionResult GetLastUpdateTime()
-    {
-        // Get the last update time from your data source
-        var lastUpdateTime = DateTime.Now; // Replace with logic as needed
-
-        // Return the last update time in an appropriate format
-        return Json(new { lastUpdateTime = lastUpdateTime.ToString("yyyy-MM-ddTHH:mm:ss") });
     }
 
     [HttpPost]
@@ -343,7 +215,7 @@ public class ApiController : Controller
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
             var (apiResponse, balaiName) = await GetDataFromApiDetail(organizationCode);
-            
+
             if (apiResponse == null || !apiResponse.Any())
             {
                 return Json(new DataTableResult<Api>
@@ -371,11 +243,6 @@ public class ApiController : Controller
                 (a.lastReadingAt != null && a.lastReadingAt.ToString().Contains(searchValue)))
                 .ToList();
 
-            if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
-            {
-                filteredData = SortData(filteredData, sortColumn, sortColumnDirection);
-            }
-
             var result = new DataTableResult<Api>
             {
                 draw = draw,
@@ -395,6 +262,7 @@ public class ApiController : Controller
         }
         catch (Exception ex)
         {
+            // Ganti dengan penanganan kesalahan yang lebih baik, seperti menyimpan ke file log atau memberikan tanggapan yang sesuai kepada klien
             Console.WriteLine($"An error occurred while processing request: {ex.Message}");
             return Json(new DataTableResult<Api>
             {
@@ -405,35 +273,10 @@ public class ApiController : Controller
             });
         }
     }
-    private async Task<List<Api>> GetDataFromApi()
-    {
-        string apiUrl = "http://localhost:5000/Station/All";
-        string username = "m0n1tor_st4tion";
-        string password = "H1gertech.1dua3";
-
-        using (HttpClient client = new HttpClient())
-        {
-            var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
-            HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseData = await response.Content.ReadAsStringAsync();
-                var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseData);
-                return apiResponse?.Data?.ToList() ?? new List<Api>();
-            }
-            else
-            {
-                // Handle errors appropriately
-                return new List<Api>();
-            }
-        }
-    }
-
+    
     private async Task<(List<Api>, string)> GetDataFromApiDetail(string orgCode)
     {
-        string apiUrl = "http://localhost:5000/Station/Organization/ORG003";
+        string apiUrl = $"http://localhost:5000/Station/Organization/{orgCode}";
         string username = "m0n1tor_st4tion";
         string password = "H1gertech.1dua3";
 
@@ -471,32 +314,13 @@ public class ApiController : Controller
         }
     }
 
-    private List<Api> SortData(List<Api> data, string sortColumn, string sortColumnDirection)
+    [HttpGet]
+    public ActionResult GetLastUpdateTime()
     {
-        switch (sortColumn)
-        {
-            case "balaiName":
-                return sortColumnDirection == "asc" ?
-                    data.OrderBy(a => a.balaiName).ToList() :
-                    data.OrderByDescending(a => a.balaiName).ToList();
+        // Get the last update time from your data source
+        var lastUpdateTime = DateTime.Now; // Replace with logic as needed
 
-            case "jumlahPos":
-                return sortColumnDirection == "asc" ?
-                    data.OrderBy(a => a.jumlahPos).ToList() :
-                    data.OrderByDescending(a => a.jumlahPos).ToList();
-
-            case "jumlahPosOnline":
-                return sortColumnDirection == "asc" ?
-                    data.OrderBy(a => a.jumlahPosOnline).ToList() :
-                    data.OrderByDescending(a => a.jumlahPosOnline).ToList();
-
-            case "jumlahPosOffline":
-                return sortColumnDirection == "asc" ?
-                    data.OrderBy(a => a.jumlahPosOffline).ToList() :
-                    data.OrderByDescending(a => a.jumlahPosOffline).ToList();
-
-            default:
-                return data;
-        }
+        // Return the last update time in an appropriate format
+        return Json(new { lastUpdateTime = lastUpdateTime.ToString("yyyy-MM-ddTHH:mm:ss") });
     }
 }

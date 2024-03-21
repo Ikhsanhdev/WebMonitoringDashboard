@@ -76,104 +76,6 @@
         </div>
     </section>
 
-
-    @* <section class="section dashboard">
-        <div class="row">
-            <!-- Kartu Sebelah Kiri -->
-            <div class="col-md-4">
-                <!-- Duga Air Card -->
-                <div class="card info-duga">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Pos Duga Air</h5>
-                        <div class="text-center">
-                            <h6 id="totalDugaAir"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <!-- Curah Hujan Card -->
-                <div class="card info-curah">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Pos Curah Hujan</h5>
-                        <div class="text-center">
-                            <h6 id="totalCurahHujan"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kartu Sebelah Kanan -->
-            <div class="col-md-4">
-                <!-- Klimatologi Card -->
-                <div class="card info-klimatologi">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Pos Klimatologi</h5>
-                        <div class="text-center">
-                            <h6 id="totalKlimatologi"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="row">
-            <!-- Kartu Sebelah Kiri -->
-            <div class="col-md-3">
-                <!-- Total Pos Online Card -->
-                <div class="card info-online">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Pos Online</h5>
-                        <div class="text-center">
-                            <h6 id="totalOnline"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <!-- Total Pos Offline Card -->
-                <div class="card info-offline">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Pos Offline</h5>
-                        <div class="text-center">
-                            <h6 id="totalOffline"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kartu Sebelah Kanan -->
-            <div class="col-md-3">
-                <!-- Total Pos Card -->
-                <div class="card info-total">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Pos</h5>
-                        <div class="text-center">
-                            <h6 id="totalPos"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Kartu Sebelah Kanan -->
-            <div class="col-md-3">
-                <!-- Total Instansi Card -->
-                <div class="card info-instansi">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Total Instansi</h5>
-                        <div class="text-center">
-                            <h6 id="totalInstansi"></h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> *@
-
     <br>
 
     <div class="card mb-3">
@@ -223,102 +125,103 @@
     <script>
         $(document).ready(function () {
             // Fungsi untuk memperbarui jumlah pos
-            function updateTotalPos() {
+            function updateTotals() {
+                // Panggil endpoint untuk total duga air
                 $.ajax({
-                    url: '/Api/GetTotalPos',
+                    url: '/Api/GetTotalData',
                     type: 'POST',
+                    data: { totalType: 'totalDugaAir' },
                     success: function(response) {
-                        // Update jumlah pos di dalam elemen HTML
-                        $('#totalPos').text(response.totalPos);
+                        $('#totalDugaAir').text(response.total);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Handle error jika diperlukan
-                    }
-                });
-
-                $.ajax({
-                    url: '/Api/GetTotalDugaAir',
-                    type: 'POST',
-                    success: function(response) {
-                        // Tampilkan jumlah pos duga air
-                        $('#totalDugaAir').text(response.totalDugaAir);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        // Handle error jika diperlukan
                         $('#totalDugaAir').text('Error');
                     }
                 });
+
                 $.ajax({
-                    url: '/Api/GetTotalCurahHujan',
+                    url: '/Api/GetTotalData',
                     type: 'POST',
+                    data: { totalType: 'totalCurahHujan' },
                     success: function(response) {
-                        // Tampilkan jumlah pos duga air
-                        $('#totalCurahHujan').text(response.totalCurahHujan);
+                        $('#totalCurahHujan').text(response.total);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Handle error jika diperlukan
                         $('#totalCurahHujan').text('Error');
                     }
                 });
+
                 $.ajax({
-                    url: '/Api/GetTotalKlimatologi',
+                    url: '/Api/GetTotalData',
                     type: 'POST',
+                    data: { totalType: 'totalKlimatologi' },
                     success: function(response) {
-                        // Tampilkan jumlah pos duga air
-                        $('#totalKlimatologi').text(response.totalKlimatologi);
+                        $('#totalKlimatologi').text(response.total);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Handle error jika diperlukan
                         $('#totalKlimatologi').text('Error');
                     }
                 });
-                 $.ajax({
-                    url: '/Api/GetTotalOnline',
+
+                $.ajax({
+                    url: '/Api/GetTotalData',
                     type: 'POST',
+                    data: { totalType: 'totalOnline' },
                     success: function(response) {
-                        // Tampilkan jumlah pos duga air
-                        $('#totalOnline').text(response.totalOnline);
+                        $('#totalOnline').text(response.total);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Handle error jika diperlukan
                         $('#totalOnline').text('Error');
                     }
                 });
-                 $.ajax({
-                    url: '/Api/GetTotalOffline',
+
+                $.ajax({
+                    url: '/Api/GetTotalData',
                     type: 'POST',
+                    data: { totalType: 'totalOffline' },
                     success: function(response) {
-                        // Tampilkan jumlah pos duga air
-                        $('#totalOffline').text(response.totalOffline);
+                        $('#totalOffline').text(response.total);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Handle error jika diperlukan
                         $('#totalOffline').text('Error');
                     }
                 });
-                 $.ajax({
-                    url: '/Api/GetTotalInstansi',
+
+                $.ajax({
+                    url: '/Api/GetTotalData',
                     type: 'POST',
+                    data: { totalType: 'totalPos' }, // Parameter untuk total pos
                     success: function(response) {
-                        // Tampilkan jumlah pos duga air
-                        $('#totalInstansi').text(response.totalInstansi);
+                        $('#totalPos').text(response.total);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Handle error jika diperlukan
+                        $('#totalPos').text('Error');
+                    }
+                });
+
+                $.ajax({
+                    url: '/Api/GetTotalData',
+                    type: 'POST',
+                    data: { totalType: 'totalInstansi' },
+                    success: function(response) {
+                        $('#totalInstansi').text(response.total);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
                         $('#totalInstansi').text('Error');
                     }
                 });
-                }
+                // Lanjutkan dengan pemanggilan untuk total lainnya...
+            }
 
-                // Panggil fungsi untuk memperbarui jumlah pos saat halaman dimuat
-                updateTotalPos();
+            // Panggil fungsi untuk memperbarui jumlah total saat halaman dimuat
+            updateTotals();
 
             // Function to refresh DataTable and update last update time
             function refreshDataTable() {
@@ -410,20 +313,4 @@
             updateLastUpdateTime();
         });
     </script>
-
-    @* <script>
-        $(document).ready(function(){
-            $('.counter-value').each(function(){
-                $(this).prop('Counter', 0).animate({
-                    Counter: $(this).text()
-                },{
-                    duration: 3500,
-                    easing: 'swing',
-                    step: function(now){
-                        $(this).text(Math.ceil(now));
-                    }
-                });
-            });
-        });
-    </script>  *@
 }
