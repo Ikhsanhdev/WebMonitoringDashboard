@@ -368,4 +368,46 @@ public class ApiController : Controller
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
+
+    [HttpGet]
+    public async Task<JsonResult> GetStationByOrgCode(string orgCode){
+        string endPoint = $"Station/Organization/{orgCode}";
+        var data = await GetDataApi(endPoint);
+        return Json(data);
+    }
+
+    private async Task<dynamic> GetDataApi(string endPoint){
+        
+        string apiUrl = $"http://localhost:5000/{endPoint}"; 
+        string username = "m0n1tor_st4tion";
+        string password = "H1gertech.1dua3";
+
+        using (HttpClient client = new HttpClient())
+        {
+            // Set up basic authentication credentials
+            string authHeaderValue = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{username}:{password}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    // Deserialize the response data to a JSON string
+                    string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(responseData);
+                    return responseData; // Output the JSON string
+                }
+                else
+                {
+                    return response.StatusCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return ex.Message;
+            }
+        }
+    }
 }
