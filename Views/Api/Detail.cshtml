@@ -120,29 +120,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Include DataTables -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var fetchData = function(organizationCode) {
-                return $.ajax({
-                    url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
-                    method: 'GET',
-                    dataType: 'json'
-                });
-            };
+<script>
+    $(document).ready(function () {
+        var fetchData = function(organizationCode) {
+            return $.ajax({
+                url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
+                method: 'GET',
+                dataType: 'json'
+            });
+        };
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const orgParam = urlParams.get('orgCode');
-            console.log(orgParam);
+        const urlParams = new URLSearchParams(window.location.search);
+        const orgParam = urlParams.get('orgCode');
 
-            fetchData(orgParam).done(function(response) {
-                //var result = response; // No need to parse JSON as it's already parsed
-                var result = JSON.parse(response);
-                const data = result.data;
+        fetchData(orgParam).done(function(response) {
+            var result = JSON.parse(response);
+            const data = result.data;
 
-                var body = $("#offpos tbody");
-                body.empty();
-                let i = 1;
-                $.each(data, function(index, item) {
+            var body = $("#offpos tbody");
+            body.empty();
+            let i = 1;
+            $.each(data, function(index, item) {
+                // Only add row if deviceStatus is offline
+                if (item.deviceStatus.toLowerCase() === 'offline') {
                     var row = $("<tr>");
 
                     row.append($("<td>").text(i++));
@@ -153,71 +153,74 @@
                     row.append($("<td>").text(item.lastReadingAt));
 
                     body.append(row);
-                });
-            }).fail(function(xhr, status, error) {
-                console.error('Request failed with status:', status);
+                }
             });
-
-            // Function to refresh DataTable and update last update time
-            function refreshDataTable() {
-                $('#offpos').DataTable().ajax.reload(null, false);
-                updateLastUpdateTime();
-            }
-
-            // Function to update last update time
-            function updateLastUpdateTime() {
-                var now = new Date();
-                var formattedTime = moment(now).format("DD-MM-YYYY HH:mm:ss");
-
-                // Get the last update time from the Ajax response
-                $.ajax({
-                    url: '/Api/GetLastUpdateTime', // Replace with the appropriate URL
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        var lastUpdateTimeString = response.lastUpdateTime; // Replace with the correct property name
-                        if (lastUpdateTimeString) {
-                            var lastUpdateTime = moment(lastUpdateTimeString);
-                            formattedTime = lastUpdateTime.format("DD-MM-YYYY HH:mm:ss");
-                        }
-
-                        // Use the correct ID here
-                        $('#lastUpdateTime').text('Last Updated : ' + formattedTime);
-                    },
-                    error: function (error) {
-                        console.error('Error getting last update time:', error);
-                    }
-                });
-            }
-
-            // Set up auto-refresh using setInterval
-            var autoRefreshInterval = setInterval(function () {
-                refreshDataTable();
-            }, 300000); // 5 minutes in milliseconds
-
-            // Stop auto-refresh when the page is unloaded
-            $(window).on('beforeunload', function () {
-                clearInterval(autoRefreshInterval);
-            });
-
-            // Initial update of last update time
-            updateLastUpdateTime();
+        }).fail(function(xhr, status, error) {
+            console.error('Request failed with status:', status);
         });
 
-        function getStationByOrgCode() {
-            var orgCode = document.getElementById("orgCode").value;
+        // Function to refresh DataTable and update last update time
+        function refreshDataTable() {
+            $('#offpos').DataTable().ajax.reload(null, false);
+            updateLastUpdateTime();
+        }
+
+        // Function to update last update time
+        function updateLastUpdateTime() {
+            var now = new Date();
+            var formattedTime = moment(now).format("DD-MM-YYYY HH:mm:ss");
+
+            // Get the last update time from the Ajax response
             $.ajax({
-                url: '/Api/GetStationByOrgCode?orgCode=' + orgCode,
-                method: 'GET',
+                url: '/Api/GetLastUpdateTime', // Replace with the appropriate URL
+                type: 'GET',
                 dataType: 'json',
                 success: function (response) {
-                    var result = JSON.parse(response);
-                    const data = result.data;
+                    var lastUpdateTimeString = response.lastUpdateTime; // Replace with the correct property name
+                    if (lastUpdateTimeString) {
+                        var lastUpdateTime = moment(lastUpdateTimeString);
+                        formattedTime = lastUpdateTime.format("DD-MM-YYYY HH:mm:ss");
+                    }
 
-                    var tableBody = $("#offpos tbody");
-                    tableBody.empty();
-                    let i = 1;
-                    $.each(data, function (index, item) {
+                    // Use the correct ID here
+                    $('#lastUpdateTime').text('Last Updated : ' + formattedTime);
+                },
+                error: function (error) {
+                    console.error('Error getting last update time:', error);
+                }
+            });
+        }
+
+        // Set up auto-refresh using setInterval
+        var autoRefreshInterval = setInterval(function () {
+            refreshDataTable();
+        }, 300000); // 5 minutes in milliseconds
+
+        // Stop auto-refresh when the page is unloaded
+        $(window).on('beforeunload', function () {
+            clearInterval(autoRefreshInterval);
+        });
+
+        // Initial update of last update time
+        updateLastUpdateTime();
+    });
+
+    function getStationByOrgCode() {
+        var orgCode = document.getElementById("orgCode").value;
+        $.ajax({
+            url: '/Api/GetStationByOrgCode?orgCode=' + orgCode,
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                var result = JSON.parse(response);
+                const data = result.data;
+
+                var tableBody = $("#offpos tbody");
+                tableBody.empty();
+                let i = 1;
+                $.each(data, function (index, item) {
+                    // Only add row if deviceStatus is offline
+                    if (item.deviceStatus.toLowerCase() === 'offline') {
                         var row = $("<tr>");
 
                         row.append($("<td>").text(i++));
@@ -228,12 +231,14 @@
                         row.append($("<td>").text(item.lastReadingAt));
 
                         tableBody.append(row);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('Request failed with status:', status);
-                }
-            });
-        }
-    </script>
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Request failed with status:', status);
+            }
+        });
+    }
+</script>
+
 }

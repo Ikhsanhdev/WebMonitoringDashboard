@@ -10965,19 +10965,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ikhsa\\.nuget\\packages\\": {}
+    "C:\\Users\\HP\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+      "projectUniqueName": "d:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
       "projectName": "menyala",
-      "projectPath": "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
-      "packagesPath": "C:\\Users\\ikhsa\\.nuget\\packages\\",
-      "outputPath": "C:\\dotnet\\WebMonitoringDashboard\\obj\\",
+      "projectPath": "d:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "d:\\dotnet\\WebMonitoringDashboard\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ikhsa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -10995,11 +10995,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -11058,7 +11053,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
