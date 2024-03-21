@@ -286,7 +286,7 @@
                     {
                         "data": "jumlahPos",
                         "render": function (data, type, row) {
-                            return '<a href="/Api/Detail/' + row.organizationCode + '" style="text-decoration: none;">' + data + '</a>';
+                            return '<a href="/Api/Detail?orgCode=' + row.organizationCode + '" style="text-decoration: none;">' + data + '</a>';
                         },
                         "orderable": false,
                         "searchable": false,

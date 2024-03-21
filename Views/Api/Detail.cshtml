@@ -122,6 +122,42 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
+            var fetchData = function(organizationCode) {
+                return $.ajax({
+                    url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
+                    method: 'GET',
+                    dataType: 'json'
+                });
+            };
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const orgParam = urlParams.get('orgCode');
+            console.log(orgParam);
+
+            fetchData(orgParam).done(function(response) {
+                //var result = response; // No need to parse JSON as it's already parsed
+                var result = JSON.parse(response);
+                const data = result.data;
+
+                var body = $("#offpos tbody");
+                body.empty();
+                let i = 1;
+                $.each(data, function(index, item) {
+                    var row = $("<tr>");
+
+                    row.append($("<td>").text(i++));
+                    row.append($("<td>").text(item.balaiName));
+                    row.append($("<td>").text(item.slug));
+                    row.append($("<td>").text(item.deviceStatus));
+                    row.append($("<td>").text(item.stationType));
+                    row.append($("<td>").text(item.lastReadingAt));
+
+                    body.append(row);
+                });
+            }).fail(function(xhr, status, error) {
+                console.error('Request failed with status:', status);
+            });
+
             // Function to refresh DataTable and update last update time
             function refreshDataTable() {
                 $('#offpos').DataTable().ajax.reload(null, false);
@@ -193,7 +229,6 @@
 
                         tableBody.append(row);
                     });
-                    console.log(result.data)
                 },
                 error: function (xhr, status, error) {
                     console.error('Request failed with status:', status);
