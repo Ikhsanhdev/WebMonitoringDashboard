@@ -1,7 +1,6 @@
 @{
     ViewData["Title"] = "Tabel Monitoring";
-
-    @* var offlinepos = Model.Where(item => item.DeviceStatus == "offline").ToList(); *@
+    var org = new List<string>() { "ORG018", "ORG023", "ORG030"};
 }
 
 @model IEnumerable<Api>
@@ -17,7 +16,7 @@
         </nav>
     </div>
 
-    <div class="card">
+    @* <div class="card">
         <div class="card-body">
             <div class="row no-gutters">
                 <div class="col">
@@ -71,6 +70,19 @@
 
             </div>
         </div>
+    </div> *@
+
+    <div class="row mb-3">
+        <div class="col-6">
+            <select name="orgCode" id="orgCode" class="form-select">
+                @foreach(var o in org){
+                    <option value="@o">@o</option>
+                }
+            </select>
+        </div>
+        <div class="col-6">
+            <button onclick="getStationByOrgCode()" class="btn btn-primary">Get All </button>
+        </div>
     </div>
 
     <br>
@@ -87,8 +99,8 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Organisasi</th>
                             <th class="text-center">Nama Pos</th>
-                            @* <th class="text-center">Tipe</th> *@
                             <th class="text-center">Status</th>
+                            <th class="text-center">Tipe</th>
                             <th class="text-center">Reading At</th>
                         </tr>
                     </thead>
@@ -142,37 +154,6 @@
                 });
             }
 
-            var dataTable = $('#offpos').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "info": true,
-                "infoCallback": function (settings, start, end, max, total, pre) {
-                    return "Showing " + (start) + " to " + end + " of " + total + " entries";
-                },
-                "ajax": {
-                    "url": "/Api/GetDetail",
-                    "type": "POST",
-                    "datatype": "json"
-                },
-                "columns": [
-                    { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
-                    { "data": "organizationCode", "name": "OrganizationCode", "autoWidth": true },
-                    { "data": "slug", "name": "Slug", "autoWidth": true },
-                    @* { "data": "stationType", "name": "StationType", "autoWidth": true, "className": "text-center" }, *@
-                    { 
-                        "data": "deviceStatus",
-                        "name": "DeviceStatus",
-                        "autoWidth": true,
-                        "className": "text-center",
-                        "render": function (data, type, row) {
-                            // Custom rendering based on deviceStatus
-                            return data === "offline" ? "<span style='color:red;'>Offline</span>" : "<span style='color:green;'>Online</span>";
-                        }
-                    },
-                    { "data": "lastReadingAt", "name": "LastReadingAt", "autoWidth": true, "className": "text-center" }
-                ]
-            });
-
             // Set up auto-refresh using setInterval
             var autoRefreshInterval = setInterval(function () {
                 refreshDataTable();
@@ -186,5 +167,38 @@
             // Initial update of last update time
             updateLastUpdateTime();
         });
+
+        function getStationByOrgCode() {
+            var orgCode = document.getElementById("orgCode").value;
+            $.ajax({
+                url: '/Api/GetStationByOrgCode?orgCode=' + orgCode,
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    const data = result.data;
+
+                    var tableBody = $("#offpos tbody");
+                    tableBody.empty();
+                    let i = 1;
+                    $.each(data, function (index, item) {
+                        var row = $("<tr>");
+
+                        row.append($("<td>").text(i++));
+                        row.append($("<td>").text(item.balaiName));
+                        row.append($("<td>").text(item.slug));
+                        row.append($("<td>").text(item.deviceStatus));
+                        row.append($("<td>").text(item.stationType));
+                        row.append($("<td>").text(item.lastReadingAt));
+
+                        tableBody.append(row);
+                    });
+                    console.log(result.data)
+                },
+                error: function (xhr, status, error) {
+                    console.error('Request failed with status:', status);
+                }
+            });
+        }
     </script>
 }
