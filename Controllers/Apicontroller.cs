@@ -26,7 +26,7 @@ public class ApiController : Controller
         return View();
     }
 
-    [HttpPost]
+     [HttpPost]
     public async Task<IActionResult> GetList()
     {
         try
@@ -322,5 +322,50 @@ public class ApiController : Controller
 
         // Return the last update time in an appropriate format
         return Json(new { lastUpdateTime = lastUpdateTime.ToString("yyyy-MM-ddTHH:mm:ss") });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ProcessDataDashboard() {
+        try {
+            var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
+            var start = int.Parse(Request.Form["start"].FirstOrDefault());
+            var length = int.Parse(Request.Form["length"].FirstOrDefault());
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+            var apiResponse = await GetDataFromApi();
+
+            var groupedData = apiResponse
+                .GroupBy(d => new { d.balaiName, d.name, d.subDomain, d.organizationCode })
+                .Select(group => new Api
+                {
+                    balaiName = group.Key.balaiName,
+                    name = group.Key.name,
+                    subDomain = group.Key.subDomain,
+                    organizationCode = group.Key.organizationCode,
+                    jumlahPos = group.Count(),
+                    jumlahPosOffline = group.Count(d => d.deviceStatus == "offline"),
+                    jumlahPosOnline = group.Count(d => d.deviceStatus == "online")
+                }).ToList();
+
+            var result = new DataTableResult<Api> {
+                draw = draw,
+                recordsTotal = apiResponse.Count(),
+                recordsFiltered = groupedData.Count(),
+                data = groupedData.Skip(start).Take(length).ToList()
+            };
+
+            var nomorColumn = start + 1;
+            result.data.ForEach(item =>
+            {
+                item.nomor = nomorColumn;
+                nomorColumn++;
+            });
+
+            return Json(result);
+        } catch (Exception ex) {
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
     }
 }

@@ -265,7 +265,7 @@
                     return "Showing " + (start) + " to " + end + " of " + total + " entries";
                 },
                 "ajax": {
-                    "url": "/Api/GetList",
+                    "url": "/Api/ProcessDataDashboard",
                     "type": "POST",
                     "datatype": "json"
                 },
@@ -275,11 +275,7 @@
                     {
                         "data": "name",
                         "render": function (data, type, row) {
-                            if (row.subDomain !== null) {
-                                return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.name + '</a>';
-                            } else {
-                                return '';
-                            }
+                            return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.name + '</a>';
                         },
                         "orderable": false,
                         "searchable": false,
