@@ -62,12 +62,12 @@ public class ApiController : Controller
                     a.jumlahPos.ToString().Contains(searchValue) ||
                     a.jumlahPosOnline.ToString().Contains(searchValue) ||
                     a.jumlahPosOffline.ToString().Contains(searchValue) ||
-                    a.slug.Contains(searchValue) ||
-                    a.stationType.Contains(searchValue) ||
+                    // a.slug.Contains(searchValue) ||
+                    // a.stationType.Contains(searchValue) ||
                     a.organizationCode.Contains(searchValue) ||
-                    a.deviceId.Contains(searchValue) ||
-                    (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
-                    a.lastReadingAt?.ToString().Contains(searchValue) == true)
+                    a.deviceId.Contains(searchValue) )
+                    // (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
+                    // a.lastReadingAt?.ToString().Contains(searchValue) == true)
                 )
                 .ToList();
 
@@ -81,13 +81,13 @@ public class ApiController : Controller
                 jumlahPosOnline = g.Count(p => p.deviceStatus == "online"),
                 jumlahPosOffline = g.Count(p => p.deviceStatus == "offline"),
 
-                slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
+                // slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
                 subDomain = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.subDomain) : g.Max(p => p.subDomain),
                 name = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.name) : g.Max(p => p.name),
-                stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
+                // stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
                 organizationCode = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.organizationCode) : g.Max(p => p.organizationCode),
-                deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
-                lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
+                // deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
+                // lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
             })
             .ToList();
 
@@ -230,15 +230,15 @@ public class ApiController : Controller
             var filteredData = apiResponse.Where(a =>
                 string.IsNullOrEmpty(searchValue) ||
                 a.balaiName.Contains(searchValue) ||
-                a.name.Contains(searchValue) ||
-                a.subDomain.Contains(searchValue) ||
-                a.jumlahPos.ToString().Contains(searchValue) ||
-                a.jumlahPosOnline.ToString().Contains(searchValue) ||
-                a.jumlahPosOffline.ToString().Contains(searchValue) ||
+                // a.name.Contains(searchValue) ||
+                // a.subDomain.Contains(searchValue) ||
+                // a.jumlahPos.ToString().Contains(searchValue) ||
+                // a.jumlahPosOnline.ToString().Contains(searchValue) ||
+                // a.jumlahPosOffline.ToString().Contains(searchValue) ||
                 a.slug.Contains(searchValue) ||
-                a.stationType.Contains(searchValue) ||
+                // a.stationType.Contains(searchValue) ||
                 a.organizationCode.Contains(searchValue) ||
-                a.deviceId.Contains(searchValue) ||
+                // a.deviceId.Contains(searchValue) ||
                 (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
                 (a.lastReadingAt != null && a.lastReadingAt.ToString().Contains(searchValue)))
                 .ToList();
