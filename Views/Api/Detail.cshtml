@@ -1,6 +1,15 @@
 @{
     ViewData["Title"] = "Tabel Monitoring";
-    var org = new List<string>() { "ORG018", "ORG023", "ORG030"};
+  @*  var org = new List<string>() { "","ORG001", "ORG002", "ORG003","ORG004","ORG005",
+                "ORG006","ORG007","ORG008","ORG009","ORG010",
+                "ORG011","ORG012","ORG013","ORG014","ORG015",
+                "ORG016","ORG017","ORG018","ORG019","ORG020",
+                "ORG021","ORG022","ORG023","ORG024","ORG025",
+                "ORG026","ORG027","ORG028","ORG029","ORG030",
+                "ORG031","ORG032","ORG033","ORG034","ORG035",
+                "ORG036","ORG037","ORG038","ORG039","ORG040",
+                "ORG041","ORG042","ORG043","ORG044","ORG045",
+                "ORG046","ORG047","ORG048","ORG049",};*@
 }
 
 @model IEnumerable<Api>
@@ -72,7 +81,7 @@
         </div>
     </div> *@
 
-    <div class="row mb-3">
+    @* <div class="row mb-3">
         <div class="col-6">
             <select name="orgCode" id="orgCode" class="form-select">
                 @foreach(var o in org){
@@ -83,8 +92,18 @@
         <div class="col-6">
             <button onclick="getStationByOrgCode()" class="btn btn-primary">Get All </button>
         </div>
+    </div> *@
+    <div class="col">
+        <h6>Status :</h6>
+        <div class="col-6">
+            <select id="statusFilter" class="form-select">
+                <option value="all">Semua</option>
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+            </select>
+        </div>
     </div>
-
+    
     <br>
 
     <div class="card mb-3">
@@ -100,7 +119,7 @@
                             <th class="text-center">Organisasi</th>
                             <th class="text-center">Nama Pos</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center">Tipe</th>
+                            <th class="text-center">Tipe</th> 
                             <th class="text-center">Reading At</th>
                         </tr>
                     </thead>
@@ -135,9 +154,11 @@
             console.log(orgParam);
 
             fetchData(orgParam).done(function(response) {
-                //var result = response; // No need to parse JSON as it's already parsed
                 var result = JSON.parse(response);
                 const data = result.data;
+             // Menampilkan nama balai dari data yang dipilih
+        var balaiName = data.length > 0 ? data[0].balaiName : ""; // Ambil dari data pertama
+        $("h1").text(balaiName);
 
                 var body = $("#offpos tbody");
                 body.empty();
@@ -146,11 +167,27 @@
                     var row = $("<tr>");
 
                     row.append($("<td>").text(i++));
-                    row.append($("<td>").text(item.balaiName));
+                    row.append($("<td>").text(item.organizationCode));
                     row.append($("<td>").text(item.slug));
-                    row.append($("<td>").text(item.deviceStatus));
-                    row.append($("<td>").text(item.stationType));
-                    row.append($("<td>").text(item.lastReadingAt));
+                    
+                    // Define color and text position based on device status
+                    var statusText = $("<td>").text(item.deviceStatus);
+                    if (item.deviceStatus === 'offline') {
+                        statusText.css({
+                            'color': 'red',
+                            'text-align': 'center'
+                        });
+                    } else {
+                        statusText.css({
+                            'color': 'green',
+                            'text-align': 'center'
+                        });
+                    }
+                    row.append(statusText);
+                     row.append($("<td>").text(item.stationType));
+                   // Format lastReadingAt using Moment.js
+                    var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY") : ''; // Jika tanggal tidak ada, kosongkan
+                    row.append($("<td>").text(formattedDate));
 
                     body.append(row);
                 });
@@ -159,7 +196,7 @@
             });
 
             // Function to refresh DataTable and update last update time
-            function refreshDataTable() {
+         @*  function refreshDataTable() {
                 $('#offpos').DataTable().ajax.reload(null, false);
                 updateLastUpdateTime();
             }
@@ -201,9 +238,53 @@
             });
 
             // Initial update of last update time
-            updateLastUpdateTime();
+            updateLastUpdateTime();*@ 
+
+           // Function to filter data by device status (online or offline)
+    function filterDataByStatus(status) {
+        var rows = $("#offpos tbody tr");
+        rows.show(); // Show all rows initially
+
+        var visibleRows = rows.filter(function() {
+            var statusCell = $(this).find("td:eq(3)"); // Get the cell containing device status
+            var deviceStatus = statusCell.text().toLowerCase();
+            return status === 'all' || deviceStatus === status;
         });
 
+        // Hide rows that don't match the selected status
+        rows.not(visibleRows).hide();
+
+        // Reset numbering for visible rows
+        visibleRows.each(function(index) {
+            $(this).find("td:eq(0)").text(index + 1);
+        });
+
+        // Update card color and text based on filter status
+        var cardHeader = $(".card-header");
+        var cardTitle = $(".card-title");
+
+        if (status === 'online') {
+            cardHeader.css('background', '#28a745');
+            cardTitle.text('ONLINE').removeClass('text-white').addClass('text-white');
+        } else if (status === 'offline') {
+            cardHeader.css('background', '#dc3545');
+            cardTitle.text('OFFLINE').removeClass('text-white').addClass('text-white');
+        } else {
+            cardHeader.css('background', '#007bff');
+            cardTitle.text('SEMUA').removeClass('text-white').addClass('text-white');
+        }
+    }
+
+    // Event handler for filter dropdown change
+    $("#statusFilter").change(function() {
+        var selectedStatus = $(this).val();
+        filterDataByStatus(selectedStatus);
+    });
+
+    // Initial filter based on default selected status
+    var defaultStatus = $("#statusFilter").val();
+    filterDataByStatus(defaultStatus);
+});
         function getStationByOrgCode() {
             var orgCode = document.getElementById("orgCode").value;
             $.ajax({
@@ -221,7 +302,7 @@
                         var row = $("<tr>");
 
                         row.append($("<td>").text(i++));
-                        row.append($("<td>").text(item.balaiName));
+                        row.append($("<td>").text(item.organizationCode));
                         row.append($("<td>").text(item.slug));
                         row.append($("<td>").text(item.deviceStatus));
                         row.append($("<td>").text(item.stationType));
