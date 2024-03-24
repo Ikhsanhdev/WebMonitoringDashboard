@@ -116,8 +116,8 @@
                     <thead>
                         <tr>
                             <th class="text-center">No.</th>
-                            <th class="text-center">Organisasi</th>
                             <th class="text-center">Nama Pos</th>
+                            <th class="text-center">Device ID</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Tipe</th> 
                             <th class="text-center">Reading At</th>
@@ -156,9 +156,10 @@
             fetchData(orgParam).done(function(response) {
                 var result = JSON.parse(response);
                 const data = result.data;
-             // Menampilkan nama balai dari data yang dipilih
-        var balaiName = data.length > 0 ? data[0].balaiName : ""; // Ambil dari data pertama
-        $("h1").text(balaiName);
+
+                // Menampilkan nama balai dari data yang dipilih
+                var balaiName = data.length > 0 ? data[0].balaiName : ""; // Ambil dari data pertama
+                $("h1").text(balaiName);
 
                 var body = $("#offpos tbody");
                 body.empty();
@@ -167,8 +168,8 @@
                     var row = $("<tr>");
 
                     row.append($("<td>").text(i++));
-                    row.append($("<td>").text(item.organizationCode));
                     row.append($("<td>").text(item.slug));
+                    row.append($("<td>").text(item.deviceId));
                     
                     // Define color and text position based on device status
                     var statusText = $("<td>").text(item.deviceStatus);
@@ -186,7 +187,7 @@
                     row.append(statusText);
                      row.append($("<td>").text(item.stationType));
                    // Format lastReadingAt using Moment.js
-                    var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY") : ''; // Jika tanggal tidak ada, kosongkan
+                    var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td>").text(formattedDate));
 
                     body.append(row);
@@ -302,8 +303,8 @@
                         var row = $("<tr>");
 
                         row.append($("<td>").text(i++));
-                        row.append($("<td>").text(item.organizationCode));
                         row.append($("<td>").text(item.slug));
+                            row.append($("<td>").text(item.deviceId));
                         row.append($("<td>").text(item.deviceStatus));
                         row.append($("<td>").text(item.stationType));
                         row.append($("<td>").text(item.lastReadingAt));
