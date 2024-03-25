@@ -14,60 +14,10 @@
   color: #012970;
 }
 
-.dashboard .info-duga h6 {
-  font-size: 28px;
-  color: #4154f1;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard .info-curah h6 {
-  font-size: 28px;
-  color: #2eca6a;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard .info-klimatologi h6 {
-  font-size: 28px;
-  color: #db1514;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard .info-online h6 {
-  font-size: 28px;
-  color: #2eca6a;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard .info-offline h6 {
-  font-size: 28px;
-  color: #db1514;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard .info-total h6 {
-  font-size: 28px;
-  color: #f59517;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-.dashboard .info-instansi h6 {
-  font-size: 28px;
-  color: #17f5b2;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .counter {
@@ -191,37 +141,6 @@
   background-color: #eed388;
   text-align: center;
   font-weight: bold;
-}
-
-#onpos {
-  padding: 10px;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.25em 0.4em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25rem;
-}
-
-.badge-success {
-  color: #fff;
-  background-color: #28a745;
-}
-
-.badge-danger {
-  color: #fff;
-  background-color: #dc3545;
-}
-
-.badge-secondary {
-  color: #fff;
-  background-color: #6c757d;
 }
 
 .card .btn-secondary {
