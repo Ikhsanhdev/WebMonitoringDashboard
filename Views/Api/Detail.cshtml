@@ -1,6 +1,6 @@
 @{
     ViewData["Title"] = "Tabel Monitoring";
-    var org = new List<string>() { "","ORG001", "ORG002", "ORG003","ORG004","ORG005",
+    @* var org = new List<string>() { "","ORG001", "ORG002", "ORG003","ORG004","ORG005",
                 "ORG006","ORG007","ORG008","ORG009","ORG010",
                 "ORG011","ORG012","ORG013","ORG014","ORG015",
                 "ORG016","ORG017","ORG018","ORG019","ORG020",
@@ -9,7 +9,7 @@
                 "ORG031","ORG032","ORG033","ORG034","ORG035",
                 "ORG036","ORG037","ORG038","ORG039","ORG040",
                 "ORG041","ORG042","ORG043","ORG044","ORG045",
-                "ORG046","ORG047","ORG048","ORG049",};
+                "ORG046","ORG047","ORG048","ORG049",}; *@
 }
 
 @model IEnumerable<Api>
@@ -41,7 +41,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row gx-3">
-                <div class="col-md-4 mb-3 mb-md-0">
+                @* <div class="col-md-4 mb-3 mb-md-0">
                     <h6 class="mb-3">Nama Balai :</h6>
                     <div class="col">
                         <select id="orgCode" class="form-select text-dark">
@@ -50,7 +50,7 @@
                             }
                         </select>
                     </div>
-                </div>
+                </div> *@
 
                 <div class="col-md-4 mb-3 mb-md-0">
                     <h6 class="mb-3">Tipe Pos :</h6>
@@ -93,7 +93,7 @@
                             <th class="text-center">Nama Pos</th>
                             <th class="text-center">Device ID</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center">Tipe</th> 
+                            <!-- <th class="text-center">Tipe</th> -->
                             <th class="text-center">Reading At</th>
                         </tr>
                     </thead>
@@ -158,7 +158,7 @@
                         });
                     }
                     row.append(statusText);
-                    row.append($("<td>").text(item.stationType));
+                    //row.append($("<td>").text(item.stationType));
                    // Format lastReadingAt using Moment.js
                     var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td class='text-center'>").text(formattedDate));
@@ -337,7 +337,7 @@
                                 });
                             }
                             row.append(statusText);
-                            row.append($("<td>").text(item.stationType));
+                            //row.append($("<td>").text(item.stationType));
                             // Format lastReadingAt using Moment.js
                             var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                             row.append($("<td class='text-center'>").text(formattedDate));
