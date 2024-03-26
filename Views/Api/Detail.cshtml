@@ -94,7 +94,7 @@
                             <th class="text-center">Nama Pos</th>
                             <th class="text-center">Device ID</th>
                             <th class="text-center">Status</th>
-                            <!-- <th class="text-center">Tipe</th> -->
+                            <th class="text-center">Tipe</th>
                             <th class="text-center">Reading At</th>
                         </tr>
                     </thead>
@@ -159,7 +159,7 @@
                         });
                     }
                     row.append(statusText);
-                    //row.append($("<td>").text(item.stationType));
+                    row.append($("<td>").text(item.stationType));
                    // Format lastReadingAt using Moment.js
                     var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td class='text-center'>").text(formattedDate));
@@ -338,7 +338,7 @@
                                 });
                             }
                             row.append(statusText);
-                            //row.append($("<td>").text(item.stationType));
+                            row.append($("<td>").text(item.stationType));
                             // Format lastReadingAt using Moment.js
                             var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                             row.append($("<td class='text-center'>").text(formattedDate));
