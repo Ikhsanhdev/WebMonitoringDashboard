@@ -6,6 +6,13 @@ L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png',
   attribution: '&copy; <a href="http://higertech.com">Higertech</a>',
 }).addTo(map);
 
+var peta = L.marker([-6.85521, 107.633878], {
+  icon: L.icon({
+    iconUrl: '/assets/img/kompas.png', // Ganti dengan path atau URL icon yang sesuai
+    iconSize: [100, 80], // Ukuran icon
+  }),
+}).addTo(map);
+
 // S. Musi
 var musi = L.polygon(
   [
@@ -727,7 +734,7 @@ var kedukann = L.polygon(
 
 var circlekedukann = L.circle([-6.93221, 107.751804], {
   color: 'red',
-  fillColor: '#f03',
+  // fillColor: '#f03',
   fillOpacity: 1,
   radius: 400,
 }).addTo(map);
@@ -1165,7 +1172,7 @@ var laut = L.polygon(
     [-6.942, 107.796504], //bawah
   ],
   {
-    color: 'cyan',
+    color: 'turquoise',
   }
 ).addTo(map);
 
@@ -1179,5 +1186,33 @@ var laut = L.marker([-6.88121, 107.796504], {
     className: 'text-label',
     iconSize: [100, 40],
     html: '<div style="transform: rotate(-90deg); color: black; font-weight: bold; font-size: 13px;">LAUT</div>',
+  }),
+}).addTo(map);
+
+var circle1 = L.circle([-6.952, 107.621678], {
+  color: 'red',
+  fillOpacity: 1,
+  radius: 150,
+}).addTo(map);
+
+var circle1 = L.marker([-6.9524, 107.636678], {
+  icon: L.divIcon({
+    className: 'text-label',
+    iconSize: [160, 40], // Wider icon to accommodate the text
+    html: '<div style="transform: rotate(0deg); color: red; font-weight: bold; font-size: 13px; display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 10px;"><em>Telah <span>Terbangun</span></em></div>',
+  }),
+}).addTo(map);
+
+var circle2 = L.circle([-6.952, 107.646678], {
+  color: 'blue',
+  fillOpacity: 1,
+  radius: 150,
+}).addTo(map);
+
+var circle2 = L.marker([-6.9541, 107.663678], {
+  icon: L.divIcon({
+    className: 'text-label',
+    iconSize: [160, 40],
+    html: '<div style="transform: rotate(0deg); color: blue; font-weight: bold; font-size: 13px;">Eksisting</div>',
   }),
 }).addTo(map);

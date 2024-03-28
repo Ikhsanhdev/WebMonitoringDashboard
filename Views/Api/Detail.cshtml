@@ -25,19 +25,6 @@
         </nav>
     </div>
 
-    @* <div class="row mb-3">
-        <div class="col-6">
-            <select name="orgCode" id="orgCode" class="form-select">
-                @foreach(var o in org){
-                    <option value="@o">@o</option>
-                }
-            </select>
-        </div>
-        <div class="col-6">
-            <button onclick="getStationByOrgCode()" class="btn btn-primary">Get All </button>
-        </div>
-    </div> *@
-
     <!-- Filter Detail -->
     <div class="card">
         <div class="card-body">
@@ -94,7 +81,7 @@
                             <th class="text-center">Nama Pos</th>
                             <th class="text-center">Device ID</th>
                             <th class="text-center">Status</th>
-                            <!-- <th class="text-center">Tipe</th> -->
+                            <th class="text-center">Tipe</th>
                             <th class="text-center">Reading At</th>
                         </tr>
                     </thead>
@@ -159,7 +146,7 @@
                         });
                     }
                     row.append(statusText);
-                    //row.append($("<td>").text(item.stationType));
+                    row.append($("<td class='text-center'>").text(item.stationType));
                    // Format lastReadingAt using Moment.js
                     var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td class='text-center'>").text(formattedDate));
@@ -261,9 +248,9 @@
 
                 if (type !== 'semua') { // Periksa jika tipe yang dipilih bukan "semua"
                     var visibleRows = rows.filter(function() {
-                        var slugCell = $(this).find("td:eq(1)");
-                        var slugText = slugCell.text().toLowerCase();
-                        return slugText.includes(type.toLowerCase());
+                        var typeCell = $(this).find("td:eq(1)");
+                        var stationType = typeCell.text().toLowerCase();
+                        return stationType.includes(type.toLowerCase());
                     });
                     rows.not(visibleRows).hide();
 
@@ -338,7 +325,7 @@
                                 });
                             }
                             row.append(statusText);
-                            //row.append($("<td>").text(item.stationType));
+                            row.append($("<td class='text-center'>").text(item.stationType));
                             // Format lastReadingAt using Moment.js
                             var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                             row.append($("<td class='text-center'>").text(formattedDate));

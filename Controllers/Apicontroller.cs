@@ -26,6 +26,11 @@ public class ApiController : Controller
         return View();
     }
 
+    public async Task<IActionResult> JsonDetail()
+    {
+        return View();
+    }
+
      [HttpPost]
     public async Task<IActionResult> GetList()
     {
