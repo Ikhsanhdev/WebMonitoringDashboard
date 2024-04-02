@@ -79,65 +79,75 @@
 <body>
 
   <main>
-        <div class="container">
-            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <!-- Form login -->
-                                    <form method="post">
-                                        <div class="pt-4 pb-2">
-                                            <h5 class="card-title text-center pb-0 fs-4">
-                                                <img class="rounded-3" src="~/assets/img/logo-pu.jpg" class="img-fluid" style="max-height: 70px;">
-                                            </h5>
-                                            <br>
-                                            <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="yourUsername" class="form-label fw-semibold">Username</label>
-                                            <div class="input-group has-validation">
-                                                <input type="text" name="username" class="form-control input-semi-bold" id="yourUsername" placeholder="Masukkan Username" required>
-                                                <div class="invalid-feedback">Please enter your username.</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="yourPassword" class="form-label fw-semibold">Password</label>
-                                            <div class="input-group has-validation">
-                                                <input type="password" name="password" class="form-control" id="yourPassword" placeholder="Masukkan password" required>
-                                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <div class="invalid-feedback">Please enter your password!</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                                                <label class="form-check-label" for="rememberMe">Remember me</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <!-- Menggunakan input type="submit" untuk submit form -->
-                                            <input type="submit" class="btn btn-primary w-100" value="Login">
-                                        </div>
-                                        
-                                        <div class="col-12">
-                                            <br>
-                                            <br>
-                                            <p class="mb-1 text-center font-12">Powered By</p>
-                                            <p class="mb-0 text-center fw-semibold font-12">PT. Higertech Karya Sinergi</p>
-                                        </div>
-                                    </form>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">
+                                        <img class="rounded-3" src="~/assets/img/logo-pu.jpg" class="img-fluid" style="max-height: 70px;">
+                                    </h5>
+                                    <br>
+                                    <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
                                 </div>
+
+                                <form class="row g-3 needs-validation" action="~/Api/Index" method="post" novalidate>
+
+                                    <div class="col-12">
+                                        <label for="yourUsername" class="form-label fw-semibold">Username</label>
+                                        <div class="input-group has-validation">
+                                            <input type="text" name="username" class="form-control input-semi-bold" id="yourUsername" placeholder="Masukkan Username" required>
+                                            <div class="invalid-feedback">Please enter your username.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="yourPassword" class="form-label fw-semibold">Password</label>
+                                        <div class="input-group has-validation">
+                                            <input type="password" name="password" class="form-control" id="yourPassword" placeholder="Masukkan password" required>
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <div class="invalid-feedback">Please enter your password!</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">Login</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <br>
+                                        <br>
+                                        <p class="mb-1 text-center font-12">Powered By</p>
+                                        <p class="mb-0 text-center fw-semibold font-12">PT. Higertech Karya Sinergi</p>
+                                    </div>
+                                </form>
+
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
-    </main>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

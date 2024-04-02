@@ -47,20 +47,22 @@
                 });
 
                 // Membuat teks pesan
-                var message = "Assalamualaikum wr.wb<br>Bapak/Ibu Yth,<br>Kami informasikan rekapitulasi data pos offline:<br>Tanggal: " + formattedDate + "<br>";
-                
+                var message = "Assalamualaikum wr.wb<br>Bapak/Ibu Yth,<br>Kami informasikan rekapitulasi data pos offline :<br>Tanggal : " + formattedDate + "<br>" ;
+
+                var balaiName = data.length > 0 ? data[0].balaiName : "Nama Balai";
+                message += "Instansi : " + balaiName + "<br>";
                 // Menambahkan informasi website dari subDomain
                 var website = "http://" + (data.length > 0 ? data[0].subDomain : "contoh") + ".higertech.com/";
-                message += "Website: <a href='" + website + "'>" + website + "</a><br>";
+                message += "Website : <a href='" + website + "'>" + website + "</a><br>";
 
                 // Jika semua pos aktif, tambahkan keterangan
                 if (offlineData.length === 0) {
-                    message += "Keterangan: Alat Aktif Semua<br>";
+                    message += "Keterangan : Alat Aktif Semua<br>";
                 } else {
                     // Loop melalui setiap entri offline dan tambahkan ke pesan
                     offlineData.forEach(function(entry, index) {
                         var lastReadingDate = moment(entry.lastReadingAt);
-                        var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : "Alat tidak mengirim data terakhir";
+                        var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : "00/00/0000, 00:00 localtime";
 
                         message += (index + 1) + ". " + entry.slug + "&emsp;Alat tidak mengirim data , &emsp;" + lastReadingDateString + "<br>";
                     });
