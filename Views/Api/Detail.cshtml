@@ -146,7 +146,7 @@
                         });
                     }
                     row.append(statusText);
-                    //row.append($("<td>").text(item.stationType));
+                    row.append($("<td class='text-center'>>").text(item.stationType));
                    // Format lastReadingAt using Moment.js
                     var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td class='text-center'>").text(formattedDate));
@@ -325,7 +325,7 @@
                                 });
                             }
                             row.append(statusText);
-                            //row.append($("<td>").text(item.stationType));
+                            row.append($("<td class='text-center'>").text(item.stationType));
                             // Format lastReadingAt using Moment.js
                             var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                             row.append($("<td class='text-center'>").text(formattedDate));

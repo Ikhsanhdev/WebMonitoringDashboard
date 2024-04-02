@@ -69,10 +69,17 @@
                 }
 
                 // Menambahkan kontak admin
-                message += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech )<br>Terimakasih 🙏🏻.";
+                message += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech )<br>Terimakasih 🙏🏻. <br><br>";
 
                 // Menampilkan pesan di dalam elemen body
                 document.body.innerHTML = message;
+
+                var backButton = document.createElement("button");
+                backButton.innerHTML = "Back";
+                backButton.onclick = function() {
+                    window.history.back();
+                };
+                document.body.appendChild(backButton);
             }).fail(function(xhr, status, error) {
                 console.error('Request failed with status:', status);
             });
