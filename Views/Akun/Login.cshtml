@@ -3,177 +3,165 @@
 }
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>LOGIN</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-
-  <!-- Favicons -->
-  <link href="~/assets/img/hgt.png" rel="icon">
-  <link href="~/assets/img/hgt.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Updated: Nov 17 2023 with Bootstrap v5.3.2
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-<style>
-    /* Untuk kotak input */
-    .input-group input[type="text"],
-    .input-group input[type="password"] {
-        border-radius: 25px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #fff; /* Warna latar belakang kotak input */
-        color: #000; /* Warna teks */
-    }
-    
-    /* Untuk tombol toggle password */
-    .input-group button[type="button"] {
-        border-top-right-radius: 25px;
-        border-bottom-right-radius: 25px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #fff; /* Warna latar belakang tombol */
-        color: #007bff; /* Warna teks */
-    }
-    
-    /* Untuk tombol login */
-    .btn-primary {
-        border-radius: 25px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #007bff; /* Warna latar belakang tombol */
-        color: #fff; /* Warna teks */
-    }
-    
-    /* Untuk latar belakang di luar kotak input dan tombol */
-    body {
-        background-color: #000e88; /* Warna latar belakang biru tua */
-    }
-</style>
+        <title>LOGIN</title>
+        <meta content="" name="description">
+        <meta content="" name="keywords">
 
 
-</head>
+        <!-- Favicons -->
+        <link href="~/assets/img/hgt.png" rel="icon">
+        <link href="~/assets/img/hgt.png" rel="apple-touch-icon">
 
-<body>
+        <!-- Google Fonts -->
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <main>
-    <div class="container">
+        <!-- Vendor CSS Files -->
+        <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+        <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+        <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+        <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+        <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+        <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <!-- Template Main CSS File -->
+        <link href="assets/css/style.css" rel="stylesheet">
+
+        <!-- =======================================================
+        * Template Name: NiceAdmin
+        * Updated: Nov 17 2023 with Bootstrap v5.3.2
+        * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+        * Author: BootstrapMade.com
+        * License: https://bootstrapmade.com/license/
+        ======================================================== -->
+        <style>
+            /* Untuk kotak input */
+            .input-group input[type="text"],
+            .input-group input[type="password"] {
+                border-radius: 25px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: #fff; /* Warna latar belakang kotak input */
+                color: #000; /* Warna teks */
+            }
+            
+            /* Untuk tombol toggle password */
+            .input-group button[type="button"] {
+                border-top-right-radius: 25px;
+                border-bottom-right-radius: 25px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: #fff; /* Warna latar belakang tombol */
+                color: #007bff; /* Warna teks */
+            }
+            
+            /* Untuk tombol login */
+            .btn-primary {
+                border-radius: 25px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: #007bff; /* Warna latar belakang tombol */
+                color: #fff; /* Warna teks */
+            }
+            
+            /* Untuk latar belakang di luar kotak input dan tombol */
+            body {
+                background-color: #000e88; /* Warna latar belakang biru tua */
+            }
+        </style>
+    </head>
+    <body>
+        <main>
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-                        <div class="card mb-3">
+                                <div class="card mb-3">
 
-                            <div class="card-body">
+                                    <div class="card-body">
 
-                                <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">
-                                        <img class="rounded-3" src="~/assets/img/logo-pu.jpg" class="img-fluid" style="max-height: 70px;">
-                                    </h5>
-                                    <br>
-                                    <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
+                                        <div class="pt-4 pb-2">
+                                            <h5 class="card-title text-center pb-0 fs-4">
+                                                <img class="rounded-3" src="~/assets/img/logo-pu.jpg" class="img-fluid" style="max-height: 70px;">
+                                            </h5>
+                                            <br>
+                                            <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
+                                        </div>
+
+                                        <form class="row g-3 needs-validation" action="~/Api/Index" method="post" novalidate>
+                                            <div class="col-12">
+                                                <label for="yourUsername" class="form-label fw-semibold">Username</label>
+                                                <div class="input-group has-validation">
+                                                    <input type="text" name="username" class="form-control input-semi-bold" id="yourUsername" placeholder="Masukkan Username" required>
+                                                    <div class="invalid-feedback">Please enter your username.</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="yourPassword" class="form-label fw-semibold">Password</label>
+                                                <div class="input-group has-validation">
+                                                    <input type="password" name="password" class="form-control" id="yourPassword" placeholder="Masukkan password" required>
+                                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <div class="invalid-feedback">Please enter your password!</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <button class="btn btn-primary w-100" type="submit">Login</button>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <br>
+                                                <br>
+                                                <p class="mb-1 text-center font-12">Powered By</p>
+                                                <p class="mb-0 text-center fw-semibold font-12">PT. Higertech Karya Sinergi</p>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-
-                                <form class="row g-3 needs-validation" action="~/Api/Index" method="post" novalidate>
-
-                                    <div class="col-12">
-                                        <label for="yourUsername" class="form-label fw-semibold">Username</label>
-                                        <div class="input-group has-validation">
-                                            <input type="text" name="username" class="form-control input-semi-bold" id="yourUsername" placeholder="Masukkan Username" required>
-                                            <div class="invalid-feedback">Please enter your username.</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="yourPassword" class="form-label fw-semibold">Password</label>
-                                        <div class="input-group has-validation">
-                                            <input type="password" name="password" class="form-control" id="yourPassword" placeholder="Masukkan password" required>
-                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <div class="invalid-feedback">Please enter your password!</div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Login</button>
-                                    </div>
-                                    <div class="col-12">
-                                        <br>
-                                        <br>
-                                        <p class="mb-1 text-center font-12">Powered By</p>
-                                        <p class="mb-0 text-center fw-semibold font-12">PT. Higertech Karya Sinergi</p>
-                                    </div>
-                                </form>
-
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
+        </main>
 
-        </section>
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    </div>
-</main>
-
-
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.min.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script>
-    document.getElementById('togglePassword').addEventListener('click', function() {
-    const passwordInput = document.getElementById('yourPassword');
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    this.querySelector('i').classList.toggle('bi-eye');
-    this.querySelector('i').classList.toggle('bi-eye-slash');
-});
-</script>
+        <!-- Vendor JS Files -->
+        <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/chart.js/chart.umd.js"></script>
+        <script src="assets/vendor/echarts/echarts.min.js"></script>
+        <script src="assets/vendor/quill/quill.min.js"></script>
+        <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+        <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+        <script src="assets/vendor/php-email-form/validate.js"></script>
+        <script>
+            document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('yourPassword');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('bi-eye');
+            this.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+        </script>
 
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-
-</body>
-
+        <!-- Template Main JS File -->
+        <script src="assets/js/main.js"></script>
+    </body>
 </html>

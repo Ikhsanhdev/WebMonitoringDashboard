@@ -3,88 +3,87 @@
 }
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabel Monitoring</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tabel Monitoring</title>
+    </head>
+    <body>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var fetchData = function(organizationCode) {
-                return $.ajax({
-                    url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
-                    method: 'GET',
-                    dataType: 'json'
-                });
-            };
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const orgParam = urlParams.get('orgCode');
-
-            // Mendapatkan tanggal saat ini
-            var currentDate = new Date();
-            var formattedDate = currentDate.toLocaleString('id-ID', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            }).replace(/\./g, ':');
-
-            fetchData(orgParam).done(function(response) {
-                var result = JSON.parse(response);
-                const data = result.data;
-
-                // Filter hanya entri dengan devicestatus 'offline'
-                var offlineData = data.filter(function(entry) {
-                    return entry.deviceStatus === 'offline';
-                });
-
-                // Membuat teks pesan
-                var message = "Assalamualaikum wr.wb<br>Bapak/Ibu Yth,<br>Kami informasikan rekapitulasi data pos offline :<br>Tanggal : " + formattedDate + "<br>" ;
-
-                var balaiName = data.length > 0 ? data[0].balaiName : "Nama Balai";
-                message += "Instansi : " + balaiName + "<br>";
-                // Menambahkan informasi website dari subDomain
-                var website = "http://" + (data.length > 0 ? data[0].subDomain : "contoh") + ".higertech.com/";
-                message += "Website : <a href='" + website + "'>" + website + "</a><br>";
-
-                // Jika semua pos aktif, tambahkan keterangan
-                if (offlineData.length === 0) {
-                    message += "Keterangan : Alat Aktif Semua<br>";
-                } else {
-                    // Loop melalui setiap entri offline dan tambahkan ke pesan
-                    offlineData.forEach(function(entry, index) {
-                        var lastReadingDate = moment(entry.lastReadingAt);
-                        var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : "00/00/0000, 00:00 localtime";
-
-                        message += (index + 1) + ". " + entry.slug + "&emsp;Alat tidak mengirim data , &emsp;" + lastReadingDateString + "<br>";
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var fetchData = function(organizationCode) {
+                    return $.ajax({
+                        url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
+                        method: 'GET',
+                        dataType: 'json'
                     });
-                }
-
-                // Menambahkan kontak admin
-                message += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech )<br>Terimakasih 🙏🏻. <br><br>";
-
-                // Menampilkan pesan di dalam elemen body
-                document.body.innerHTML = message;
-
-                var backButton = document.createElement("button");
-                backButton.innerHTML = "Back";
-                backButton.onclick = function() {
-                    window.history.back();
                 };
-                document.body.appendChild(backButton);
-            }).fail(function(xhr, status, error) {
-                console.error('Request failed with status:', status);
-            });
-        });
-    </script>
 
-</body>
+                const urlParams = new URLSearchParams(window.location.search);
+                const orgParam = urlParams.get('orgCode');
+
+                // Mendapatkan tanggal saat ini
+                var currentDate = new Date();
+                var formattedDate = currentDate.toLocaleString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                }).replace(/\./g, ':');
+
+                fetchData(orgParam).done(function(response) {
+                    var result = JSON.parse(response);
+                    const data = result.data;
+
+                    // Filter hanya entri dengan devicestatus 'offline'
+                    var offlineData = data.filter(function(entry) {
+                        return entry.deviceStatus === 'offline';
+                    });
+
+                    // Membuat teks pesan
+                    var message = "Assalamualaikum wr.wb<br>Bapak/Ibu Yth,<br>Kami informasikan rekapitulasi data pos offline :<br>Tanggal : " + formattedDate + "<br>" ;
+
+                    var balaiName = data.length > 0 ? data[0].balaiName : "Nama Balai";
+                    message += "Instansi : " + balaiName + "<br>";
+                    // Menambahkan informasi website dari subDomain
+                    var website = "http://" + (data.length > 0 ? data[0].subDomain : "contoh") + ".higertech.com/";
+                    message += "Website : <a href='" + website + "'>" + website + "</a><br>";
+
+                    // Jika semua pos aktif, tambahkan keterangan
+                    if (offlineData.length === 0) {
+                        message += "Keterangan : Alat Aktif Semua<br>";
+                    } else {
+                        // Loop melalui setiap entri offline dan tambahkan ke pesan
+                        offlineData.forEach(function(entry, index) {
+                            var lastReadingDate = moment(entry.lastReadingAt);
+                            var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : "00/00/0000, 00:00 localtime";
+
+                            message += (index + 1) + ". " + entry.slug + "&emsp;Alat tidak mengirim data , &emsp;" + lastReadingDateString + "<br>";
+                        });
+                    }
+
+                    // Menambahkan kontak admin
+                    message += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech )<br>Terimakasih 🙏🏻. <br><br>";
+
+                    // Menampilkan pesan di dalam elemen body
+                    document.body.innerHTML = message;
+
+                    var backButton = document.createElement("button");
+                    backButton.innerHTML = "Back";
+                    backButton.onclick = function() {
+                        window.history.back();
+                    };
+                    document.body.appendChild(backButton);
+                }).fail(function(xhr, status, error) {
+                    console.error('Request failed with status:', status);
+                });
+            });
+        </script>
+    </body>
 </html>
