@@ -282,7 +282,15 @@
                         "className": "text-center"
                     },
                     { "data": "jumlahPosOnline", "name": "JumlahPosOnline", "autoWidth": true, "className": "text-center" },
-                    { "data": "jumlahPosOffline", "name": "JumlahPosOffline", "autoWidth": true, "className": "text-center" },
+                   {
+                        "data": "jumlahPosOffline",
+                        "render": function (data, type, row) {
+                            return '<a href="/Api/JsonDetail?orgCode=' + row.organizationCode + '" style="text-decoration: none;">' + data + '</a>';
+                        },
+                        "orderable": false,
+                        "searchable": false,
+                        "className": "text-center"
+                    },
                     {
                         "data": "jumlahPos",
                         "render": function (data, type, row) {
