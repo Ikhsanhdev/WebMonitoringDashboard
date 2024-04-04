@@ -92,7 +92,7 @@
                                             <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
                                         </div>
 
-                                        <form class="row g-3 needs-validation" action="~/Api/Index" method="post" novalidate>
+                                        <form class="row g-3 needs-validation" method="post" novalidate>
                                             <div class="col-12">
                                                 <label for="yourUsername" class="form-label fw-semibold">Username</label>
                                                 <div class="input-group has-validation">
@@ -100,7 +100,6 @@
                                                     <div class="invalid-feedback">Please enter your username.</div>
                                                 </div>
                                             </div>
-
                                             <div class="col-12">
                                                 <label for="yourPassword" class="form-label fw-semibold">Password</label>
                                                 <div class="input-group has-validation">
@@ -111,20 +110,30 @@
                                                     <div class="invalid-feedback">Please enter your password!</div>
                                                 </div>
                                             </div>
-
                                             <div class="col-12">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
                                                     <label class="form-check-label" for="rememberMe">Remember me</label>
                                                 </div>
                                             </div>
-
                                             <div class="col-12">
-                                                <button class="btn btn-primary w-100" type="submit">Login</button>
+                                                <!-- Menggunakan input type="submit" untuk submit form -->
+                                                <input type="submit" class="btn btn-primary w-100" value="Login">
                                             </div>
-
+                                            <!-- Menambahkan tag untuk menampilkan pesan kesalahan -->
+                                            @if (!ViewData.ModelState.IsValid)
+                                            {
+                                                <div class="col-12 mt-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                                        {
+                                                            <p>@error.ErrorMessage</p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                            
                                             <div class="col-12">
-                                                <br>
                                                 <br>
                                                 <p class="mb-1 text-center font-12">Powered By</p>
                                                 <p class="mb-0 text-center fw-semibold font-12">PT. Higertech Karya Sinergi</p>
@@ -152,14 +161,13 @@
         <script src="assets/vendor/php-email-form/validate.js"></script>
         <script>
             document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('yourPassword');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('bi-eye');
-            this.querySelector('i').classList.toggle('bi-eye-slash');
-        });
+                const passwordInput = document.getElementById('yourPassword');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('bi-eye');
+                this.querySelector('i').classList.toggle('bi-eye-slash');
+            });
         </script>
-
 
         <!-- Template Main JS File -->
         <script src="assets/js/main.js"></script>

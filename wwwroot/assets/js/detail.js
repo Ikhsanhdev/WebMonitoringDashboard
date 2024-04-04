@@ -52,7 +52,7 @@ $(document).ready(function () {
         // Loop melalui setiap entri offline dan tambahkan ke pesan
         offlineData.forEach(function (entry, index) {
           var lastReadingDate = moment(entry.lastReadingAt);
-          var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : '00/00/0000, 00:00 localtime';
+          var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : '00/00/0000, 00:00';
 
           messageObj.offlineData.push({
             index: index + 1,
@@ -68,24 +68,24 @@ $(document).ready(function () {
 
       // Membuat pesan teks dari objek pesan
       var messageText =
-        'Assalamualaikum wr.wb\n' +
+        'Selamat siang\n' +
         'Bapak/Ibu Yth,\n' +
         'Dari total ' +
         messageObj.totalPos +
         ' pos, kami informasikan rekapitulasi data pos offline :\n' +
-        'Tanggal  : ' +
+        'Tanggal    : ' +
         messageObj.formattedDate +
         '\n' +
-        'Instansi : ' +
+        'Instansi   : ' +
         messageObj.balaiName +
         '\n' +
-        'Website  : ' +
+        'Website    : ' +
         messageObj.website +
         '\n';
 
       if (messageObj.offlineData.length > 0) {
         messageObj.offlineData.forEach(function (dataEntry) {
-          messageText += dataEntry.index + '. ' + dataEntry.slug + ' ' + dataEntry.info + ' ,  ' + dataEntry.lastReadingDateString + '\n';
+          messageText += dataEntry.index + '. ' + dataEntry.slug + ' ' + dataEntry.info + ',  ' + dataEntry.lastReadingDateString + ' localtime\n';
         });
       } else {
         messageText += 'Keterangan : ' + messageObj.keterangan + '\n';
@@ -107,7 +107,7 @@ $(document).ready(function () {
           data: {
             appkey: 'db4d6a2b-540c-466f-a8fc-dde2a5316c3b',
             authkey: 'rAip4HxrVxgoYYybIUuaWDho76yqs27YrA0QGGyivid3SErbWe',
-            to: '6282130708717',
+            // to: '6282130708717',
             to: '6289656343544', // Ganti dengan nomor penerima yang sebenarnya
             message: messageText,
           },
