@@ -429,7 +429,7 @@ public class ApiController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> SendMessageToApiTest(string orgCode, string number) {
+    public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
         string apiUrl = "http://localhost:3000/send-message";
         string username = "higertech";
         string password = "1234";
