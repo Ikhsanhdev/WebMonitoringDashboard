@@ -452,7 +452,7 @@ public class ApiController : Controller
                 msg += $"Dari total {lengthPos} pos, kami informasikan rekapitulasi data pos offline :\n";
                 msg += $"Tanggal  : {today}\n";
                 msg += $"Instansi : {result[0].balaiName}\n";
-                msg += $"Website  : http://{result[0].subDomain}.higertech.com\n";
+                msg += $"Website  : https://{result[0].subDomain}.higertech.com\n";
 
                 var i = 1;
                 var dataList = result as List<Api>;
