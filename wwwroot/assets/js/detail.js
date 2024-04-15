@@ -62,8 +62,6 @@ $(document).ready(function () {
           });
         });
       }
-
-      // Menambahkan kontak admin
       messageObj.contact = '081120217941 (admin CS teknis Higertech)';
 
       // Membuat pesan teks dari objek pesan
@@ -93,24 +91,56 @@ $(document).ready(function () {
 
       messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi ' + messageObj.contact + '\n' + 'Terimakasih 🙏🏻.';
 
+      // Menambahkan kontak admin
+      messageObj.contact = '081120217941 (admin CS teknis Higertech)';
+
       // Menampilkan pesan di dalam elemen body
       var preElement = document.createElement('pre');
       preElement.textContent = messageText;
       document.body.appendChild(preElement);
 
-      var sendButton = document.createElement('button');
-      sendButton.innerHTML = 'Kirim Pesan';
-      sendButton.onclick = function () {
+      // Mengatur nilai default pada input textbox nomor telepon
+      const defaultPhoneNumber = urlParams.get('phoneNumber') || '';
+      document.getElementById('phoneNumber').value = defaultPhoneNumber;
+
+      // Menambahkan event listener untuk tombol "Kirim Pesan"
+      document.getElementById('sendButton').addEventListener('click', function () {
+        var phoneNumber = document.getElementById('phoneNumber').value.trim(); // Mendapatkan nomor telepon dari input textbox
+        if (!phoneNumber) {
+          alert('Masukkan nomor telepon terlebih dahulu');
+          return;
+        }
+
+        // var messageText =
+        //   'Selamat siang\n' +
+        //   'Bapak/Ibu Yth,\n' +
+        //   'Dari total ' +
+        //   messageObj.totalPos +
+        //   ' pos, kami informasikan rekapitulasi data pos offline :\n' +
+        //   'Tanggal    : ' +
+        //   messageObj.formattedDate +
+        //   '\n' +
+        //   'Instansi   : ' +
+        //   messageObj.balaiName +
+        //   '\n' +
+        //   'Website    : ' +
+        //   messageObj.website +
+        //   '\n';
+
+        // if (messageObj.offlineData.length > 0) {
+        //   messageObj.offlineData.forEach(function (dataEntry) {
+        //     messageText += dataEntry.index + '. ' + dataEntry.slug + ' ' + dataEntry.info + ',  ' + dataEntry.lastReadingDateString + ' localtime\n';
+        //   });
+        // } else {
+        //   messageText += 'Keterangan : ' + messageObj.keterangan + '\n';
+        // }
+
+        // messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi ' + messageObj.contact + '\n' + 'Terimakasih 🙏🏻.';
+
+        // Mengirim pesan dengan metode POST ke URL yang ditentukan
         $.ajax({
-          url: 'https://app.saungwa.com/api/create-message',
+          url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
           method: 'POST',
-          data: {
-            appkey: 'db4d6a2b-540c-466f-a8fc-dde2a5316c3b',
-            authkey: 'rAip4HxrVxgoYYybIUuaWDho76yqs27YrA0QGGyivid3SErbWe',
-            // to: '6282130708717',
-            to: '6289656343544', // Ganti dengan nomor penerima yang sebenarnya
-            message: messageText,
-          },
           success: function (response) {
             console.log('Pesan berhasil dikirim:', response);
             alert('Pesan berhasil dikirim!');
@@ -120,8 +150,7 @@ $(document).ready(function () {
             alert('Gagal mengirim pesan!');
           },
         });
-      };
-      document.body.appendChild(sendButton);
+      });
 
       var backButton = document.createElement('button');
       backButton.innerHTML = 'Back';
