@@ -144,7 +144,7 @@ $(document).ready(function () {
           method: 'POST',
           success: function (response) {
             console.log('Pesan berhasil dikirim:', response);
-            alert('Pesan berhasil dikirim!');
+            alert('Pesan berhasil dikirim:');
           },
           error: function (xhr, status, error) {
             console.error('Gagal mengirim pesan:', status, error);
