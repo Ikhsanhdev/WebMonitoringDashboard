@@ -467,7 +467,7 @@ public class ApiController : Controller
                             i++;
                         }
                     } else {
-                        msg += "Alat Aktif Semua\n";
+                        msg += "Keterangan : Alat Aktif Semua\n";
                     }
                 } else {
                     Console.WriteLine("Failed to cast data to YourItemType[].");
@@ -549,7 +549,7 @@ public class ApiController : Controller
                             i++;
                         }
                     } else {
-                        msg += "Alat Aktif Semua\n";
+                        msg += "Keterangan : Alat Aktif Semua\n";
                     }
                 } else {
                     Console.WriteLine("Failed to cast data to YourItemType[].");
@@ -630,7 +630,7 @@ public class ApiController : Controller
                             i++;
                         }
                     } else {
-                        msg += "Alat Aktif Semua\n";
+                        msg += "Keterangan : Alat Aktif Semua\n";
                     }
                 } else {
                     Console.WriteLine("Failed to cast data to YourItemType[].");

@@ -140,6 +140,7 @@ $(document).ready(function () {
         // Mengirim pesan dengan metode POST ke URL yang ditentukan
         $.ajax({
           url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+          //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
           method: 'POST',
           success: function (response) {
             console.log('Pesan berhasil dikirim:', response);
