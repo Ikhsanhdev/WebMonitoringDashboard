@@ -128,8 +128,8 @@ $(document).ready(function () {
           // Mengirim pesan hanya jika nomor telepon valid (digit dan panjangnya sesuai)
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
             $.ajax({
-              //url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
-              url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               success: function (response) {
                 console.log('Pesan berhasil dikirim ke ' + phoneNumber + ':', response);
@@ -139,10 +139,10 @@ $(document).ready(function () {
                 if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
                   var message = '';
                   if (successfulNumbers.length > 0) {
-                    message += 'Pesan berhasil dikirim ke nomor: ' + successfulNumbers.join(', ') + '\n';
+                    message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
                   }
                   if (failedNumbers.length > 0) {
-                    message += 'Gagal mengirim pesan ke nomor: ' + failedNumbers.join(', ') + '\n';
+                    message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
                   }
                   alert(message.trim());
                 }
@@ -155,10 +155,10 @@ $(document).ready(function () {
                 if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
                   var message = '';
                   if (successfulNumbers.length > 0) {
-                    message += 'Pesan berhasil dikirim ke nomor: ' + successfulNumbers.join(', ') + '\n';
+                    message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
                   }
                   if (failedNumbers.length > 0) {
-                    message += 'Gagal mengirim pesan ke nomor: ' + failedNumbers.join(', ') + '\n';
+                    message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
                   }
                   alert(message.trim());
                 }
@@ -171,10 +171,10 @@ $(document).ready(function () {
             if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
               var message = '';
               if (successfulNumbers.length > 0) {
-                message += 'Pesan berhasil dikirim ke nomor: ' + successfulNumbers.join(', ') + '\n';
+                message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
               }
               if (failedNumbers.length > 0) {
-                message += 'Gagal mengirim pesan ke nomor: ' + failedNumbers.join(', ') + '\n';
+                message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
               }
               alert(message.trim());
             }
