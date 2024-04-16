@@ -105,51 +105,80 @@ $(document).ready(function () {
 
       // Menambahkan event listener untuk tombol "Kirim Pesan"
       document.getElementById('sendButton').addEventListener('click', function () {
-        var phoneNumber = document.getElementById('phoneNumber').value.trim(); // Mendapatkan nomor telepon dari input textbox
-        if (!phoneNumber) {
+        var phoneNumbers = document.getElementById('phoneNumber').value.trim(); // Mendapatkan nomor telepon dari input textbox
+        if (!phoneNumbers) {
           alert('Masukkan nomor telepon terlebih dahulu');
           return;
         }
 
-        // var messageText =
-        //   'Selamat siang\n' +
-        //   'Bapak/Ibu Yth,\n' +
-        //   'Dari total ' +
-        //   messageObj.totalPos +
-        //   ' pos, kami informasikan rekapitulasi data pos offline :\n' +
-        //   'Tanggal    : ' +
-        //   messageObj.formattedDate +
-        //   '\n' +
-        //   'Instansi   : ' +
-        //   messageObj.balaiName +
-        //   '\n' +
-        //   'Website    : ' +
-        //   messageObj.website +
-        //   '\n';
+        // Memisahkan nomor telepon yang dipisahkan oleh koma atau spasi
+        var phoneNumberList = phoneNumbers.split(/[\s,]+/);
 
-        // if (messageObj.offlineData.length > 0) {
-        //   messageObj.offlineData.forEach(function (dataEntry) {
-        //     messageText += dataEntry.index + '. ' + dataEntry.slug + ' ' + dataEntry.info + ',  ' + dataEntry.lastReadingDateString + ' localtime\n';
-        //   });
-        // } else {
-        //   messageText += 'Keterangan : ' + messageObj.keterangan + '\n';
-        // }
+        // Mengecek apakah ada nomor telepon yang dimasukkan
+        if (phoneNumberList.length === 0) {
+          alert('Masukkan nomor telepon terlebih dahulu');
+          return;
+        }
 
-        // messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi ' + messageObj.contact + '\n' + 'Terimakasih 🙏🏻.';
+        var successfulNumbers = [];
+        var failedNumbers = [];
 
-        // Mengirim pesan dengan metode POST ke URL yang ditentukan
-        $.ajax({
-          //url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
-          url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
-          method: 'POST',
-          success: function (response) {
-            console.log('Pesan berhasil dikirim:', response);
-            alert('Pesan berhasil dikirim.');
-          },
-          error: function (xhr, status, error) {
-            console.error('Gagal mengirim pesan:', status, error);
-            alert('Gagal mengirim pesan!');
-          },
+        // Mengirim pesan dengan metode POST ke setiap nomor telepon yang terpisah
+        phoneNumberList.forEach(function (phoneNumber) {
+          // Mengirim pesan hanya jika nomor telepon valid (digit dan panjangnya sesuai)
+          if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
+            $.ajax({
+              //url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              method: 'POST',
+              success: function (response) {
+                console.log('Pesan berhasil dikirim ke ' + phoneNumber + ':', response);
+                successfulNumbers.push(phoneNumber);
+
+                // Menampilkan popup setelah semua nomor selesai diproses
+                if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
+                  var message = '';
+                  if (successfulNumbers.length > 0) {
+                    message += 'Pesan berhasil dikirim ke nomor: ' + successfulNumbers.join(', ') + '\n';
+                  }
+                  if (failedNumbers.length > 0) {
+                    message += 'Gagal mengirim pesan ke nomor: ' + failedNumbers.join(', ') + '\n';
+                  }
+                  alert(message.trim());
+                }
+              },
+              error: function (xhr, status, error) {
+                console.error('Gagal mengirim pesan ke ' + phoneNumber + ':', status, error);
+                failedNumbers.push(phoneNumber);
+
+                // Menampilkan popup setelah semua nomor selesai diproses
+                if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
+                  var message = '';
+                  if (successfulNumbers.length > 0) {
+                    message += 'Pesan berhasil dikirim ke nomor: ' + successfulNumbers.join(', ') + '\n';
+                  }
+                  if (failedNumbers.length > 0) {
+                    message += 'Gagal mengirim pesan ke nomor: ' + failedNumbers.join(', ') + '\n';
+                  }
+                  alert(message.trim());
+                }
+              },
+            });
+          } else {
+            failedNumbers.push(phoneNumber);
+
+            // Menampilkan popup setelah semua nomor selesai diproses
+            if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
+              var message = '';
+              if (successfulNumbers.length > 0) {
+                message += 'Pesan berhasil dikirim ke nomor: ' + successfulNumbers.join(', ') + '\n';
+              }
+              if (failedNumbers.length > 0) {
+                message += 'Gagal mengirim pesan ke nomor: ' + failedNumbers.join(', ') + '\n';
+              }
+              alert(message.trim());
+            }
+          }
         });
       });
 
