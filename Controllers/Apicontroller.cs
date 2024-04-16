@@ -42,6 +42,20 @@ public class ApiController : Controller
     {
         return View();
     }
+      public async Task<IActionResult> TotalPos()
+    {
+        return View();
+    }
+    
+     public async Task<IActionResult> TotalOnline()
+    {
+        return View();
+    }
+    public async Task<IActionResult> TotalOffline()
+    {
+        return View();
+    }
+
 
      [HttpPost]
     public async Task<IActionResult> GetList()
@@ -427,7 +441,11 @@ public class ApiController : Controller
         var data = await GetDataApi(endPoint);
         return Json(data);
     }
-
+     public async Task<JsonResult> GetStationAll(){
+        string endPoint = $"Station/All/";
+        var data = await GetDataApi(endPoint);
+        return Json(data);
+    }
     [HttpPost]
     public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
         string apiUrl = "http://localhost:3000/send-message";

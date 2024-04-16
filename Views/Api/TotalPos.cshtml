@@ -1,0 +1,302 @@
+@{
+    ViewData["Title"] = "Tabel Monitoring";
+    @* var org = new List<string>() { "","ORG001", "ORG002", "ORG003","ORG004","ORG005",
+                "ORG006","ORG007","ORG008","ORG009","ORG010",
+                "ORG011","ORG012","ORG013","ORG014","ORG015",
+                "ORG016","ORG017","ORG018","ORG019","ORG020",
+                "ORG021","ORG022","ORG023","ORG024","ORG025",
+                "ORG026","ORG027","ORG028","ORG029","ORG030",
+                "ORG031","ORG032","ORG033","ORG034","ORG035",
+                "ORG036","ORG037","ORG038","ORG039","ORG040",
+                "ORG041","ORG042","ORG043","ORG044","ORG045",
+                "ORG046","ORG047","ORG048","ORG049",}; *@
+}
+
+@model IEnumerable<Api>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1></h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Tabel Monitoring</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Filter Detail -->
+    <div class="card">
+        <div class="card-body">
+            <div class="row gx-3">
+                @* <div class="col-md-4 mb-3 mb-md-0">
+                    <h6 class="mb-3">Nama Balai :</h6>
+                    <div class="col">
+                        <select id="orgCode" class="form-select text-dark">
+                            @foreach(var o in org){
+                                <option value="@o">@o</option>
+                            }
+                        </select>
+                    </div>
+                </div> 
+
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h6 class="mb-3">Tipe Pos :</h6>
+                    <div class="col">
+                        <select id="tipeFilter" class="form-select text-dark mb-3">
+                            <option value="semua">SEMUA</option>
+                            <option value="AWLR">AWLR</option>
+                            <option value="ARR">ARR</option>
+                            <option value="AWS">AWS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h6 class="mb-3">Status :</h6>
+                    <div class="col">
+                        <select id="statusFilter" class="form-select text-dark">
+                            <option value="all">SEMUA</option>
+                            <option value="online">ONLINE</option>
+                            <option value="offline">OFFLINE</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+    <br>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i></h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="offpos" class="display table table-sm table-bordered table-responsive-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Nama Pos</th>
+                            <th class="text-center">Device ID</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Tipe</th>
+                            <th class="text-center">Reading At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Your data rows go here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="lastUpdateTime" style="margin-top: 10px; color: gray;"></div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <!-- Include jQuery and Moment.js -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- Include DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var fetchData = function() {
+                return $.ajax({
+                    url: '/Api/GetStationAll'  ,
+                    method: 'GET',
+                    dataType: 'json'
+                });
+            };
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const orgParam = urlParams.get('orgCode');
+            console.log(orgParam);
+
+            fetchData(orgParam).done(function(response) {
+                var result = JSON.parse(response);
+                const data = result.data;
+
+               // Mengubah teks judul menjadi "Total Pos"
+                $("h1").text("Total Pos");
+
+
+                var body = $("#offpos tbody");
+                body.empty();
+                let i = 1;
+                $.each(data, function(index, item) {
+                    var row = $("<tr>");
+
+                    row.append($("<td class='text-center'>").text(i++));
+                    row.append($("<td>").text(item.slug));
+                    row.append($("<td class='text-center'>").text(item.deviceId));
+                    // Define color and text position based on device status
+                    var statusText = $("<td>").text(item.deviceStatus);
+                    if (item.deviceStatus === 'offline') {
+                        statusText.css({
+                            'color': 'red',
+                            'text-align': 'center'
+                        });
+                    } else {
+                        statusText.css({
+                            'color': 'green',
+                            'text-align': 'center'
+                        });
+                    }
+                    row.append(statusText);
+                    row.append($("<td class='text-center'>").text(item.stationType));
+                   // Format lastReadingAt using Moment.js
+                    var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
+                    row.append($("<td class='text-center'>").text(formattedDate));
+
+                    body.append(row);
+                });
+                 // Inisialisasi DataTables dengan paging
+                $('#offpos').DataTable({
+                    "paging": true
+                });
+            }).fail(function(xhr, status, error) {
+                console.error('Request failed with status:', status);
+            });
+
+            // Function to filter data by device status (online or offline)
+            function filterDataByStatus(status, orgCode, type) {
+                var rows = $("#offpos tbody tr");
+                rows.show(); // Show all rows initially
+
+                var visibleRows = rows.filter(function() {
+                    var statusCell = $(this).find("td:eq(3)"); // Get the cell containing device status
+                    var deviceStatus = statusCell.text().toLowerCase();
+                    return (status === 'all' || deviceStatus === status) && (type === 'semua' || $(this).find("td:eq(1)").text().toLowerCase().includes(type.toLowerCase()));
+                });
+
+                // Hide rows that don't match the selected status and type
+                rows.not(visibleRows).hide();
+
+                // Reset numbering for visible rows
+                visibleRows.each(function(index) {
+                    $(this).find("td:eq(0)").text(index + 1);
+                });
+
+                // Update card color and text based on filter status
+                var cardHeader = $(".card-header");
+                var cardTitle = $(".card-title");
+
+                if (status === 'online') {
+                    cardHeader.css('background', '#28a745');
+                    cardTitle.text('ONLINE').removeClass('text-white').addClass('text-white');
+                } else if (status === 'offline') {
+                    cardHeader.css('background', '#dc3545');
+                    cardTitle.text('OFFLINE').removeClass('text-white').addClass('text-white');
+                } else {
+                    cardHeader.css('background', '#007bff');
+                    cardTitle.text('SEMUA').removeClass('text-white').addClass('text-white');
+                }
+            }
+
+            // Function untuk select tipe
+            function filterDataByType(type, status) {
+                var rows = $("#offpos tbody tr");
+                rows.show();
+
+                rows.each(function(index) {
+                    $(this).find("td:eq(0)").text(index + 1);
+                });
+
+                if (type !== 'semua') { // Periksa jika tipe yang dipilih bukan "semua"
+                    var visibleRows = rows.filter(function() {
+                        var typeCell = $(this).find("td:eq(1)");
+                        var stationType = typeCell.text().toLowerCase();
+                        return stationType.includes(type.toLowerCase());
+                    });
+                    rows.not(visibleRows).hide();
+
+                    visibleRows.each(function(index) {
+                        $(this).find("td:eq(0)").text(index + 1);
+                    });
+                }
+
+                // Filter data by status after filtering by type
+                var selectedStatus = $("#statusFilter").val();
+                var selectedOrgCode = $("#orgCode").val();
+                filterDataByStatus(selectedStatus, selectedOrgCode, type);
+            }
+
+            // Event handler for filter dropdown change
+            $("#statusFilter").change(function() {
+                var selectedStatus = $(this).val();
+                var selectedType = $("#tipeFilter").val();
+                var selectedOrgCode = $("#orgCode").val(); // Perbarui nilai selectedOrgCode
+                filterDataByStatus(selectedStatus, selectedOrgCode, selectedType);
+            });
+
+            $("#tipeFilter").change(function() {
+                var selectedType = $(this).val();
+                var selectedStatus = $("#statusFilter").val();
+                var selectedOrgCode = $("#orgCode").val(); // Perbarui nilai selectedOrgCode
+                filterDataByType(selectedType, selectedStatus);
+            });
+
+            $("#orgCode").change(function() {
+                var selectedOrgCode = $(this).val(); // Perbarui nilai selectedOrgCode
+                getStationByOrgCode(); // Panggil fungsi untuk mengambil data stasiun sesuai dengan orgCode yang dipilih
+            });
+
+            // Initial filter based on default selected status
+            var defaultStatus = $("#statusFilter").val();
+            var defaultOrgCode = $("#orgCode").val();
+            var defaultType = $("#tipeFilter").val();
+            filterDataByType(defaultType, defaultStatus);
+            filterDataByStatus(defaultStatus, defaultOrgCode, defaultType);
+
+            function getStationByOrgCode() {
+                var orgCode = $("#orgCode").val(); // Mengambil nilai orgCode dari dropdown
+                $.ajax({
+                    url: '/Api/GetStationAll' ,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        const data = result.data;
+
+                        var tableBody = $("#offpos tbody");
+                        tableBody.empty();
+                        let i = 1;
+                        $.each(data, function (index, item) {
+                            var row = $("<tr>");
+
+                            row.append($("<td class='text-center'>").text(i++));
+                            row.append($("<td>").text(item.slug));
+                            row.append($("<td class='text-center'>").text(item.deviceId));
+                            // Define color and text position based on device status
+                            var statusText = $("<td>").text(item.deviceStatus);
+                            if (item.deviceStatus === 'offline') {
+                                statusText.css({
+                                    'color': 'red',
+                                    'text-align': 'center'
+                                });
+                            } else {
+                                statusText.css({
+                                    'color': 'green',
+                                    'text-align': 'center'
+                                });
+                            }
+                            row.append(statusText);
+                            row.append($("<td class='text-center'>").text(item.stationType));
+                            // Format lastReadingAt using Moment.js
+                            var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
+                            row.append($("<td class='text-center'>").text(formattedDate));
+
+                            tableBody.append(row);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Request failed with status:', status);
+                    }
+                });
+            }
+        });
+    </script>
+}
