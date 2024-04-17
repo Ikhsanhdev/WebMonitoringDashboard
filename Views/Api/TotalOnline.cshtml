@@ -79,6 +79,7 @@
                         <tr>
                             <th class="text-center">No.</th>
                             <th class="text-center">Nama Pos</th>
+                            <th class="text-center">Nama Instansi</th>
                             <th class="text-center">Device ID</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Tipe</th>
@@ -132,6 +133,7 @@
 
                         row.append($("<td class='text-center'>").text(i++));
                         row.append($("<td>").text(item.slug));
+                        row.append($("<td class='text-center'>").text(item.balaiName));
                         row.append($("<td class='text-center'>").text(item.deviceId));
                         // Define color and text position based on device status
                         var statusText = $("<td>").text(item.deviceStatus);
