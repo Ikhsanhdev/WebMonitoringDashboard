@@ -108,10 +108,31 @@ $(document).ready(function () {
       messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)' + '\n' + 'Terimakasih 🙏🏻.';
       //messageObj.contact = '081120217941 (admin CS teknis Higertech)';
 
-      // Menampilkan pesan di dalam elemen body
-      var preElement = document.createElement('pre');
-      preElement.textContent = messageText;
-      document.body.appendChild(preElement);
+      // Membuat elemen untuk pesan
+      var messageElement = document.createElement('pre');
+      messageElement.textContent = messageText;
+
+      // Membuat tombol "Back"
+      var backButton = document.createElement('button');
+      backButton.innerHTML = 'Back';
+      backButton.className = 'btn btn-outline-info  back-button';
+      backButton.onclick = function () {
+        window.history.back();
+      };
+
+      // Membuat card body
+      var cardBody = document.createElement('div');
+      cardBody.className = 'card-body';
+      cardBody.appendChild(messageElement);
+      cardBody.appendChild(backButton);
+
+      // Membuat card
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.appendChild(cardBody);
+
+      // Menampilkan card di dalam elemen dengan id 'javascriptContent'
+      document.getElementById('javascriptContent').appendChild(card);
 
       // Menambahkan event listener untuk tombol "Kirim Pesan"
       document.getElementById('sendButton').addEventListener('click', function () {

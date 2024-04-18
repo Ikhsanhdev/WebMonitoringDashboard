@@ -17,7 +17,6 @@
 /* Footer */
 .footer {
   position: fixed;
-  left: 0;
   bottom: 0;
   width: 100%;
 }
@@ -151,4 +150,12 @@
 
 .card .d-grid {
   padding: 25px;
+}
+
+.back-button {
+  float: right; /* Mengatur tata letak menjadi float kanan */
+  margin-left: 5px; /* Memberikan sedikit jarak dari elemen sebelumnya */
+}
+#phoneNumber {
+  width: 205px;
 }

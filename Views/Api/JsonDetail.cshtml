@@ -1,6 +1,7 @@
 @{
-    Layout = null; // Mengatur layout menjadi null agar tidak ada layout yang diaplikasikan pada halaman ini
+    ViewData["Title"] = "Message | Whatsapp";
 }
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -46,8 +47,23 @@
         </style>
     </head>
     <body>
-        <input type="text" id="phoneNumber" placeholder="Masukkan Nomor WA">
-        <button id="sendButton">Kirim Pesan</button>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Message Broadcast</h5>
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="phoneNumber" placeholder="Masukkan Nomor WA">
+                            </div>
+                            <button id="sendButton" class="btn btn-outline-success mt-3 mb-3">Kirim Pesan</button>
+                            <!--  menampilkan konten dari JavaScript -->
+                        <div id="javascriptContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
