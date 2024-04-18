@@ -5,12 +5,45 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-         <!-- Favicons -->
+        <!-- Favicons -->
         <link href="~/assets/img/hgt.png" rel="icon">
         <link href="~/assets/img/hgt.png" rel="apple-touch-icon">
         <title>Details</title>
+        <style>
+            /* Styles for Popup Container */
+            .popup-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            }
+
+            /* Styles for Popup Content */
+            .popup-content {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            }
+
+            /* Close Button Style */
+            .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            }
+        </style>
     </head>
     <body>
         <input type="text" id="phoneNumber" placeholder="Masukkan Nomor WA">
@@ -20,5 +53,35 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="~/assets/js/detail.js"></script>
 
-    </body>
+        <!-- Popup Container -->
+        <div class="popup-container" id="popupContainer">
+        <!-- Popup Content -->
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2 id="popupTitle"></h2>
+            <p id="popupMessage"></p>
+            <button onclick="closePopup()">Tutup</button>
+        </div>
+        </div>
+
+        <script>
+        @* // Function to Open Popup
+        function openPopup() {
+            var popup = document.getElementById('popupContainer');
+            popup.style.display = 'flex';
+        } *@
+
+        // Function to Close Popup
+        function closePopup() {
+            var popup = document.getElementById('popupContainer');
+            popup.style.display = 'none';
+        }
+
+        // Menambahkan event listener untuk tombol "Kirim Pesan"
+        document.getElementById('sendButton').addEventListener('click', function () {
+            // Panggil fungsi untuk membuka popup saat tombol diklik
+            openPopup();
+        });
+        </script>
+    </body>
 </html>

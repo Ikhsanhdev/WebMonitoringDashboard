@@ -23,6 +23,23 @@ $(document).ready(function () {
     })
     .replace(/\./g, ':');
 
+  // Function to Open Popup with Message
+  function openPopup(title, message) {
+    var popup = document.getElementById('popupContainer');
+    var popupTitle = document.querySelector('.popup-content h2');
+    var popupContent = document.querySelector('.popup-content p');
+
+    popupTitle.textContent = title; // Set judul popup
+    popupContent.textContent = message; // Set pesan pada popup
+    popup.style.display = 'flex';
+  }
+
+  // Function to Close Popup
+  function closePopup() {
+    var popup = document.getElementById('popupContainer');
+    popup.style.display = 'none';
+  }
+
   fetchData(orgParam)
     .done(function (response) {
       var result = JSON.parse(response);
@@ -88,94 +105,86 @@ $(document).ready(function () {
         messageText += 'Keterangan : ' + messageObj.keterangan + '\n';
       }
 
-      messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi ' + messageObj.contact + '\n' + 'Terimakasih 🙏🏻.';
-
-      // Menambahkan kontak admin
-      messageObj.contact = '081120217941 (admin CS teknis Higertech)';
+      messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)' + '\n' + 'Terimakasih 🙏🏻.';
+      //messageObj.contact = '081120217941 (admin CS teknis Higertech)';
 
       // Menampilkan pesan di dalam elemen body
       var preElement = document.createElement('pre');
       preElement.textContent = messageText;
       document.body.appendChild(preElement);
 
-      // Mengatur nilai default pada input textbox nomor telepon
-      const defaultPhoneNumber = urlParams.get('phoneNumber') || '';
-      document.getElementById('phoneNumber').value = defaultPhoneNumber;
-
       // Menambahkan event listener untuk tombol "Kirim Pesan"
       document.getElementById('sendButton').addEventListener('click', function () {
-        var phoneNumbers = document.getElementById('phoneNumber').value.trim(); // Mendapatkan nomor telepon dari input textbox
+        var phoneNumbers = document.getElementById('phoneNumber').value.trim();
         if (!phoneNumbers) {
           alert('Masukkan nomor telepon terlebih dahulu');
           return;
         }
 
-        // Memisahkan nomor telepon yang dipisahkan oleh koma atau spasi
         var phoneNumberList = phoneNumbers.split(/[\s,]+/);
-
-        // Mengecek apakah ada nomor telepon yang dimasukkan
         if (phoneNumberList.length === 0) {
           alert('Masukkan nomor telepon terlebih dahulu');
           return;
         }
 
+        // Menampilkan overlay loading saat memulai pengiriman pesan
+        $('#overlay').fadeIn();
+
         var successfulNumbers = [];
         var failedNumbers = [];
 
-        // Mengirim pesan dengan metode POST ke setiap nomor telepon yang terpisah
         phoneNumberList.forEach(function (phoneNumber) {
-          // Mengirim pesan hanya jika nomor telepon valid (digit dan panjangnya sesuai)
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
             $.ajax({
               url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
-              //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               success: function (response) {
                 console.log('Pesan berhasil dikirim ke ' + phoneNumber + ':', response);
                 successfulNumbers.push(phoneNumber);
 
-                // Menampilkan popup setelah semua nomor selesai diproses
                 if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
                   var message = '';
+                  var title = 'Pesan Terkirim'; // Judul untuk pesan berhasil
                   if (successfulNumbers.length > 0) {
                     message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
                   }
                   if (failedNumbers.length > 0) {
+                    title = 'Pesan Tidak Terkirim'; // Judul untuk pesan gagal terkirim
                     message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
                   }
-                  alert(message.trim());
+                  openPopup(title, message); // Tampilkan popup dengan judul dan pesan hasil pengiriman
+                  $('#overlay').fadeOut();
                 }
               },
               error: function (xhr, status, error) {
                 console.error('Gagal mengirim pesan ke ' + phoneNumber + ':', status, error);
                 failedNumbers.push(phoneNumber);
 
-                // Menampilkan popup setelah semua nomor selesai diproses
                 if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
-                  var message = '';
+                  var message = 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n'; // Pesan untuk kesalahan pengiriman
+                  var title = 'Pesan Tidak Terkirim'; // Judul untuk pesan gagal terkirim
                   if (successfulNumbers.length > 0) {
-                    message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
+                    message += ', Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ');
                   }
-                  if (failedNumbers.length > 0) {
-                    message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
-                  }
-                  alert(message.trim());
+                  openPopup(title, message); // Tampilkan popup dengan judul dan pesan hasil pengiriman
+                  $('#overlay').fadeOut();
                 }
               },
             });
           } else {
             failedNumbers.push(phoneNumber);
 
-            // Menampilkan popup setelah semua nomor selesai diproses
             if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
               var message = '';
+              var title = 'Pesan Tidak Terkirim'; // Judul untuk pesan gagal terkirim
               if (successfulNumbers.length > 0) {
                 message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
               }
               if (failedNumbers.length > 0) {
                 message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
               }
-              alert(message.trim());
+              openPopup(title, message); // Tampilkan popup dengan judul dan pesan hasil pengiriman
+              $('#overlay').fadeOut();
             }
           }
         });
