@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using menyala.Controllers;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
+
+[Authorize]
 
 public class ApiController : Controller
 {

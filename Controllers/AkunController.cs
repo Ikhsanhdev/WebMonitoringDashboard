@@ -1,36 +1,72 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using menyala.Models;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace menyala.Controllers
 {
     public class AkunController : Controller
+{
+    [HttpGet]
+    public IActionResult Login(string returnUrl = null)
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
 
-        public IActionResult Login()
+    [HttpPost]
+    public async Task<IActionResult> Login(string username, string password, string returnUrl = null)
+    {
+        // Hardcode username dan password
+        if (username == "admin" && password == "12345678")
         {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Login(string username, string password)
-        {
-            // Periksa apakah username dan password sesuai dengan yang diharapkan
-            if (username == "admin" && password == "12345678")
+            var claims = new List<Claim>
             {
-                // Jika berhasil, arahkan ke halaman Index di folder API
-                return RedirectToAction("Index", "Api");
+                new Claim(ClaimTypes.Name, username)
+                // Anda bisa menambahkan claim lainnya di sini jika diperlukan
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                // IsPersistent = true,
+                // ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10)
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
             }
             else
             {
-                // Jika gagal, tampilkan pesan kesalahan pada halaman login
-                ModelState.AddModelError(string.Empty, "Username atau password salah.");
-                return View();
+                return RedirectToAction("Index", "Api");
             }
-        }
-    }
+        }
+
+        ModelState.AddModelError(string.Empty, "Username atau password salah.");
+        return View();
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Login", "Akun");
+    }
+
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+}
+
 }
