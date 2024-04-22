@@ -15,8 +15,6 @@ using menyala.Controllers;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 
-[Authorize]
-
 public class ApiController : Controller
 {
     private readonly HttpClient _httpClient;
@@ -31,36 +29,43 @@ public class ApiController : Controller
         public IEnumerable<Api> Data { get; set; }
     }
 
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         return View();
     }
 
+    [Authorize]
     public async Task<IActionResult> Detail()
     {
         return View();
     }
 
+    [Authorize]
     public async Task<IActionResult> JsonDetail()
     {
         return View();
     }
-      public async Task<IActionResult> TotalPos()
+
+    [Authorize]
+    public async Task<IActionResult> TotalPos()
     {
         return View();
     }
     
-     public async Task<IActionResult> TotalOnline()
+    [Authorize]
+    public async Task<IActionResult> TotalOnline()
     {
         return View();
     }
+
+    [Authorize]
     public async Task<IActionResult> TotalOffline()
     {
         return View();
     }
-
-
-     [HttpPost]
+    
+    [HttpPost]
     public async Task<IActionResult> GetList()
     {
         try
@@ -668,6 +673,57 @@ public class ApiController : Controller
                 }}";
 
                  // Set authentication header
+                string authHeaderValue = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{username}:{password}"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+                // Create content for POST request
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode) {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                } else {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendSiagaWarning() {
+        string apiUrl = "http://localhost:3000/send-message";
+        string username = "higertech";
+        string password = "1234";
+
+        try {
+            using (HttpClient client = new HttpClient()) {
+                DateTime currentDate = DateTime.Now;
+                string today = currentDate.ToString("d MMMM yyyy HH:mm");
+
+                string msg = "⚠ [Status: Normal]";
+                msg += "Nama Pos    : PCH JATIHANDAP";
+                msg += "Device      : Higertech - HGT436";
+                msg += $"Waktu      : {today} WIB";
+                msg += "Curah Hujan : 7,80 mm";
+
+                msg = msg.Replace("\n", "\\n");
+                string number = "081224519794";
+
+                string jsonBody = $@"{{
+                    ""number"" : ""{number}"",
+                    ""message"": ""{msg}""
+                }}";
+
+                // Set authentication header
                 string authHeaderValue = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{username}:{password}"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
