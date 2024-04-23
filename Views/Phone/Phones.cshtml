@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Phone Book";
+}
+
+@model IEnumerable<Phone>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Phone Book</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Tabel Phone Book</li>
+            </ol>
+        </nav>
+    </div>
+
+    <br>
+
+    <div class="card mb-3">
+        <div class="card-header" style="background: #a3c2e0;">
+            <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i>Phone List</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="offpos" class="display table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Nama Instansi</th>
+                            <th class="text-center">PIC</th>
+                            <th class="text-center">Nomor HP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.name</td>
+                                <td>@item.nomor</td>
+                            </tr>
+                        } *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
