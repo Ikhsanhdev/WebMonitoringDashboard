@@ -4,6 +4,7 @@ using menyala.Models;
 using System.Diagnostics;
 using System.Linq;
 using dotnetIcon.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace menyala.Controllers
 {
@@ -18,6 +19,7 @@ namespace menyala.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Phones()
         {
             var phones = _context.Phones.ToList(); // Ambil semua data Phone dari database
