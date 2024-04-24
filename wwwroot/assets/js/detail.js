@@ -158,6 +158,7 @@ $(document).ready(function () {
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
             $.ajax({
               url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               success: function (response) {
                 console.log('Pesan berhasil dikirim ke ' + phoneNumber + ':', response);
@@ -210,13 +211,6 @@ $(document).ready(function () {
           }
         });
       });
-
-      var backButton = document.createElement('button');
-      backButton.innerHTML = 'Back';
-      backButton.onclick = function () {
-        window.history.back();
-      };
-      document.body.appendChild(backButton);
     })
     .fail(function (xhr, status, error) {
       console.error('Request failed with status:', status);
