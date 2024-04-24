@@ -456,7 +456,7 @@ public class ApiController : Controller
     }
     [HttpPost]
     public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
-        string apiUrl = "https://localhost:3000/send-message";
+        string apiUrl = "https://wa.higertech.com/send-message";
         string username = "higertech";
         string password = "1234";
 
@@ -538,7 +538,7 @@ public class ApiController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendMessageGroup(string orgCode, string number) {
-        string apiUrl = "https://localhost:3000/send-group";
+        string apiUrl = "https://wa.higertech.com/send-group";
         string username = "higertech";
         string password = "1234";
 
@@ -619,7 +619,7 @@ public class ApiController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendChannel(string orgCode, string channelId) {
-        string apiUrl = "http://localhost:3000/send-channel";
+        string apiUrl = "http://wa.higertech.com/send-channel";
         string username = "higertech";
         string password = "1234";
 
