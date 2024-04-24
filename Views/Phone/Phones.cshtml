@@ -1,0 +1,255 @@
+@{
+    ViewData["Title"] = "Phone Book";
+    var i = 1;
+}
+
+@model IEnumerable<Phone>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Phone Book</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Tabel Phone Book</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header" style="background: #22CE83;">
+            <div class="row">
+                <div class="col">
+                    <h4 class="card-title mb-0 text-white"><i class="fa fa-water me-1"></i>Phone List</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col text-end me-3 mt-3">
+            <button type="button" class="btn btn-primary create-button" data-toggle="modal" data-target="#createModal">Add</button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="phone" class="display table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Nama Instansi</th>
+                            <th class="text-center">PIC</th>
+                            <th class="text-center">Nomor HP</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var phone in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">@i</td>
+                                    <td>@phone.name</td>
+                                    <td class="text-center">@phone.pic</td>
+                                    <td class="text-center">@phone.nomor</td>
+                                    <td class="text-center">
+                                        <!-- Tombol Update -->
+                                        <a href="#" class="btn btn-warning btn-sm update-button" data-id="@phone.Id">Update</a>
+                                        <!-- Tombol Delete -->
+                                        <a href="#" class="btn btn-danger btn-sm delete-button" data-id="@phone.Id">Delete</a>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">Data not available</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Add Data Phone</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Ubah form untuk menangani submit -->
+                    <form id="createForm" asp-controller="Phone" asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama Instansi :</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pic" class="form-label">PIC :</label>
+                            <input type="text" id="pic" name="pic" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nomor" class="form-label">Nomor HP :</label>
+                            <input type="text" id="nomor" name="nomor" class="form-control" required>
+                        </div>
+                        <div class="text-end">
+                            <!-- Ubah tombol menjadi submit -->
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk Update -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Update Data Phone</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form untuk Update -->
+                    <form id="updateForm" asp-controller="Phone" asp-action="Update" method="post">
+                        <!-- Input hidden untuk ID -->
+                        <input type="hidden" id="updateId" name="id" value="" />
+                        <div class="mb-3">
+                            <label for="updateName" class="form-label">Nama Instansi :</label>
+                            <input type="text" id="updateName" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updatePic" class="form-label">PIC :</label>
+                            <input type="text" id="updatePic" name="pic" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateNomor" class="form-label">Nomor HP :</label>
+                            <input type="text" id="updateNomor" name="nomor" class="form-control" required>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Tangani submit form create
+            $('#createForm').submit(function (e) {
+                e.preventDefault(); // Menghentikan default submit
+
+                // Ambil data dari formulir
+                var formData = $(this).serialize();
+
+                // Kirim data ke server menggunakan AJAX
+                $.ajax({
+                    url: '@Url.Action("Create", "Phone")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        // Tambahkan logika sesuai kebutuhan, seperti menampilkan pesan sukses, dll.
+                        console.log('Data added successfully');
+                        // Refresh halaman setelah berhasil menambahkan data
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        // Tambahkan logika error handling jika diperlukan
+                        console.error('Error adding data:', error);
+                    }
+                });
+
+                // Setelah submit, tutup modal
+                $('#createModal').modal('hide');
+            });
+
+            // Tangani reset form ketika modal create ditutup
+            $('#createModal').on('hidden.bs.modal', function () {
+                $('#createForm')[0].reset();
+            });
+
+            // Tangani klik tombol update di dalam tabel
+            $('.update-button').click(function () {
+                var id = $(this).data('id');
+                var name = $(this).closest('tr').find('td:nth-child(2)').text(); // Mengambil nama dari kolom kedua
+                var pic = $(this).closest('tr').find('td:nth-child(3)').text(); // Mengambil PIC dari kolom ketiga
+                var nomor = $(this).closest('tr').find('td:nth-child(4)').text(); // Mengambil Nomor HP dari kolom keempat
+
+                // Set nilai awal pada form update
+                $('#updateId').val(id);
+                $('#updateName').val(name);
+                $('#updatePic').val(pic);
+                $('#updateNomor').val(nomor);
+
+                // Tampilkan modal update
+                $('#updateModal').modal('show');
+
+                // Tangani peristiwa saat modal ditampilkan
+                $('#updateModal').on('shown.bs.modal', function () {
+                    // Fokuskan input pertama saat modal ditampilkan
+                    $('#updateName').focus();
+                });
+            });
+
+            // Tangani submit form update
+            $('#updateForm').submit(function (e) {
+                e.preventDefault(); // Menghentikan default submit
+
+                // Ambil data dari formulir
+                var formData = $(this).serialize();
+
+                // Kirim data ke server menggunakan AJAX
+                $.ajax({
+                    url: '@Url.Action("Update", "Phone")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        // Tambahkan logika sesuai kebutuhan, seperti menampilkan pesan sukses, dll.
+                        console.log('Data updated successfully');
+                        // Refresh halaman setelah berhasil mengupdate data
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        // Tambahkan logika error handling jika diperlukan
+                        console.error('Error updating data:', error);
+                    }
+                });
+
+                // Setelah submit, tutup modal
+                $('#updateModal').modal('hide');
+            });
+
+            // Tangani tombol close pada modal update
+            $('#updateModal').on('click', '.btn-close', function () {
+                // Reset nilai form saat tombol close ditekan
+                $('#updateForm')[0].reset();
+                // Tutup modal secara manual
+                $('#updateModal').modal('hide');
+            });
+
+            // Tangani klik tombol delete
+            $('.delete-button').click(function () {
+                var id = $(this).data('id');
+                if (confirm('Are you sure you want to delete this phone entry?')) {
+                    // Kirim request POST untuk delete dengan parameter ID
+                    $.post('@Url.Action("Delete", "Phone")', { id: id }, function () {
+                        // Refresh halaman setelah delete selesai
+                        window.location.reload();
+                    });
+                }
+            });
+        });
+    </script>
+}
+

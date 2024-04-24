@@ -144,6 +144,17 @@
   font-weight: bold;
 }
 
+#phone {
+  padding: 10px;
+}
+
+#phone thead th {
+  background-color: #22ce83;
+  text-align: center;
+  color: #ffff;
+  font-weight: bold;
+}
+
 .card .btn-secondary {
   width: 180px;
 }

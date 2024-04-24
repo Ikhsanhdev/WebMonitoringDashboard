@@ -2,9 +2,30 @@
 var map = L.map('map').setView([-6.89921, 107.707], 13);
 
 // Tambahkan tile layer OSM
-L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
+// Tambahkan tile layer OSM
+var tileLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://higertech.com">Higertech</a>',
 }).addTo(map);
+
+// Tambahkan control untuk legenda
+var legendControl = L.control({ position: 'bottomright' });
+
+legendControl.onAdd = function (map) {
+  var div = L.DomUtil.create('div', 'legend');
+  div.innerHTML = `
+    <div style="display: flex; align-items: center; padding: 5px; background-color: white;">
+      <div style="width: 20px; height: 20px; background-color: red; border-radius: 50%; margin-right: 5px;"></div>
+      <div style="color: red; font-weight: bold;"><em>Telah Terbangun</em></div>
+    </div>
+    <div style="display: flex; align-items: center; padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+      <div style="width: 20px; height: 20px; background-color: blue; border-radius: 50%; margin-right: 5px;"></div>
+      <div style="color: blue; font-weight: bold;"><em>Eksisting</em></div>
+    </div>
+  `;
+  return div;
+};
+
+legendControl.addTo(map);
 
 var peta = L.marker([-6.85521, 107.633878], {
   icon: L.icon({
@@ -1189,30 +1210,30 @@ var laut = L.marker([-6.88121, 107.796504], {
   }),
 }).addTo(map);
 
-var circle1 = L.circle([-6.952, 107.621678], {
-  color: 'red',
-  fillOpacity: 1,
-  radius: 150,
-}).addTo(map);
+// var circle1 = L.circle([-6.952, 107.621678], {
+//   color: 'red',
+//   fillOpacity: 1,
+//   radius: 150,
+// }).addTo(map);
 
-var circle1 = L.marker([-6.9524, 107.636678], {
-  icon: L.divIcon({
-    className: 'text-label',
-    iconSize: [160, 40], // Wider icon to accommodate the text
-    html: '<div style="transform: rotate(0deg); color: red; font-weight: bold; font-size: 13px; display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 10px;"><em>Telah <span>Terbangun</span></em></div>',
-  }),
-}).addTo(map);
+// var circle1 = L.marker([-6.9524, 107.636678], {
+//   icon: L.divIcon({
+//     className: 'text-label',
+//     iconSize: [160, 40], // Wider icon to accommodate the text
+//     html: '<div style="transform: rotate(0deg); color: red; font-weight: bold; font-size: 13px; display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 10px;"><em>Telah <span>Terbangun</span></em></div>',
+//   }),
+// }).addTo(map);
 
-var circle2 = L.circle([-6.952, 107.646678], {
-  color: 'blue',
-  fillOpacity: 1,
-  radius: 150,
-}).addTo(map);
+// var circle2 = L.circle([-6.952, 107.646678], {
+//   color: 'blue',
+//   fillOpacity: 1,
+//   radius: 150,
+// }).addTo(map);
 
-var circle2 = L.marker([-6.9541, 107.663678], {
-  icon: L.divIcon({
-    className: 'text-label',
-    iconSize: [160, 40],
-    html: '<div style="transform: rotate(0deg); color: blue; font-weight: bold; font-size: 13px;">Eksisting</div>',
-  }),
-}).addTo(map);
+// var circle2 = L.marker([-6.9541, 107.663678], {
+//   icon: L.divIcon({
+//     className: 'text-label',
+//     iconSize: [160, 40],
+//     html: '<div style="transform: rotate(0deg); color: blue; font-weight: bold; font-size: 13px;">Eksisting</div>',
+//   }),
+// }).addTo(map);

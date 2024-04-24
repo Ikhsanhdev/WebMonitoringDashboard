@@ -17,5 +17,6 @@ namespace dotnetIcon.Data
 
         // public DbSet<Pgsql> Pgsqls { get; set; }
         public DbSet<Test> tests { get; set; }
+        public DbSet<Phone> Phones { get; set; }
     }
 }
