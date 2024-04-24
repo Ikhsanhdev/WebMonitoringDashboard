@@ -538,7 +538,7 @@ public class ApiController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendMessageGroup(string orgCode, string number) {
-        string apiUrl = "http://localhost:3000/send-group";
+        string apiUrl = "https://localhost:3000/send-group";
         string username = "higertech";
         string password = "1234";
 
