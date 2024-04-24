@@ -64,7 +64,7 @@ public class ApiController : Controller
     {
         return View();
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> GetList()
     {
@@ -456,7 +456,7 @@ public class ApiController : Controller
     }
     [HttpPost]
     public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
-        string apiUrl = "http://localhost:3000/send-message";
+        string apiUrl = "https://localhost:3000/send-message";
         string username = "higertech";
         string password = "1234";
 
@@ -709,13 +709,13 @@ public class ApiController : Controller
                 DateTime currentDate = DateTime.Now;
                 string today = currentDate.ToString("d MMMM yyyy HH:mm");
 
-                string msg = "⚠ [Status: Normal]";
-                msg += "Nama Pos    : PCH JATIHANDAP";
-                msg += "Device      : Higertech - HGT436";
-                msg += $"Waktu      : {today} WIB";
-                msg += "Curah Hujan : 7,80 mm";
+                string msg = "🔴 [Status: AWAS ]\\n";
+                msg += "POS \u003A PCH JATIHANDAP\\n";
+                msg += "ID Device \u003A HGT436\\n";
+                msg += "Web \u003A hkabbwscitarum.higertech.com\\n";
+                msg += $"Waktu \u003A {today} WIB\\n";
+                msg += "Curah Hujan \u003A 7,80 mm";
 
-                msg = msg.Replace("\n", "\\n");
                 string number = "081224519794";
 
                 string jsonBody = $@"{{
