@@ -7,8 +7,13 @@ public class Api
     public string? deviceId { get; set; }
     public string? slug { get; set; }
     public string stationType { get; set;}
+    public string? type {get; set;}
     public DateTime? lastReadingAt { get; set; }
     public string? deviceStatus { get; set; }
+    public float? waterLevel {get; set;}
+    public string? warningStatus { get; set; }
+    public string? unitDisplay {get; set;}
+    public string? unitSensor {get; set;}
 
     [Required]
     public string balaiName { get; set; }
