@@ -14,6 +14,9 @@ public class Api
     public string? warningStatus { get; set; }
     public string? unitDisplay {get; set;}
     public string? unitSensor {get; set;}
+    public string? intensityLastHour {get; set;}
+    public float? rainfallLastHour {get; set;}
+    public float? rainfall {get; set;}
 
     [Required]
     public string balaiName { get; set; }

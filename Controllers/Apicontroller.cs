@@ -702,6 +702,7 @@ public class ApiController : Controller
     public async Task<IActionResult> SendWarning(string orgCode, string number) {
         string apiUrl = "https://wa.higertech.com/send-message";
         string username = "higertech";
+
         string password = "1234";
 
         try {
@@ -710,6 +711,9 @@ public class ApiController : Controller
                 var organizationData = await GetDataApi(endPointData);
                 var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
                 var result = stationData.Data;
+
+                DateTime currentDate = DateTime.Now;
+                string today = currentDate.ToString("d MMMM yyyy HH:mm");
 
                 var dataList = result as List<Api>;
                 string msg = "";
@@ -736,14 +740,12 @@ public class ApiController : Controller
                                     statusWarning = "WASPADA";
                                 }
 
-                                string stationName = awlr.slug;
-
                                 DateTime lastReading = awlr.lastReadingAt ?? DateTime.Now;
                                 string dayName = await GenerateDay(lastReading);
 
                                 msg += status;
                                 msg += "\\n";
-                                msg += $"Nama Pos \u003A {stationName.Replace("-", " ")}\\n";
+                                msg += $"Nama Pos \u003A {awlr.name}\\n";
                                 msg += $"ID Device \u003A {awlr.deviceId}\\n";
                                 msg += $"Web \u003A http://{awlr.subDomain}.higertech.com\\n";
                                 msg += $"Hari \u003A {dayName}\\n";
@@ -751,14 +753,37 @@ public class ApiController : Controller
                                 msg += $"Tma \u003A {awlr.waterLevel} {awlr.unitDisplay}\\n";
                                 msg += $"Status \u003A {statusWarning}\\n";
                                 msg += "\\n";
-                                msg += $"diupdate \u003A {lastReading.ToString("d MMMM yyyy HH:mm")} WIB\\n";
+                                msg += $"_diupdate \u003A {today} WIB_\\n";
                                 msg += "\\n";
                             }
                         }
                     }
-
+                    
                     if(dataArr != null) {
-                        msg += "test Arr";
+                        var dataWarningArr = dataArr.Where(item => item.intensityLastHour == "Hujan Ringan" || item.intensityLastHour == "Hujan Sedang" || item.intensityLastHour == "Hujan Lebat" || item.intensityLastHour == "Hujan Sangat Lebat").ToList();
+                        Console.WriteLine("data warning :");
+                        Console.WriteLine(dataWarningArr);
+                        if(dataWarningArr != null) {
+                            foreach(var arr in dataWarningArr) {
+                                DateTime lastReadingArr = arr.lastReadingAt ?? DateTime.Now;
+                                string dayNameArr = await GenerateDay(lastReadingArr);
+
+                                msg += $"[Intensitas Jam \u003A {arr.intensityLastHour}]\\n";
+                                msg += "\\n";
+                                msg += $"Nama Pos \u003A {arr.name}\\n";
+                                msg += $"ID Device \u003A {arr.deviceId}\\n";
+                                msg += $"Web \u003A http://{arr.subDomain}.higertech.com\\n";
+                                msg += $"Hari \u003A {dayNameArr}\\n";
+                                msg += $"Tanggal \u003A {lastReadingArr.ToString("dd-MM-yyyy")}\\n";
+                                msg += $"CH \u003A {arr.rainfall} mm\\n";
+                                msg += "\\n";
+                                msg += "1 Jam Terakhir \u003A\\n";
+                                msg += $"CH \u003A {arr.rainfallLastHour} mm/hour\\n";
+                                msg += $"Intensitas \u003A {arr.intensityLastHour}\\n";
+                                msg += "\\n";
+                                msg += $"_diupdate \u003A {today} WIB_\\n";
+                            }
+                        }     
                     }
                 } else {
                     Console.WriteLine("Failed to cast data to YourItemType[].");
@@ -799,11 +824,8 @@ public class ApiController : Controller
         if (lastReading.HasValue) {
             DayOfWeek dayOfWeek = lastReading.Value.DayOfWeek;
             string dayName = dayOfWeek.ToString();
-
             return dayName;
         } else {
-            // Handle the case where lastReading is null
-            // For example, return a default value or throw an exception
             return "Unknown"; // Default value
         }
     }
