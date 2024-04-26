@@ -699,110 +699,23 @@ public class ApiController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> SendWarning(string orgCode, string number) {
+    public async Task<IActionResult> SendWarningToApi(string number, string msg) {
         string apiUrl = "https://wa.higertech.com/send-message";
         string username = "higertech";
-
         string password = "1234";
 
         try {
-            using (HttpClient client = new HttpClient()) {
-                string endPointData = $"Station/Organization/{orgCode}";
-                var organizationData = await GetDataApi(endPointData);
-                var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
-                var result = stationData.Data;
-
-                DateTime currentDate = DateTime.Now;
-                string today = currentDate.ToString("d MMMM yyyy HH:mm");
-
-                var dataList = result as List<Api>;
-                string msg = "";
-
-                if (dataList != null) {
-                    var dataAwlr = dataList.Where(item => item.type == "AWLR" && item.deviceStatus == "online").ToList();
-                    var dataArr = dataList.Where(item => item.type == "ARR" && item.deviceStatus == "online").ToList();
-
-                    if(dataAwlr != null) {
-                        var dataWarning = dataAwlr.Where(item => item.warningStatus == "Siaga 1" || item.warningStatus == "Siaga 2" || item.warningStatus == "Siaga 3").ToList();
-
-                        if(dataWarning != null) {
-                            foreach(var awlr in dataWarning) {
-                                string status = "";
-                                string statusWarning = "";
-                                if(awlr.warningStatus == "Siaga 1") {
-                                    status = "🔴 [Status: AWAS ]\\n";
-                                    statusWarning = "AWAS";
-                                } else if (awlr.warningStatus == "Siaga 2") {
-                                    status = "🟠 [Status: SIAGA ]\\n";
-                                    statusWarning = "SIAGA";
-                                } else if(awlr.warningStatus == "Siaga 3") {
-                                    status = "🟡 [Status: WASPADA ]\\n";
-                                    statusWarning = "WASPADA";
-                                }
-
-                                DateTime lastReading = awlr.lastReadingAt ?? DateTime.Now;
-                                string dayName = await GenerateDay(lastReading);
-
-                                msg += status;
-                                msg += "\\n";
-                                msg += $"Nama Pos \u003A {awlr.name}\\n";
-                                msg += $"ID Device \u003A {awlr.deviceId}\\n";
-                                msg += $"Web \u003A http://{awlr.subDomain}.higertech.com\\n";
-                                msg += $"Hari \u003A {dayName}\\n";
-                                msg += $"Tanggal  \u003A {lastReading.ToString("dd-MM-yyyy")}\\n";
-                                msg += $"Tma \u003A {awlr.waterLevel} {awlr.unitDisplay}\\n";
-                                msg += $"Status \u003A {statusWarning}\\n";
-                                msg += "\\n";
-                                msg += $"_diupdate \u003A {today} WIB_\\n";
-                                msg += "\\n";
-                            }
-                        }
-                    }
-                    
-                    if(dataArr != null) {
-                        var dataWarningArr = dataArr.Where(item => item.intensityLastHour == "Hujan Ringan" || item.intensityLastHour == "Hujan Sedang" || item.intensityLastHour == "Hujan Lebat" || item.intensityLastHour == "Hujan Sangat Lebat").ToList();
-                        Console.WriteLine("data warning :");
-                        Console.WriteLine(dataWarningArr);
-                        if(dataWarningArr != null) {
-                            foreach(var arr in dataWarningArr) {
-                                string status = "🔵🟡🟠🔴";
-                                DateTime lastReadingArr = arr.lastReadingAt ?? DateTime.Now;
-                                string dayNameArr = await GenerateDay(lastReadingArr);
-
-                                msg += $"[Intensitas Jam \u003A {arr.intensityLastHour}]\\n";
-                                msg += "\\n";
-                                msg += $"Nama Pos \u003A {arr.name}\\n";
-                                msg += $"ID Device \u003A {arr.deviceId}\\n";
-                                msg += $"Web \u003A http://{arr.subDomain}.higertech.com\\n";
-                                msg += $"Hari \u003A {dayNameArr}\\n";
-                                msg += $"Tanggal \u003A {lastReadingArr.ToString("dd-MM-yyyy")}\\n";
-                                msg += $"CH \u003A {arr.rainfall} mm\\n";
-                                msg += "\\n";
-                                msg += "1 Jam Terakhir \u003A\\n";
-                                msg += $"CH \u003A {arr.rainfallLastHour} mm/hour\\n";
-                                msg += $"Intensitas \u003A {arr.intensityLastHour}\\n";
-                                msg += "\\n";
-                                msg += $"_diupdate \u003A {today} WIB_\\n";
-                            }
-                        }     
-                    }
-                } else {
-                    Console.WriteLine("Failed to cast data to YourItemType[].");
-                }
-
+            using (HttpClient client = new HttpClient())  {
                 string jsonBody = $@"{{
                     ""number"" : ""{number}"",
                     ""message"": ""{msg}""
                 }}";
 
-                 // Set authentication header
                 string authHeaderValue = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{username}:{password}"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
 
-                // Create content for POST request
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                // Send POST request
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
                 if (response.IsSuccessStatusCode) {
@@ -815,6 +728,129 @@ public class ApiController : Controller
                     return StatusCode((int)response.StatusCode);
                 }
             }
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendWarningStatus(string orgCode, string station, string number) {
+        try {
+            string endPointData = $"Station/Organization/{orgCode}";
+            var organizationData = await GetDataApi(endPointData);
+            var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
+            var result = stationData.Data;
+
+            DateTime currentDate = DateTime.Now;
+            string today = currentDate.ToString("d MMMM yyyy HH:mm");
+
+            var dataList = result as List<Api>;
+            string msg = "";
+
+            if (dataList != null) {
+                var data = dataList.Where(item => item.type == station && item.deviceStatus == "online").ToList();
+
+                if(data != null) {
+                    if(station == "AWLR") {
+                        var dataWarning = data.Where(item => item.warningStatus == "Siaga 1" || item.warningStatus == "Siaga 2" || item.warningStatus == "Siaga 3").ToList();
+
+                        if(dataWarning != null) {
+                            foreach(var row in dataWarning) {
+                                string status = "";
+                                string statusWarning = "";
+
+                                if(row.warningStatus == "Siaga 1") {
+                                    status = "🔴 [Status: AWAS ]\\n";
+                                    statusWarning = "🔴 AWAS";
+                                } else if (row.warningStatus == "Siaga 2") {
+                                    status = "🟠 [Status: SIAGA ]\\n";
+                                    statusWarning = "🟠 SIAGA";
+                                } else if(row.warningStatus == "Siaga 3") {
+                                    status = "🟡 [Status: WASPADA ]\\n";
+                                    statusWarning = "🟡 WASPADA";
+                                }
+
+                                DateTime lastReading = row.lastReadingAt ?? DateTime.Now;
+                                string dayName = await GenerateDay(lastReading);
+
+                                msg += status;
+                                msg += "\\n";
+                                msg += $"Nama Pos \u003A {row.name}\\n";
+                                msg += $"ID Device \u003A {row.deviceId}\\n";
+                                msg += $"Web \u003A http://{row.subDomain}.higertech.com\\n";
+                                msg += $"Hari \u003A {dayName}\\n";
+                                msg += $"Tanggal  \u003A {lastReading.ToString("dd-MM-yyyy HH:mm")} WIB\\n";
+                                msg += $"Tma \u003A {row.waterLevel} {row.unitDisplay}\\n";
+                                msg += $"Status \u003A {statusWarning}\\n";
+                                msg += "\\n";
+                                msg += $"_diupdate \u003A {today} WIB_\\n";
+                                msg += "=============================";
+                                msg += "\\n";
+                                msg += "\\n";
+                            }
+
+                            return await SendWarningToApi(number, msg);
+                        } 
+                        // else {
+                        //     return StatusCode(200, "aman bosqu");
+                        // }
+                    } else if(station == "ARR") {
+                        var dataWarning = data.Where(item => item.intensityLastHour == "Hujan Ringan" || item.intensityLastHour == "Hujan Sedang" || item.intensityLastHour == "Hujan Lebat" || item.intensityLastHour == "Hujan Sangat Lebat").ToList();
+                        
+                        if(dataWarning != null) {
+                            foreach(var row in dataWarning) {
+                                string status = "";
+                                string statusWarning = "";
+
+                                if(row.intensityLastHour == "Hujan Ringan") {
+                                    status = $"🔵 [Intensitas Jam \u003A {row.intensityLastHour}]\\n";
+                                    statusWarning = $"Intensitas \u003A 🔵 {row.intensityLastHour}\\n";
+                                } else if(row.intensityLastHour == "Hujan Sedang") {
+                                    status = $"🟡 [Intensitas Jam \u003A {row.intensityLastHour}]\\n";
+                                    statusWarning = $"Intensitas \u003A 🟡 {row.intensityLastHour}\\n";
+                                } else if(row.intensityLastHour == "Hujan Lebat") {
+                                    status = $"🟠 [Intensitas Jam \u003A {row.intensityLastHour}]\\n";
+                                    statusWarning = $"Intensitas \u003A 🟠 {row.intensityLastHour}\\n";
+                                } else if(row.intensityLastHour == "Hujan Sangat Lebat") {
+                                    status = $"🔴 [Intensitas Jam \u003A {row.intensityLastHour}]\\n";
+                                    statusWarning = $"Intensitas \u003A 🔴 {row.intensityLastHour}\\n";
+                                }
+
+                                DateTime lastReading = row.lastReadingAt ?? DateTime.Now;
+                                string dayName = await GenerateDay(lastReading);
+
+                                msg += status;
+                                msg += "\\n";
+                                msg += $"Nama Pos \u003A {row.name}\\n";
+                                msg += $"ID Device \u003A {row.deviceId}\\n";
+                                msg += $"Web \u003A http://{row.subDomain}.higertech.com\\n";
+                                msg += $"Hari \u003A {dayName}\\n";
+                                msg += $"Tanggal \u003A {lastReading.ToString("dd-MM-yyyy HH:mm")} WIB\\n";
+                                msg += $"CH \u003A {row.rainfall} mm\\n";
+                                msg += "\\n";
+                                msg += "1 Jam Terakhir \u003A\\n";
+                                msg += $"CH \u003A {row.rainfallLastHour} mm/hour\\n";
+                                msg += statusWarning;
+                                msg += "\\n";
+                                msg += $"_diupdate \u003A {today} WIB_\\n";
+                                msg += "=============================";
+                                msg += "\\n";
+                                msg += "\\n";
+                            }
+
+                            return await SendWarningToApi(number, msg);
+                        } 
+                        // else {
+                        //     return StatusCode(200, "aman bosqu");
+                        // }
+                    }
+                }
+            } else {
+                Console.WriteLine("Failed to cast data to YourItemType[].");
+            }
+            
+            return StatusCode(500, "An error occurred");
         } catch(Exception ex) {
             Console.WriteLine($"An error occurred: {ex.Message}");
             return StatusCode(500, "An error occurred");
