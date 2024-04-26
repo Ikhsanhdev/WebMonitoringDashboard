@@ -765,6 +765,7 @@ public class ApiController : Controller
                         Console.WriteLine(dataWarningArr);
                         if(dataWarningArr != null) {
                             foreach(var arr in dataWarningArr) {
+                                string status = "🔵🟡🟠🔴";
                                 DateTime lastReadingArr = arr.lastReadingAt ?? DateTime.Now;
                                 string dayNameArr = await GenerateDay(lastReadingArr);
 
