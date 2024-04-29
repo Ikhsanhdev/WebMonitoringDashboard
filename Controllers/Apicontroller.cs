@@ -241,118 +241,6 @@ public class ApiController : Controller
         }
     }
 
-    // [HttpPost]
-    // public async Task<IActionResult> GetDetail(string organizationCode)
-    // {
-    //     try
-    //     {
-    //         var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
-    //         var start = int.Parse(Request.Form["start"].FirstOrDefault());
-    //         var length = int.Parse(Request.Form["length"].FirstOrDefault());
-    //         var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-    //         var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-    //         var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-    //         var (apiResponse, balaiName) = await GetDataFromApiDetail(organizationCode);
-
-    //         if (apiResponse == null || !apiResponse.Any())
-    //         {
-    //             return Json(new DataTableResult<Api>
-    //             {
-    //                 draw = draw,
-    //                 recordsTotal = 0,
-    //                 recordsFiltered = 0,
-    //                 data = new List<Api>()
-    //             });
-    //         }
-
-    //         var filteredData = apiResponse.Where(a =>
-    //             string.IsNullOrEmpty(searchValue) ||
-    //             a.balaiName.Contains(searchValue) ||
-    //             // a.name.Contains(searchValue) ||
-    //             // a.subDomain.Contains(searchValue) ||
-    //             // a.jumlahPos.ToString().Contains(searchValue) ||
-    //             // a.jumlahPosOnline.ToString().Contains(searchValue) ||
-    //             // a.jumlahPosOffline.ToString().Contains(searchValue) ||
-    //             a.slug.Contains(searchValue) ||
-    //             // a.stationType.Contains(searchValue) ||
-    //             a.organizationCode.Contains(searchValue) ||
-    //             // a.deviceId.Contains(searchValue) ||
-    //             (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
-    //             (a.lastReadingAt != null && a.lastReadingAt.ToString().Contains(searchValue)))
-    //             .ToList();
-
-    //         var result = new DataTableResult<Api>
-    //         {
-    //             draw = draw,
-    //             recordsTotal = apiResponse.Count(),
-    //             recordsFiltered = filteredData.Count(),
-    //             data = filteredData.Skip(start).Take(length).ToList()
-    //         };
-
-    //         var nomorColumn = start + 1;
-    //         result.data.ForEach(item =>
-    //         {
-    //             item.nomor = nomorColumn;
-    //             nomorColumn++;
-    //         });
-
-    //         return Json(result);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         // Ganti dengan penanganan kesalahan yang lebih baik, seperti menyimpan ke file log atau memberikan tanggapan yang sesuai kepada klien
-    //         Console.WriteLine($"An error occurred while processing request: {ex.Message}");
-    //         return Json(new DataTableResult<Api>
-    //         {
-    //             draw = 0,
-    //             recordsTotal = 0,
-    //             recordsFiltered = 0,
-    //             data = new List<Api>()
-    //         });
-    //     }
-    // }
-    
-    // private async Task<(List<Api>, string)> GetDataFromApiDetail(string orgCode)
-    // {
-    //     string apiUrl = $"http://localhost:5000/Station/Organization/{orgCode}";
-    //     string username = "m0n1tor_st4tion";
-    //     string password = "H1gertech.1dua3";
-
-    //     try
-    //     {
-    //         using (HttpClient client = new HttpClient())
-    //         {
-    //             var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-    //             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
-    //             HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-    //             if (response.IsSuccessStatusCode)
-    //             {
-    //                 string responseData = await response.Content.ReadAsStringAsync();
-    //                 var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseData);
-                    
-    //                 // Filter hanya data dengan DeviceStatus offline
-    //                 var offlineData = apiResponse?.Data?.Where(item => item.deviceStatus == "offline").ToList();
-                    
-    //                 string balaiName = apiResponse?.Data?.FirstOrDefault()?.balaiName;
-    //                 List<Api> data = offlineData ?? new List<Api>();
-    //                 return (data, balaiName);
-    //             }
-    //             else
-    //             {
-    //                 Console.WriteLine($"Failed to retrieve data from API. Status code: {response.StatusCode}");
-    //                 return (new List<Api>(), null);
-    //             }
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"An error occurred while fetching data from the API: {ex.Message}");
-    //         return (new List<Api>(), null);
-    //     }
-    // }
-
     private async Task<dynamic> GetDataApi(string endPoint){
         
         string apiUrl = $"http://localhost:5000/{endPoint}"; 
@@ -397,51 +285,6 @@ public class ApiController : Controller
         // Return the last update time in an appropriate format
         return Json(new { lastUpdateTime = lastUpdateTime.ToString("yyyy-MM-ddTHH:mm:ss") });
     }
-
-    // [HttpPost]
-    // public async Task<IActionResult> ProcessDataDashboard() {
-    //     try {
-    //         var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
-    //         var start = int.Parse(Request.Form["start"].FirstOrDefault());
-    //         var length = int.Parse(Request.Form["length"].FirstOrDefault());
-    //         var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-    //         var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-    //         var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-    //         var apiResponse = await GetDataFromApi();
-
-    //         var groupedData = apiResponse
-    //             .GroupBy(d => new { d.balaiName, d.name, d.subDomain, d.organizationCode })
-    //             .Select(group => new Api
-    //             {
-    //                 balaiName = group.Key.balaiName,
-    //                 name = group.Key.name,
-    //                 subDomain = group.Key.subDomain,
-    //                 organizationCode = group.Key.organizationCode,
-    //                 jumlahPos = group.Count(),
-    //                 jumlahPosOffline = group.Count(d => d.deviceStatus == "offline"),
-    //                 jumlahPosOnline = group.Count(d => d.deviceStatus == "online")
-    //             }).ToList();
-
-    //         var result = new DataTableResult<Api> {
-    //             draw = draw,
-    //             recordsTotal = apiResponse.Count(),
-    //             recordsFiltered = groupedData.Count(),
-    //             data = groupedData.Skip(start).Take(length).ToList()
-    //         };
-
-    //         var nomorColumn = start + 1;
-    //         result.data.ForEach(item =>
-    //         {
-    //             item.nomor = nomorColumn;
-    //             nomorColumn++;
-    //         });
-
-    //         return Json(result);
-    //     } catch (Exception ex) {
-    //         return StatusCode(500, $"Internal Server Error: {ex.Message}");
-    //     }
-    // }
     
     [HttpGet]
     public async Task<JsonResult> GetStationByOrgCode(string orgCode){
@@ -755,7 +598,7 @@ public class ApiController : Controller
                     if(station == "AWLR") {
                         var dataWarning = data.Where(item => item.warningStatus == "Siaga 1" || item.warningStatus == "Siaga 2" || item.warningStatus == "Siaga 3").ToList();
 
-                        if(dataWarning != null) {
+                        if(dataWarning.Any()) {
                             foreach(var row in dataWarning) {
                                 string status = "";
                                 string statusWarning = "";
@@ -791,15 +634,16 @@ public class ApiController : Controller
                             }
 
                             return await SendWarningToApi(number, msg);
-                        } 
-                        // else {
-                        //     return StatusCode(200, "aman bosqu");
-                        // }
+                        } else {
+                            string returnText = "Tidak ada Pos Siaga";
+                            return Content(returnText, "text/plain");
+                            Console.WriteLine("Tidak ada data siaga");
+                        }
                     } else if(station == "ARR") {
                         var dataWarning = data.Where(item => item.intensityLastHour == "Hujan Ringan" || item.intensityLastHour == "Hujan Sedang" || item.intensityLastHour == "Hujan Lebat" || item.intensityLastHour == "Hujan Sangat Lebat").ToList();
-                        
-                        if(dataWarning != null) {
-                            foreach(var row in dataWarning) {
+        
+                        if(dataWarning.Any()) {
+                            foreach(var row in dataWarning) {  
                                 string status = "";
                                 string statusWarning = "";
 
@@ -840,10 +684,11 @@ public class ApiController : Controller
                             }
 
                             return await SendWarningToApi(number, msg);
-                        } 
-                        // else {
-                        //     return StatusCode(200, "aman bosqu");
-                        // }
+                        } else {
+                            string returnText = "Tidak ada Pos Siaga";
+                            return Content(returnText, "text/plain");
+                            Console.WriteLine("Tidak ada data siaga");
+                        }
                     }
                 }
             } else {
