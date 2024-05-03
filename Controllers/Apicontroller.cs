@@ -586,7 +586,7 @@ public class ApiController : Controller
             var result = stationData.Data;
 
             int lengthPos = result?.Count ?? 0;
-            string img = "demo.higertech.com.png";
+            string img = $"https://{result[0].subDomain}.higertech.com";
 
             DateTime currentDate = DateTime.Now;
             string today = currentDate.ToString("dd/MM/yyyy HH:mm");
@@ -632,7 +632,7 @@ public class ApiController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendMedia(string number, string msg, string img) {
-        string apiUrl = "http://localhost:3000/send-media";
+        string apiUrl = "https://wa.higertech.com/send-media";
         string username = "higertech";
         string password = "1234";
 
