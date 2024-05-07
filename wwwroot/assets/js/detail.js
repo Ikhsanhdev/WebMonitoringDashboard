@@ -10,19 +10,6 @@ $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   const orgParam = urlParams.get('orgCode');
 
-  // Mendapatkan tanggal saat ini
-  var currentDate = new Date();
-  var formattedDate = currentDate
-    .toLocaleString('id-ID', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    })
-    .replace(/\./g, ':');
-
   // Function to Open Popup with Message
   function openPopup(title, message) {
     var popup = document.getElementById('popupContainer');
@@ -32,12 +19,23 @@ $(document).ready(function () {
     popupTitle.textContent = title; // Set judul popup
     popupContent.textContent = message; // Set pesan pada popup
     popup.style.display = 'flex';
+
+    // Delay untuk memberikan efek animasi
+    setTimeout(function () {
+      popup.querySelector('.popup-content').style.opacity = 1;
+      popup.querySelector('.popup-content').style.transform = 'translateY(0)';
+    }, 50); // Sesuaikan dengan kebutuhan, delay minimal untuk efek animasi
   }
 
   // Function to Close Popup
   function closePopup() {
     var popup = document.getElementById('popupContainer');
-    popup.style.display = 'none';
+    var popupContent = popup.querySelector('.popup-content');
+    popupContent.style.opacity = 0; // Animasi fade out
+    popupContent.style.transform = 'translateY(-20px)'; // Geser ke atas
+    setTimeout(function () {
+      popup.style.display = 'none'; // Setelah animasi selesai, sembunyikan popup
+    }, 300); // Sesuaikan dengan durasi animasi
   }
 
   fetchData(orgParam)
@@ -56,7 +54,6 @@ $(document).ready(function () {
       // Membuat objek pesan
       var messageObj = {
         totalPos: totalPos,
-        formattedDate: formattedDate,
         balaiName: data.length > 0 ? data[0].balaiName : 'Nama Balai',
         website: 'http://' + (data.length > 0 ? data[0].subDomain : 'contoh') + '.higertech.com/',
         offlineData: [],
@@ -68,14 +65,11 @@ $(document).ready(function () {
       } else {
         // Loop melalui setiap entri offline dan tambahkan ke pesan
         offlineData.forEach(function (entry, index) {
-          var lastReadingDate = moment(entry.lastReadingAt);
-          var lastReadingDateString = lastReadingDate.isValid() ? moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss') : '00/00/0000, 00:00';
-
           messageObj.offlineData.push({
             index: index + 1,
             slug: entry.slug,
             info: 'Alat tidak mengirim data',
-            lastReadingDateString: lastReadingDateString,
+            lastReadingDateString: moment(entry.lastReadingAt).format('DD/MM/YYYY, HH:mm:ss'),
           });
         });
       }
@@ -88,7 +82,7 @@ $(document).ready(function () {
         messageObj.totalPos +
         ' pos, kami informasikan rekapitulasi data pos offline :\n' +
         'Tanggal    : ' +
-        messageObj.formattedDate +
+        moment().format('DD/MM/YYYY, HH:mm:ss') + // Gunakan waktu saat ini
         '\n' +
         'Instansi   : ' +
         messageObj.balaiName +
@@ -106,7 +100,6 @@ $(document).ready(function () {
       }
 
       messageText += 'Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)' + '\n' + 'Terimakasih 🙏🏻.';
-      //messageObj.contact = '081120217941 (admin CS teknis Higertech)';
 
       // Membuat elemen untuk pesan
       var messageElement = document.createElement('pre');
@@ -134,6 +127,39 @@ $(document).ready(function () {
       // Menampilkan card di dalam elemen dengan id 'javascriptContent'
       document.getElementById('javascriptContent').appendChild(card);
 
+      // Event listener untuk tombol "Kirim Pesan" ke ID grup
+      document.getElementById('sendGroupButton').addEventListener('click', function () {
+        var idGrup = document.getElementById('idGrup').value.trim();
+        if (!idGrup) {
+          alert('Masukkan ID Grup terlebih dahulu');
+          return;
+        }
+
+        // Menampilkan overlay loading saat memulai pengiriman pesan
+        openLoadingPopup();
+
+        // Mengirim pesan ke ID grup
+        $.ajax({
+          url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          method: 'POST',
+          beforeSend: function () {
+            // Tampilkan loading
+            $('#loading').show();
+            console.log('Mengirim pesan ke ' + idGrup + '...');
+          }, // Mengirim orgCode, ID grup, dan pesan
+          success: function (response) {
+            closeLoadingPopup(); // Tutup loading popup
+            openSuccessPopup(); // Buka popup sukses
+          },
+          error: function (xhr, status, error) {
+            closeLoadingPopup(); // Tutup loading popup
+            openErrorPopup(); // Buka popup error
+            console.error('Error sending message:', error); // Tampilkan pesan error di konsol
+          },
+        });
+      });
+
       // Menambahkan event listener untuk tombol "Kirim Pesan"
       document.getElementById('sendButton').addEventListener('click', function () {
         var phoneNumbers = document.getElementById('phoneNumber').value.trim();
@@ -149,7 +175,7 @@ $(document).ready(function () {
         }
 
         // Menampilkan overlay loading saat memulai pengiriman pesan
-        $('#overlay').fadeIn();
+        openLoadingPopup();
 
         var successfulNumbers = [];
         var failedNumbers = [];
@@ -160,54 +186,35 @@ $(document).ready(function () {
               url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
+              beforeSend: function () {
+                // Tampilkan loading
+                $('#loading').show();
+                console.log('Mengirim pesan ke ' + phoneNumber + '...');
+              },
               success: function (response) {
                 console.log('Pesan berhasil dikirim ke ' + phoneNumber + ':', response);
                 successfulNumbers.push(phoneNumber);
 
-                if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
-                  var message = '';
-                  var title = 'Pesan Terkirim'; // Judul untuk pesan berhasil
-                  if (successfulNumbers.length > 0) {
-                    message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
-                  }
-                  if (failedNumbers.length > 0) {
-                    title = 'Pesan Tidak Terkirim'; // Judul untuk pesan gagal terkirim
-                    message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
-                  }
-                  openPopup(title, message); // Tampilkan popup dengan judul dan pesan hasil pengiriman
-                  $('#overlay').fadeOut();
+                // Tampilkan sukses popup jika semua nomor berhasil dikirim
+                if (successfulNumbers.length === phoneNumberList.length) {
+                  closeLoadingPopup(); // Tutup loading popup
+                  openSuccessPopup(); // Buka popup sukses
                 }
               },
               error: function (xhr, status, error) {
                 console.error('Gagal mengirim pesan ke ' + phoneNumber + ':', status, error);
                 failedNumbers.push(phoneNumber);
 
-                if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
-                  var message = 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n'; // Pesan untuk kesalahan pengiriman
-                  var title = 'Pesan Tidak Terkirim'; // Judul untuk pesan gagal terkirim
-                  if (successfulNumbers.length > 0) {
-                    message += ', Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ');
-                  }
-                  openPopup(title, message); // Tampilkan popup dengan judul dan pesan hasil pengiriman
-                  $('#overlay').fadeOut();
+                // Tampilkan error popup jika ada yang gagal dikirim
+                if (failedNumbers.length > 0) {
+                  closeLoadingPopup(); // Tutup loading popup
+                  openErrorPopup(); // Buka popup error
                 }
               },
             });
           } else {
             failedNumbers.push(phoneNumber);
-
-            if (successfulNumbers.length + failedNumbers.length === phoneNumberList.length) {
-              var message = '';
-              var title = 'Pesan Tidak Terkirim'; // Judul untuk pesan gagal terkirim
-              if (successfulNumbers.length > 0) {
-                message += 'Pesan berhasil dikirim ke nomor : ' + successfulNumbers.join(', ') + '\n';
-              }
-              if (failedNumbers.length > 0) {
-                message += 'Gagal mengirim pesan ke nomor : ' + failedNumbers.join(', ') + '\n';
-              }
-              openPopup(title, message); // Tampilkan popup dengan judul dan pesan hasil pengiriman
-              $('#overlay').fadeOut();
-            }
+            console.error('Nomor telepon tidak valid:', phoneNumber);
           }
         });
       });

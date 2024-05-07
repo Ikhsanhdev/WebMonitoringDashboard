@@ -20,6 +20,19 @@ namespace menyala.Controllers
         }
 
         [Authorize]
+        public IActionResult JsonDetail()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult GetPhoneNumbers()
+        {
+            var phoneNumbers = _context.Phones.Select(p => new { p.nomor, p.name, p.pic }).ToList();
+            return Json(phoneNumbers);
+        }
+
+        [Authorize]
         public IActionResult Phones()
         {
             var phones = _context.Phones.ToList(); // Ambil semua data Phone dari database

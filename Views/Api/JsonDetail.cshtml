@@ -1,19 +1,17 @@
-@{
-    ViewData["Title"] = "Message | Whatsapp";
-}
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Favicons -->
-        <link href="~/assets/img/hgt.png" rel="icon">
-        <link href="~/assets/img/hgt.png" rel="apple-touch-icon">
-        <title>Details</title>
-        <style>
-            /* Styles for Popup Container */
-            .popup-container {
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicons -->
+    <link href="~/assets/img/hgt.png" rel="icon">
+    <link href="~/assets/img/hgt.png" rel="apple-touch-icon">
+    <title>Details | Message Broadcast</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Styles for Popup Container */
+        .popup-container {
             display: none;
             position: fixed;
             top: 0;
@@ -24,80 +22,243 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            }
+            transition: opacity 0.3s ease;
+        }
 
-            /* Styles for Popup Content */
-            .popup-content {
+        /* Styles for Popup Content */
+        .popup-content {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
             max-width: 400px;
             text-align: center;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            }
+            position: relative;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
 
-            /* Close Button Style */
-            .close-btn {
+        /* Close Button Style */
+        .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
             cursor: pointer;
             font-size: 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-10 offset-md-1">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Message Broadcast</h5>
-                            <div class="form-group">
-                                <input class="form-control" type="text" id="phoneNumber" placeholder="Masukkan Nomor WA">
-                            </div>
-                            <button id="sendButton" class="btn btn-outline-success mt-3 mb-3">Kirim Pesan</button>
-                            <!--  menampilkan konten dari JavaScript -->
-                        <div id="javascriptContent"></div>
+        }
+
+        /* Loading Style */
+        #loading {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Message Broadcast</h5>
+                        <div class="form-group">
+                            <select id="phoneSelect" class="form-select">
+                                <option value="">Pilih Nomor HP</option>
+                            </select>
+                            <input class="form-control" type="text" id="phoneNumber" placeholder="Masukkan Nomor WA">
+                            <button id="sendButton" class="btn btn-outline-success">Kirim Pesan</button>
                         </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="idGrup" placeholder="Masukkan ID Grup WA">
+                            <button id="sendGroupButton" class="btn btn-outline-success">Kirim Pesan</button>
+                        </div>
+                        <!--  menampilkan konten dari JavaScript -->
+                        <div id="javascriptContent"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="~/assets/js/detail.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/detail.js"></script>
 
-        <!-- Popup Container -->
-        <div class="popup-container" id="popupContainer">
+    <!-- Popup Container - Loading -->
+    <div class="popup-container" id="loadingContainer">
         <!-- Popup Content -->
         <div class="popup-content">
-            <span class="close-btn" onclick="closePopup()">&times;</span>
-            <h2 id="popupTitle"></h2>
-            <p id="popupMessage"></p>
-            <button onclick="closePopup()">Tutup</button>
+            <h2 id="loadingTitle">Sending Message</h2>
+            <div id="loading">Loading...</div>
         </div>
+    </div>
+
+    <!-- Popup Container - Success Message -->
+    <div class="popup-container" id="successContainer">
+        <!-- Popup Content -->
+        <div class="popup-content">
+            <h3 id="successTitle">Message Sent!</h3>
+            <button class="btn btn-primary" onclick="closeSuccessPopup()">OK</button>
         </div>
+    </div>
 
-        <script>
-        @* // Function to Open Popup
-        function openPopup() {
-            var popup = document.getElementById('popupContainer');
-            popup.style.display = 'flex';
-        } *@
+    <!-- Popup Container - Error Message -->
+    <div class="popup-container" id="errorContainer">
+        <!-- Popup Content -->
+        <div class="popup-content">
+            <h3 id="errorTitle">Error Sending Message!</h3>
+            <button class="btn btn-danger" onclick="closeErrorPopup()">OK</button>
+        </div>
+    </div>
 
-        // Function to Close Popup
-        function closePopup() {
-            var popup = document.getElementById('popupContainer');
-            popup.style.display = 'none';
+    <script>
+        // Function to Open Loading Popup
+        function openLoadingPopup() {
+            var loadingPopup = document.getElementById('loadingContainer');
+            loadingPopup.style.display = 'flex';
+
+            // Delay for animation effect
+            setTimeout(function () {
+                loadingPopup.querySelector('.popup-content').style.opacity = 1;
+                loadingPopup.querySelector('.popup-content').style.transform = 'translateY(0)';
+            }, 50); // Adjust as needed, minimal delay for animation effect
         }
 
-        // Menambahkan event listener untuk tombol "Kirim Pesan"
+        // Function to Close Loading Popup
+        function closeLoadingPopup() {
+            var loadingPopup = document.getElementById('loadingContainer');
+            loadingPopup.querySelector('.popup-content').style.opacity = 0; // Fade out animation
+            loadingPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)'; // Move upwards
+            setTimeout(function () {
+                loadingPopup.style.display = 'none'; // Hide popup after animation
+            }, 300); // Adjust as needed, animation duration
+        }
+
+        // Function to Open Success Popup
+        function openSuccessPopup() {
+            var successPopup = document.getElementById('successContainer');
+            successPopup.style.display = 'flex';
+
+            // Delay for animation effect
+            setTimeout(function () {
+                successPopup.querySelector('.popup-content').style.opacity = 1;
+                successPopup.querySelector('.popup-content').style.transform = 'translateY(0)';
+            }, 50); // Adjust as needed, minimal delay for animation effect
+
+            // Change success message to "Sending Message..."
+            successPopup.querySelector('#successTitle').textContent = 'Sending Message...';
+        }
+
+        // Function to Close Success Popup
+        function closeSuccessPopup() {
+            var successPopup = document.getElementById('successContainer');
+            successPopup.querySelector('.popup-content').style.opacity = 0; // Fade out animation
+            successPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)'; // Move upwards
+            setTimeout(function () {
+                successPopup.style.display = 'none'; // Hide popup after animation
+            }, 300); // Adjust as needed, animation duration
+        }
+
+        // Function to Open Error Popup
+        function openErrorPopup() {
+            var errorPopup = document.getElementById('errorContainer');
+            errorPopup.style.display = 'flex';
+
+            // Delay for animation effect
+            setTimeout(function () {
+                errorPopup.querySelector('.popup-content').style.opacity = 1;
+                errorPopup.querySelector('.popup-content').style.transform = 'translateY(0)';
+            }, 50); // Adjust as needed, minimal delay for animation effect
+        }
+
+        // Function to Close Error Popup
+        function closeErrorPopup() {
+            var errorPopup = document.getElementById('errorContainer');
+            errorPopup.querySelector('.popup-content').style.opacity = 0; // Fade out animation
+            errorPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)'; // Move upwards
+            setTimeout(function () {
+                errorPopup.style.display = 'none'; // Hide popup after animation
+            }, 300); // Adjust as needed, animation duration
+        }
+
+        // Event listener for "Kirim Pesan" button
         document.getElementById('sendButton').addEventListener('click', function () {
-            // Panggil fungsi untuk membuka popup saat tombol diklik
-            openPopup();
+            openLoadingPopup(); // Open loading popup
+
+            // Simulate sending message (replace with actual sending process)
+            setTimeout(function () {
+                var randomNumber = Math.random(); // Simulated random number for success/error
+                if (randomNumber > 0.5) {
+                    closeLoadingPopup(); // Close loading popup
+                    openSuccessPopup(); // Open success popup
+                } else {
+                    closeLoadingPopup(); // Close loading popup
+                    openErrorPopup(); // Open error popup
+                }
+            }, 2000); // Simulated delay, replace with actual sending process duration
         });
-        </script>
-    </body>
+
+        // Tangani peristiwa saat memilih nomor pada select box
+        document.getElementById('phoneSelect').addEventListener('change', function() {
+            var selectedNumber = this.value; // Ambil nilai nomor yang dipilih
+            document.getElementById('phoneNumber').value = selectedNumber; // Masukkan nilai nomor ke dalam input nomor HP
+        });
+    </script>
+
+    <script>
+        function fetchPhoneNumbers() {
+            $.ajax({
+                url: '/Phone/GetPhoneNumbers',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var selectBox = document.getElementById('phoneSelect');
+                    selectBox.innerHTML = '';
+
+                    // Tambahkan opsi "Pilih Nomor HP" di atas list nomor
+                    var defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = 'Pilih Nomor HP';
+                    selectBox.appendChild(defaultOption);
+
+                    response.forEach(function(entry) {
+                        var option = document.createElement('option');
+                        option.value = entry.nomor;
+                        option.textContent = entry.name + ' (' + entry.pic + ')' + ' - ' + entry.nomor;
+                        selectBox.appendChild(option);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch phone numbers:', status, error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchPhoneNumbers();
+
+            // Event listener untuk mengosongkan textbox saat "Pilih Nomor HP" dipilih
+            document.getElementById('phoneSelect').addEventListener('change', function() {
+                var selectedNumber = this.value;
+                if (selectedNumber === '') {
+                    document.getElementById('phoneNumber').value = ''; // Kosongkan textbox
+                }
+            });
+
+            // Event listener untuk memantau perubahan pada textbox
+            document.getElementById('phoneNumber').addEventListener('input', function() {
+                var inputText = this.value.trim(); // Ambil nilai teks input setelah di-trim
+                var selectBox = document.getElementById('phoneSelect');
+
+                // Jika input kosong, atur select box ke "Pilih Nomor HP"
+                if (inputText === '') {
+                    selectBox.value = '';
+                }
+            });
+        });
+    </script>
+</body>
 </html>
