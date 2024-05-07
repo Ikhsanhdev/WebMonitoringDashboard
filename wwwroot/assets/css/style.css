@@ -169,11 +169,11 @@
 }
 
 #phoneNumber {
-  width: 205px;
+  width: 275px;
 }
 
 #idGrup {
-  width: 205px;
+  width: 275px;
 }
 
 /* Custom styles for layout */
@@ -191,4 +191,18 @@
 /* Adjust spacing between elements */
 .form-group > * {
   margin-right: 10px; /* Adjust as needed */
+}
+
+/* CSS untuk tombol "Kirim Pesan" */
+#sendButton,
+#sendGroupButton {
+  width: 15%; /* Mengatur lebar tombol menjadi 15% dari lebar parent pada mode desktop */
+}
+
+/* Media query untuk mode smartphone */
+@media screen and (max-width: 767px) {
+  #sendButton,
+  #sendGroupButton {
+    width: 100%; /* Mengatur lebar tombol menjadi 100% pada mode smartphone */
+  }
 }
