@@ -210,7 +210,7 @@
                 var visibleRows = rows.filter(function() {
                     var statusCell = $(this).find("td:eq(3)"); // Get the cell containing device status
                     var deviceStatus = statusCell.text().toLowerCase();
-                    return (status === 'all' || deviceStatus === status) && (type === 'semua' || $(this).find("td:eq(1)").text().toLowerCase().includes(type.toLowerCase()));
+                    return (status === 'all' || deviceStatus === status) && (type === 'semua' || $(this).find("td:eq(4)").text().toLowerCase().includes(type.toLowerCase()));
                 });
 
                 // Hide rows that don't match the selected status and type
@@ -248,7 +248,7 @@
 
                 if (type !== 'semua') { // Periksa jika tipe yang dipilih bukan "semua"
                     var visibleRows = rows.filter(function() {
-                        var typeCell = $(this).find("td:eq(1)");
+                        var typeCell = $(this).find("td:eq(4)");
                         var stationType = typeCell.text().toLowerCase();
                         return stationType.includes(type.toLowerCase());
                     });
