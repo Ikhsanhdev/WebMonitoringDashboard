@@ -577,7 +577,7 @@ public class ApiController : Controller
         }
     }
 
-     [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> SendMessageMedia(string orgCode, string number) {
         try {
             string endPointData = $"Station/Organization/{orgCode}";
@@ -631,8 +631,98 @@ public class ApiController : Controller
     }
 
     [HttpPost]
+    public async Task<IActionResult> SendGroupMedia(string orgCode, string number) {
+        try {
+            string endPointData = $"Station/Organization/{orgCode}";
+            var organizationData = await GetDataApi(endPointData);
+            var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
+            var result = stationData.Data;
+
+            int lengthPos = result?.Count ?? 0;
+            string img = $"https://{result[0].subDomain}.higertech.com";
+
+            DateTime currentDate = DateTime.Now;
+            string today = currentDate.ToString("dd/MM/yyyy HH:mm");
+
+            //message
+            string msg = "Selamat Pagi\n";
+            msg += "Bapak/Ibu Yth,\n";
+            msg += $"Dari total {lengthPos} pos, kami informasikan rekapitulasi data pos offline :\n";
+            msg += $"Tanggal  : {today}\n";
+            msg += $"Instansi : {result[0].balaiName}\n";
+            msg += $"Website  : https://{result[0].subDomain}.higertech.com\n";
+
+            var i = 1;
+            var dataList = result as List<Api>;
+            if (dataList != null) {
+                var offlineDevices = dataList.Where(item => item.deviceStatus == "offline").ToList();
+
+                if (offlineDevices.Count > 0) {
+                    foreach(var device in offlineDevices) {
+                        string lastReading = device.lastReadingAt?.ToString("dd/MM/yyyy, HH:mm:ss") ?? "00/00/0000, 00:00";
+
+                        msg += $"{i}. {device.slug} Alat tidak mengirim data, {lastReading} localtime\n";
+                        i++;
+                    }
+                } else {
+                    msg += "Keterangan : Alat Aktif Semua\n";
+                }
+            } else {
+                Console.WriteLine("Failed to cast data to YourItemType[].");
+            }
+
+            msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
+            msg += "Terima Kasih 🙏🏻.";
+
+            msg = msg.Replace("\n", "\\n");
+
+            return await SendMediaGroup(number, msg, img);
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+    }
+
+    [HttpPost]
     public async Task<IActionResult> SendMedia(string number, string msg, string img) {
         string apiUrl = "https://wa.higertech.com/send-media";
+        string username = "higertech";
+        string password = "1234";
+
+        try {
+            using (HttpClient client = new HttpClient())  {
+                string jsonBody = $@"{{
+                    ""number"" : ""{number}"",
+                    ""message"": ""{msg}"",
+                    ""imgUrl"" : ""{img}""
+                }}";
+
+                string authHeaderValue = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{username}:{password}"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode) {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                } else {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendMediaGroup(string number, string msg, string img) {
+        string apiUrl = "http://localhost:3000/send-group-media";
         string username = "higertech";
         string password = "1234";
 
