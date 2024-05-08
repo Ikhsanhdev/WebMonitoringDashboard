@@ -722,7 +722,7 @@ public class ApiController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendMediaGroup(string number, string msg, string img) {
-        string apiUrl = "http://localhost:3000/send-group-media";
+        string apiUrl = "https://wa-higertech.com/send-group-media";
         string username = "higertech";
         string password = "1234";
 
