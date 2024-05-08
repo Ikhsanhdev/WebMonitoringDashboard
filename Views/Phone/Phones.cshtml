@@ -5,6 +5,9 @@
 
 @model IEnumerable<Phone>
 
+<!-- Link ke file CSS -->
+<link rel="stylesheet" href="style.css">
+
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>Phone Book</h1>
@@ -287,8 +290,13 @@
                         }, 2000);
                     });
                 });
+                // Tangani klik tombol close ("x") pada modal konfirmasi delete
+            $('#confirmDeleteModal').on('click', '.btn-close, .btn-secondary', function () {
+                // Tutup modal konfirmasi tanpa menghapus data
+                $('#confirmDeleteModal').modal('hide');
             });
-        });
+            });
+            });
     </script>
 }
 
