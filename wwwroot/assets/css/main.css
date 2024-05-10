@@ -1685,3 +1685,27 @@ section {
   background-color: red;
   background-image: url("../img/carousel/catering-about.png");
 }
+
+.wa__widget_container {
+  position: fixed;
+  bottom: 20px; /* Adjust as needed */
+  left: 20px; /* Adjust to position on the left */
+  z-index: 1000; /* Ensure widget appears above other content */
+}
+
+/* Style for the WhatsApp button popup */
+.wa__btn_popup {
+  background-color: #25D366; /* WhatsApp color */
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.wa__btn_popup img {
+  margin-right: 5px;
+  width: 30px; /* Adjust icon size */
+  height: 30px; /* Adjust icon size */
+}
