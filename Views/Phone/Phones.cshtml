@@ -280,10 +280,10 @@
                 $('#confirmDeleteBtn').click(function () {
                     // Kirim request POST untuk delete dengan parameter ID
                     $.post('@Url.Action("Delete", "Phone")', { id: id }, function () {
-                        // Tampilkan notifikasi data berhasil dihapus
-                        $('#Deletenotification').addClass('alert-danger').text('Data deleted successfully').show();
                         // Tutup modal konfirmasi
                         $('#confirmDeleteModal').modal('hide');
+                        // Tampilkan notifikasi data berhasil dihapus
+                        $('#Deletenotification').addClass('alert-danger').text('Data deleted successfully').show();
                         // Refresh halaman setelah delete selesai
                         setTimeout(function () {
                             window.location.reload();
