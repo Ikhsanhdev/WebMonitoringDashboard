@@ -169,11 +169,11 @@
 }
 
 #phoneNumber {
-  width: 205px;
+  width: 275px;
 }
 
 #idGrup {
-  width: 205px;
+  width: 275px;
 }
 
 /* Custom styles for layout */
@@ -192,67 +192,3 @@
 .form-group > * {
   margin-right: 10px; /* Adjust as needed */
 }
-/*--------------------------------------------------------------
-# PhoneBook Page
---------------------------------------------------------------*/
-/* Gaya untuk judul dan teks */
-.pagetitle {
-  margin-bottom: 10px;
-}
-
-.pagetitle h1 {
-  font-size: 24px;
-  margin-bottom: 0;
-  font-weight: 600;
-  color: #012970;
-}
-
-/* Gaya untuk tombol "Add" */
-.create-button {
-  margin-bottom: 10px; /* Menambahkan margin bawah */
-}
-
-/* Gaya untuk tabel telepon */
-#phone {
-  width: 100%;
-  margin-top: 10px; /* Mengurangi margin atas */
-  border-collapse: collapse;
-}
-
-#phone th,
-#phone td {
-  padding: 8px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-#phone th {
-  background-color: #22ce83;
-  color: #fff;
-  font-weight: bold;
-}
-
-#phone tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-#phone tbody tr:hover {
-  background-color: #ddd;
-}
-
-/* Gaya untuk tombol aksi */
-.action-buttons a {
-  margin-right: 5px;
-}
-
-/* Animasi untuk tombol */
-.btn {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-

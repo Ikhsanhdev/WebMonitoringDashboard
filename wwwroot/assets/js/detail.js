@@ -127,7 +127,7 @@ $(document).ready(function () {
       // Menampilkan card di dalam elemen dengan id 'javascriptContent'
       document.getElementById('javascriptContent').appendChild(card);
 
-      // Event listener untuk tombol "Kirim Pesan" ke ID grup
+      // Menambahkan event listener untuk tombol "Kirim Pesan" ke ID grup
       document.getElementById('sendGroupButton').addEventListener('click', function () {
         var idGrup = document.getElementById('idGrup').value.trim();
         if (!idGrup) {
@@ -141,7 +141,6 @@ $(document).ready(function () {
         // Mengirim pesan ke ID grup
         $.ajax({
           url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
-          //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
           method: 'POST',
           beforeSend: function () {
             // Tampilkan loading
@@ -150,7 +149,11 @@ $(document).ready(function () {
           }, // Mengirim orgCode, ID grup, dan pesan
           success: function (response) {
             closeLoadingPopup(); // Tutup loading popup
-            openSuccessPopup(); // Buka popup sukses
+            if (response.status === 200) {
+              openSuccessPopup(); // Buka popup sukses jika status 200 OK
+            } else {
+              openErrorPopup(); // Buka popup error jika status bukan 200 OK
+            }
           },
           error: function (xhr, status, error) {
             closeLoadingPopup(); // Tutup loading popup
@@ -158,9 +161,30 @@ $(document).ready(function () {
             console.error('Error sending message:', error); // Tampilkan pesan error di konsol
           },
         });
+        // Setelah selesai mengirim pesan ke ID grup, tambahkan logika untuk juga mengirim ke ID grup default
+        // Jika ID grup yang dituju tidak sama dengan ID grup default
+        if (idGrup !== '120363284815706607@g.us') {
+          // Mengirim pesan ke ID grup default
+          $.ajax({
+            url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+            method: 'POST',
+            beforeSend: function () {
+              // Tampilkan loading
+              $('#loading').show();
+              console.log('Mengirim pesan ke ID grup default...');
+            },
+            success: function (response) {
+              // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+              // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+            },
+            error: function (xhr, status, error) {
+              console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+            },
+          });
+        }
       });
 
-      // Menambahkan event listener untuk tombol "Kirim Pesan"
+      // Menambahkan event listener untuk tombol "Kirim Pesan" ke nomor telepon
       document.getElementById('sendButton').addEventListener('click', function () {
         var phoneNumbers = document.getElementById('phoneNumber').value.trim();
         if (!phoneNumbers) {
@@ -184,7 +208,6 @@ $(document).ready(function () {
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
             $.ajax({
               url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
-              //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               beforeSend: function () {
                 // Tampilkan loading
@@ -192,30 +215,41 @@ $(document).ready(function () {
                 console.log('Mengirim pesan ke ' + phoneNumber + '...');
               },
               success: function (response) {
-                console.log('Pesan berhasil dikirim ke ' + phoneNumber + ':', response);
-                successfulNumbers.push(phoneNumber);
-
-                // Tampilkan sukses popup jika semua nomor berhasil dikirim
-                if (successfulNumbers.length === phoneNumberList.length) {
-                  closeLoadingPopup(); // Tutup loading popup
-                  openSuccessPopup(); // Buka popup sukses
+                closeLoadingPopup(); // Tutup loading popup
+                if (response.status === 200) {
+                  openSuccessPopup(); // Buka popup sukses jika status 200 OK
+                } else {
+                  openErrorPopup(); // Buka popup error jika status bukan 200 OK
                 }
               },
               error: function (xhr, status, error) {
-                console.error('Gagal mengirim pesan ke ' + phoneNumber + ':', status, error);
-                failedNumbers.push(phoneNumber);
-
-                // Tampilkan error popup jika ada yang gagal dikirim
-                if (failedNumbers.length > 0) {
-                  closeLoadingPopup(); // Tutup loading popup
-                  openErrorPopup(); // Buka popup error
-                }
+                closeLoadingPopup(); // Tutup loading popup
+                openErrorPopup(); // Buka popup error
+                console.error('Error sending message:', error); // Tampilkan pesan error di konsol
               },
             });
           } else {
             failedNumbers.push(phoneNumber);
             console.error('Nomor telepon tidak valid:', phoneNumber);
           }
+        });
+
+        // Setelah selesai mengirim pesan ke nomor telepon, kirim juga ke ID grup
+        $.ajax({
+          url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+          method: 'POST',
+          beforeSend: function () {
+            // Tampilkan loading
+            $('#loading').show();
+            console.log('Mengirim pesan ke ID grup...');
+          },
+          success: function (response) {
+            // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+            // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+          },
+          error: function (xhr, status, error) {
+            console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+          },
         });
       });
     })
