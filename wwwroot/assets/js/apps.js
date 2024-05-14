@@ -1719,7 +1719,7 @@ var curahCIHAWUK = L.marker([-7.185951, 107.699982], {
 }).addTo(maps);
 curahCIHAWUK.bindPopup('<b>PCH CIHAWUK</b>');
 
-//{{  POS PDA & PCH }}
+//{{ POS PDA & PCH }}
 //Unit Hidrologi Kalteng
 var POSDUGAAIRDANHUJANTEWAH = L.marker([-1.057794, 113.735804], {
   icon: L.divIcon({
@@ -1794,7 +1794,7 @@ var PDAPCHMARABAHAN = L.marker([-2.9783, 114.7766], {
 }).addTo(maps);
 PDAPCHMARABAHAN.bindPopup('<b>PDA PCH MARABAHAN</b>');
 
-//{{ POS Klimatologi }}
+//{{ POS KLIMATOLOGI }}
 //BWS Sumatera IV
 var AWSBUKITBERANGIN = L.marker([3.938748, 108.3292], {
   icon: L.divIcon({
