@@ -147,19 +147,19 @@ $(document).ready(function () {
             $('#loading').show();
             console.log('Mengirim pesan ke ' + idGrup + '...');
           }, // Mengirim orgCode, ID grup, dan pesan
-          success: function (response) {
-            closeLoadingPopup(); // Tutup loading popup
-            if (response.status === 200) {
-              openSuccessPopup(); // Buka popup sukses jika status 200 OK
-            } else {
-              openErrorPopup(); // Buka popup error jika status bukan 200 OK
-            }
-          },
-          error: function (xhr, status, error) {
-            closeLoadingPopup(); // Tutup loading popup
-            openErrorPopup(); // Buka popup error
-            console.error('Error sending message:', error); // Tampilkan pesan error di konsol
-          },
+          // success: function (response) {
+          //   closeLoadingPopup(); // Tutup loading popup
+          //   if (response.status === 200) {
+          //     openSuccessPopup(); // Buka popup sukses jika status 200 OK
+          //   } else {
+          //     openErrorPopup(); // Buka popup error jika status bukan 200 OK
+          //   }
+          // },
+          // error: function (xhr, status, error) {
+          //   closeLoadingPopup(); // Tutup loading popup
+          //   openErrorPopup(); // Buka popup error
+          //   console.error('Error sending message:', error); // Tampilkan pesan error di konsol
+          // },
         });
         // Setelah selesai mengirim pesan ke ID grup, tambahkan logika untuk juga mengirim ke ID grup default
         // Jika ID grup yang dituju tidak sama dengan ID grup default
@@ -173,13 +173,13 @@ $(document).ready(function () {
               $('#loading').show();
               console.log('Mengirim pesan ke ID grup default...');
             },
-            success: function (response) {
-              // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
-              // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
-            },
-            error: function (xhr, status, error) {
-              console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
-            },
+            // success: function (response) {
+            //   // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+            //   // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+            // },
+            // error: function (xhr, status, error) {
+            //   console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+            // },
           });
         }
       });
@@ -214,19 +214,19 @@ $(document).ready(function () {
                 $('#loading').show();
                 console.log('Mengirim pesan ke ' + phoneNumber + '...');
               },
-              success: function (response) {
-                closeLoadingPopup(); // Tutup loading popup
-                if (response.status === 200) {
-                  openSuccessPopup(); // Buka popup sukses jika status 200 OK
-                } else {
-                  openErrorPopup(); // Buka popup error jika status bukan 200 OK
-                }
-              },
-              error: function (xhr, status, error) {
-                closeLoadingPopup(); // Tutup loading popup
-                openErrorPopup(); // Buka popup error
-                console.error('Error sending message:', error); // Tampilkan pesan error di konsol
-              },
+              // success: function (response) {
+              //   closeLoadingPopup(); // Tutup loading popup
+              //   if (response.status === 200) {
+              //     openSuccessPopup(); // Buka popup sukses jika status 200 OK
+              //   } else {
+              //     openErrorPopup(); // Buka popup error jika status bukan 200 OK
+              //   }
+              // },
+              // error: function (xhr, status, error) {
+              //   closeLoadingPopup(); // Tutup loading popup
+              //   openErrorPopup(); // Buka popup error
+              //   console.error('Error sending message:', error); // Tampilkan pesan error di konsol
+              // },
             });
           } else {
             failedNumbers.push(phoneNumber);
@@ -243,13 +243,13 @@ $(document).ready(function () {
             $('#loading').show();
             console.log('Mengirim pesan ke ID grup...');
           },
-          success: function (response) {
-            // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
-            // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
-          },
-          error: function (xhr, status, error) {
-            console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
-          },
+          // success: function (response) {
+          //   // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+          //   // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+          // },
+          // error: function (xhr, status, error) {
+          //   console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+          // },
         });
       });
     })

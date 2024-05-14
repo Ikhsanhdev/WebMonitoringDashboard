@@ -6,6 +6,6 @@ public class Phone
 {
     public int? Id {get; set;}
     public string name { get; set; }
-    public long nomor { get; set; }
+    public string nomor { get; set; }
     public string pic { get; set; }
 }
