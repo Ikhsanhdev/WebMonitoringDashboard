@@ -141,45 +141,48 @@ $(document).ready(function () {
         // Mengirim pesan ke ID grup
         $.ajax({
           url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
           method: 'POST',
           beforeSend: function () {
             // Tampilkan loading
             $('#loading').show();
             console.log('Mengirim pesan ke ' + idGrup + '...');
-          }, // Mengirim orgCode, ID grup, dan pesan
-          // success: function (response) {
-          //   closeLoadingPopup(); // Tutup loading popup
-          //   if (response.status === 200) {
-          //     openSuccessPopup(); // Buka popup sukses jika status 200 OK
-          //   } else {
-          //     openErrorPopup(); // Buka popup error jika status bukan 200 OK
-          //   }
-          // },
-          // error: function (xhr, status, error) {
-          //   closeLoadingPopup(); // Tutup loading popup
-          //   openErrorPopup(); // Buka popup error
-          //   console.error('Error sending message:', error); // Tampilkan pesan error di konsol
-          // },
+          },
+          success: function (response) {
+            closeLoadingPopup(); // Tutup loading popup
+            if (response.status === 200) {
+              openSuccessPopup(); // Buka popup sukses jika status 200 OK
+            } else {
+              openErrorPopup(); // Buka popup error jika status bukan 200 OK
+            }
+          },
+          error: function (xhr, status, error) {
+            closeLoadingPopup(); // Tutup loading popup
+            openErrorPopup(); // Buka popup error
+            console.error('Error sending message:', error); // Tampilkan pesan error di konsol
+          },
         });
+
         // Setelah selesai mengirim pesan ke ID grup, tambahkan logika untuk juga mengirim ke ID grup default
         // Jika ID grup yang dituju tidak sama dengan ID grup default
         if (idGrup !== '120363284815706607@g.us') {
           // Mengirim pesan ke ID grup default
           $.ajax({
             url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+            //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
             method: 'POST',
             beforeSend: function () {
               // Tampilkan loading
               $('#loading').show();
               console.log('Mengirim pesan ke ID grup default...');
             },
-            // success: function (response) {
-            //   // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
-            //   // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
-            // },
-            // error: function (xhr, status, error) {
-            //   console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
-            // },
+            success: function (response) {
+              // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+              // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+            },
+            error: function (xhr, status, error) {
+              console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+            },
           });
         }
       });
@@ -201,59 +204,82 @@ $(document).ready(function () {
         // Menampilkan overlay loading saat memulai pengiriman pesan
         openLoadingPopup();
 
-        var successfulNumbers = [];
-        var failedNumbers = [];
-
         phoneNumberList.forEach(function (phoneNumber) {
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
             $.ajax({
               url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               beforeSend: function () {
                 // Tampilkan loading
                 $('#loading').show();
                 console.log('Mengirim pesan ke ' + phoneNumber + '...');
               },
-              // success: function (response) {
-              //   closeLoadingPopup(); // Tutup loading popup
-              //   if (response.status === 200) {
-              //     openSuccessPopup(); // Buka popup sukses jika status 200 OK
-              //   } else {
-              //     openErrorPopup(); // Buka popup error jika status bukan 200 OK
-              //   }
-              // },
-              // error: function (xhr, status, error) {
-              //   closeLoadingPopup(); // Tutup loading popup
-              //   openErrorPopup(); // Buka popup error
-              //   console.error('Error sending message:', error); // Tampilkan pesan error di konsol
-              // },
+              success: function (response) {
+                closeLoadingPopup(); // Tutup loading popup
+                if (response.status === 200) {
+                  openSuccessPopup(); // Buka popup sukses jika status 200 OK
+                } else {
+                  openErrorPopup(); // Buka popup error jika status bukan 200 OK
+                }
+              },
+              error: function (xhr, status, error) {
+                closeLoadingPopup(); // Tutup loading popup
+                openErrorPopup(); // Buka popup error
+                console.error('Error sending message:', error); // Tampilkan pesan error di konsol
+              },
             });
           } else {
-            failedNumbers.push(phoneNumber);
-            console.error('Nomor telepon tidak valid:', phoneNumber);
+            console.error('Invalid phone number:', phoneNumber);
           }
         });
 
         // Setelah selesai mengirim pesan ke nomor telepon, kirim juga ke ID grup
         $.ajax({
           url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+          //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
           method: 'POST',
           beforeSend: function () {
             // Tampilkan loading
             $('#loading').show();
             console.log('Mengirim pesan ke ID grup...');
           },
-          // success: function (response) {
-          //   // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
-          //   // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
-          // },
-          // error: function (xhr, status, error) {
-          //   console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
-          // },
+          success: function (response) {
+            // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+            // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+          },
+          error: function (xhr, status, error) {
+            console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+          },
         });
       });
     })
-    .fail(function (xhr, status, error) {
-      console.error('Request failed with status:', status);
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error fetching data:', errorThrown);
     });
+
+  // Fungsi untuk menampilkan overlay loading
+  function openLoadingPopup() {
+    var loadingPopup = document.getElementById('loadingPopup');
+    loadingPopup.style.display = 'block';
+  }
+
+  // Fungsi untuk menutup overlay loading
+  function closeLoadingPopup() {
+    var loadingPopup = document.getElementById('loadingPopup');
+    loadingPopup.style.display = 'none';
+  }
+
+  // Fungsi untuk menampilkan popup sukses
+  function openSuccessPopup() {
+    openPopup('Success', 'Message sent successfully.');
+  }
+
+  // Fungsi untuk menampilkan popup error
+  function openErrorPopup() {
+    openPopup('Error', 'Failed to send message.');
+  }
+
+  // Menambahkan event listener untuk tombol "Tutup" di popup
+  document.getElementById('closePopup').addEventListener('click', closePopup);
 });

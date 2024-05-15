@@ -193,7 +193,11 @@
             // Simulate sending message (replace with actual sending process)
             setTimeout(function () {
                 var randomNumber = Math.random(); // Simulated random number for success/error
-                if (randomNumber > 0.5) {
+                
+                // Simulate server response, if response is 200 OK, consider it successful
+                var responseCode = randomNumber > 0.5 ? 200 : 404; // Simulated response code
+
+                if (responseCode === 200) {
                     closeLoadingPopup(); // Close loading popup
                     openSuccessPopup(); // Open success popup
                 } else {
