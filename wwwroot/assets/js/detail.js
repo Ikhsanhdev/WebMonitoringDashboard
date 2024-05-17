@@ -140,8 +140,8 @@ $(document).ready(function () {
 
         // Mengirim pesan ke ID grup
         $.ajax({
-          url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
-          //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          //url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
           method: 'POST',
           beforeSend: function () {
             // Tampilkan loading
@@ -168,8 +168,8 @@ $(document).ready(function () {
         if (idGrup !== '120363284815706607@g.us') {
           // Mengirim pesan ke ID grup default
           $.ajax({
-            url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
-            //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+            //url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+            url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
             method: 'POST',
             beforeSend: function () {
               // Tampilkan loading
@@ -207,8 +207,8 @@ $(document).ready(function () {
         phoneNumberList.forEach(function (phoneNumber) {
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
             $.ajax({
-              url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
-              //url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              //url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               beforeSend: function () {
                 // Tampilkan loading
@@ -236,8 +236,8 @@ $(document).ready(function () {
 
         // Setelah selesai mengirim pesan ke nomor telepon, kirim juga ke ID grup
         $.ajax({
-          url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
-          //url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+          //url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+          url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
           method: 'POST',
           beforeSend: function () {
             // Tampilkan loading
