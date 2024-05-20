@@ -140,46 +140,48 @@ $(document).ready(function () {
 
         // Mengirim pesan ke ID grup
         $.ajax({
-          url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          //url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
+          url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
           method: 'POST',
           beforeSend: function () {
-            // Tampilkan loading
-            $('#loading').show();
             console.log('Mengirim pesan ke ' + idGrup + '...');
-          }, // Mengirim orgCode, ID grup, dan pesan
-          // success: function (response) {
-          //   closeLoadingPopup(); // Tutup loading popup
-          //   if (response.status === 200) {
-          //     openSuccessPopup(); // Buka popup sukses jika status 200 OK
-          //   } else {
-          //     openErrorPopup(); // Buka popup error jika status bukan 200 OK
-          //   }
-          // },
-          // error: function (xhr, status, error) {
-          //   closeLoadingPopup(); // Tutup loading popup
-          //   openErrorPopup(); // Buka popup error
-          //   console.error('Error sending message:', error); // Tampilkan pesan error di konsol
-          // },
+          },
+          success: function (response) {
+            closeLoadingPopup(); // Tutup loading popup
+            console.log('Respons dari server:', response);
+            if (response.status === 200 || response.success) {
+              openSuccessPopup(); // Buka popup sukses jika status 200 OK atau respons sukses
+            } else {
+              openErrorPopup(); // Buka popup error jika status bukan 200 OK
+            }
+          },
+          error: function (xhr, status, error) {
+            closeLoadingPopup(); // Tutup loading popup
+            console.error('Error dari server:', xhr, status, error);
+            openErrorPopup(); // Buka popup error
+          },
         });
+
         // Setelah selesai mengirim pesan ke ID grup, tambahkan logika untuk juga mengirim ke ID grup default
         // Jika ID grup yang dituju tidak sama dengan ID grup default
         if (idGrup !== '120363284815706607@g.us') {
           // Mengirim pesan ke ID grup default
           $.ajax({
-            url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+            //url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+            url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
             method: 'POST',
             beforeSend: function () {
               // Tampilkan loading
               $('#loading').show();
               console.log('Mengirim pesan ke ID grup default...');
             },
-            // success: function (response) {
-            //   // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
-            //   // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
-            // },
-            // error: function (xhr, status, error) {
-            //   console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
-            // },
+            success: function (response) {
+              // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+              // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+            },
+            error: function (xhr, status, error) {
+              console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+            },
           });
         }
       });
@@ -201,55 +203,59 @@ $(document).ready(function () {
         // Menampilkan overlay loading saat memulai pengiriman pesan
         openLoadingPopup();
 
-        var successfulNumbers = [];
-        var failedNumbers = [];
-
-        phoneNumberList.forEach(function (phoneNumber) {
+        var requests = phoneNumberList.map(function (phoneNumber) {
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
-            $.ajax({
-              url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+            return $.ajax({
+              //url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
+              url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               beforeSend: function () {
-                // Tampilkan loading
-                $('#loading').show();
                 console.log('Mengirim pesan ke ' + phoneNumber + '...');
               },
-              // success: function (response) {
-              //   closeLoadingPopup(); // Tutup loading popup
-              //   if (response.status === 200) {
-              //     openSuccessPopup(); // Buka popup sukses jika status 200 OK
-              //   } else {
-              //     openErrorPopup(); // Buka popup error jika status bukan 200 OK
-              //   }
-              // },
-              // error: function (xhr, status, error) {
-              //   closeLoadingPopup(); // Tutup loading popup
-              //   openErrorPopup(); // Buka popup error
-              //   console.error('Error sending message:', error); // Tampilkan pesan error di konsol
-              // },
+              success: function (response) {
+                console.log('Respons dari server:', response);
+                if (response.status !== 200 && !response.success) {
+                  return $.Deferred().reject(); // Reject promise if not 200 or not success
+                }
+              },
+              error: function (xhr, status, error) {
+                console.error('Error dari server:', xhr, status, error);
+              },
             });
           } else {
-            failedNumbers.push(phoneNumber);
             console.error('Nomor telepon tidak valid:', phoneNumber);
+            return $.Deferred().reject(); // Return a rejected promise for invalid numbers
           }
         });
 
+        $.when
+          .apply($, requests)
+          .done(function () {
+            closeLoadingPopup(); // Tutup loading popup
+            openSuccessPopup(); // Buka popup sukses jika semua request berhasil
+          })
+          .fail(function () {
+            closeLoadingPopup(); // Tutup loading popup
+            openErrorPopup(); // Buka popup error jika ada request yang gagal
+          });
+
         // Setelah selesai mengirim pesan ke nomor telepon, kirim juga ke ID grup
         $.ajax({
-          url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+          //url: 'https://live.higertech.com/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
+          url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=120363284815706607@g.us',
           method: 'POST',
           beforeSend: function () {
             // Tampilkan loading
             $('#loading').show();
             console.log('Mengirim pesan ke ID grup...');
           },
-          // success: function (response) {
-          //   // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
-          //   // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
-          // },
-          // error: function (xhr, status, error) {
-          //   console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
-          // },
+          success: function (response) {
+            // Tidak perlu menampilkan popup success/error untuk pengiriman ke ID grup default
+            // karena fokus utama adalah pengiriman ke ID grup yang dimasukkan pengguna
+          },
+          error: function (xhr, status, error) {
+            console.error('Error sending message to default group:', error); // Tampilkan pesan error di konsol
+          },
         });
       });
     })
