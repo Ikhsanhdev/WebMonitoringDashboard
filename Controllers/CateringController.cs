@@ -14,7 +14,6 @@ public class CateringController : Controller
         _logger = logger;
     }
 
-    [Authorize]
     public ActionResult Index() {
         return View();
     }
