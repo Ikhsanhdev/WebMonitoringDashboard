@@ -93,8 +93,7 @@
     <div class="popup-container" id="loadingContainer">
         <!-- Popup Content -->
         <div class="popup-content">
-            <h2 id="loadingTitle">Sending Message</h2>
-            <div id="loading">Loading...</div>
+            <h2 id="loadingTitle">Sending Message ...</h2>
         </div>
     </div>
 
@@ -102,7 +101,7 @@
     <div class="popup-container" id="successContainer">
         <!-- Popup Content -->
         <div class="popup-content">
-            <h3 id="successTitle">Message Sent !</h3>
+            <h3 id="successTitle">Pesan Terkirim!</h3>
             <button class="btn btn-primary" onclick="closeSuccessPopup()">OK</button>
         </div>
     </div>
@@ -111,7 +110,7 @@
     <div class="popup-container" id="errorContainer">
         <!-- Popup Content -->
         <div class="popup-content">
-            <h3 id="errorTitle">Error Sending Message !</h3>
+            <h3 id="errorTitle">Gagal Mengirim Pesan!</h3>
             <button class="btn btn-danger" onclick="closeErrorPopup()">OK</button>
         </div>
     </div>
@@ -121,91 +120,61 @@
         function openLoadingPopup() {
             var loadingPopup = document.getElementById('loadingContainer');
             loadingPopup.style.display = 'flex';
-
-            // Delay for animation effect
             setTimeout(function () {
                 loadingPopup.querySelector('.popup-content').style.opacity = 1;
                 loadingPopup.querySelector('.popup-content').style.transform = 'translateY(0)';
-            }, 50); // Adjust as needed, minimal delay for animation effect
+            }, 50);
         }
 
         // Function to Close Loading Popup
         function closeLoadingPopup() {
             var loadingPopup = document.getElementById('loadingContainer');
-            loadingPopup.querySelector('.popup-content').style.opacity = 0; // Fade out animation
-            loadingPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)'; // Move upwards
+            loadingPopup.querySelector('.popup-content').style.opacity = 0;
+            loadingPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)';
             setTimeout(function () {
-                loadingPopup.style.display = 'none'; // Hide popup after animation
-            }, 300); // Adjust as needed, animation duration
+                loadingPopup.style.display = 'none';
+            }, 300);
         }
 
         // Function to Open Success Popup
         function openSuccessPopup() {
             var successPopup = document.getElementById('successContainer');
             successPopup.style.display = 'flex';
-
-            // Delay for animation effect
             setTimeout(function () {
                 successPopup.querySelector('.popup-content').style.opacity = 1;
                 successPopup.querySelector('.popup-content').style.transform = 'translateY(0)';
-            }, 50); // Adjust as needed, minimal delay for animation effect
-
-            // Change success message to "Sending Message..."
-            successPopup.querySelector('#successTitle').textContent = 'Sending Message...';
+            }, 50);
         }
 
         // Function to Close Success Popup
         function closeSuccessPopup() {
             var successPopup = document.getElementById('successContainer');
-            successPopup.querySelector('.popup-content').style.opacity = 0; // Fade out animation
-            successPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)'; // Move upwards
+            successPopup.querySelector('.popup-content').style.opacity = 0;
+            successPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)';
             setTimeout(function () {
-                successPopup.style.display = 'none'; // Hide popup after animation
-            }, 300); // Adjust as needed, animation duration
+                successPopup.style.display = 'none';
+            }, 300);
         }
 
         // Function to Open Error Popup
         function openErrorPopup() {
             var errorPopup = document.getElementById('errorContainer');
             errorPopup.style.display = 'flex';
-
-            // Delay for animation effect
             setTimeout(function () {
                 errorPopup.querySelector('.popup-content').style.opacity = 1;
                 errorPopup.querySelector('.popup-content').style.transform = 'translateY(0)';
-            }, 50); // Adjust as needed, minimal delay for animation effect
+            }, 50);
         }
 
         // Function to Close Error Popup
         function closeErrorPopup() {
             var errorPopup = document.getElementById('errorContainer');
-            errorPopup.querySelector('.popup-content').style.opacity = 0; // Fade out animation
-            errorPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)'; // Move upwards
+            errorPopup.querySelector('.popup-content').style.opacity = 0;
+            errorPopup.querySelector('.popup-content').style.transform = 'translateY(-20px)';
             setTimeout(function () {
-                errorPopup.style.display = 'none'; // Hide popup after animation
-            }, 300); // Adjust as needed, animation duration
+                errorPopup.style.display = 'none';
+            }, 300);
         }
-
-        // Event listener for "Kirim Pesan" button
-        document.getElementById('sendButton').addEventListener('click', function () {
-            openLoadingPopup(); // Open loading popup
-
-            // Simulate sending message (replace with actual sending process)
-            setTimeout(function () {
-                var randomNumber = Math.random(); // Simulated random number for success/error
-                
-                // Simulate server response, if response is 200 OK, consider it successful
-                var responseCode = randomNumber > 0.5 ? 200 : 404; // Simulated response code
-
-                if (responseCode === 200) {
-                    closeLoadingPopup(); // Close loading popup
-                    openSuccessPopup(); // Open success popup
-                } else {
-                    closeLoadingPopup(); // Close loading popup
-                    openErrorPopup(); // Open error popup
-                }
-            }, 2000); // Simulated delay, replace with actual sending process duration
-        });
 
         // Tangani peristiwa saat memilih nomor pada select box
         document.getElementById('phoneSelect').addEventListener('change', function() {

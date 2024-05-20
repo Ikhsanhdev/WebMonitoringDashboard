@@ -144,22 +144,21 @@ $(document).ready(function () {
           url: '/Api/SendMessageGroup?orgCode=' + orgParam + '&number=' + idGrup,
           method: 'POST',
           beforeSend: function () {
-            // Tampilkan loading
-            $('#loading').show();
             console.log('Mengirim pesan ke ' + idGrup + '...');
           },
           success: function (response) {
             closeLoadingPopup(); // Tutup loading popup
-            if (response.status === 200) {
-              openSuccessPopup(); // Buka popup sukses jika status 200 OK
+            console.log('Respons dari server:', response);
+            if (response.status === 200 || response.success) {
+              openSuccessPopup(); // Buka popup sukses jika status 200 OK atau respons sukses
             } else {
               openErrorPopup(); // Buka popup error jika status bukan 200 OK
             }
           },
           error: function (xhr, status, error) {
             closeLoadingPopup(); // Tutup loading popup
+            console.error('Error dari server:', xhr, status, error);
             openErrorPopup(); // Buka popup error
-            console.error('Error sending message:', error); // Tampilkan pesan error di konsol
           },
         });
 
@@ -204,35 +203,41 @@ $(document).ready(function () {
         // Menampilkan overlay loading saat memulai pengiriman pesan
         openLoadingPopup();
 
-        phoneNumberList.forEach(function (phoneNumber) {
+        var requests = phoneNumberList.map(function (phoneNumber) {
           if (/^\d+$/.test(phoneNumber) && phoneNumber.length >= 10 && phoneNumber.length <= 15) {
-            $.ajax({
+            return $.ajax({
               //url: 'https://live.higertech.com/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               url: '/Api/SendMessageToApi?orgCode=' + orgParam + '&number=' + phoneNumber,
               method: 'POST',
               beforeSend: function () {
-                // Tampilkan loading
-                $('#loading').show();
                 console.log('Mengirim pesan ke ' + phoneNumber + '...');
               },
               success: function (response) {
-                closeLoadingPopup(); // Tutup loading popup
-                if (response.status === 200) {
-                  openSuccessPopup(); // Buka popup sukses jika status 200 OK
-                } else {
-                  openErrorPopup(); // Buka popup error jika status bukan 200 OK
+                console.log('Respons dari server:', response);
+                if (response.status !== 200 && !response.success) {
+                  return $.Deferred().reject(); // Reject promise if not 200 or not success
                 }
               },
               error: function (xhr, status, error) {
-                closeLoadingPopup(); // Tutup loading popup
-                openErrorPopup(); // Buka popup error
-                console.error('Error sending message:', error); // Tampilkan pesan error di konsol
+                console.error('Error dari server:', xhr, status, error);
               },
             });
           } else {
-            console.error('Invalid phone number:', phoneNumber);
+            console.error('Nomor telepon tidak valid:', phoneNumber);
+            return $.Deferred().reject(); // Return a rejected promise for invalid numbers
           }
         });
+
+        $.when
+          .apply($, requests)
+          .done(function () {
+            closeLoadingPopup(); // Tutup loading popup
+            openSuccessPopup(); // Buka popup sukses jika semua request berhasil
+          })
+          .fail(function () {
+            closeLoadingPopup(); // Tutup loading popup
+            openErrorPopup(); // Buka popup error jika ada request yang gagal
+          });
 
         // Setelah selesai mengirim pesan ke nomor telepon, kirim juga ke ID grup
         $.ajax({
@@ -254,32 +259,7 @@ $(document).ready(function () {
         });
       });
     })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error fetching data:', errorThrown);
+    .fail(function (xhr, status, error) {
+      console.error('Request failed with status:', status);
     });
-
-  // Fungsi untuk menampilkan overlay loading
-  function openLoadingPopup() {
-    var loadingPopup = document.getElementById('loadingPopup');
-    loadingPopup.style.display = 'block';
-  }
-
-  // Fungsi untuk menutup overlay loading
-  function closeLoadingPopup() {
-    var loadingPopup = document.getElementById('loadingPopup');
-    loadingPopup.style.display = 'none';
-  }
-
-  // Fungsi untuk menampilkan popup sukses
-  function openSuccessPopup() {
-    openPopup('Success', 'Message sent successfully.');
-  }
-
-  // Fungsi untuk menampilkan popup error
-  function openErrorPopup() {
-    openPopup('Error', 'Failed to send message.');
-  }
-
-  // Menambahkan event listener untuk tombol "Tutup" di popup
-  document.getElementById('closePopup').addEventListener('click', closePopup);
 });
