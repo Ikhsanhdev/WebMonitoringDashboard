@@ -10,7 +10,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 function initMap() {
   var initialLocation = {lat: -1.558, lng: 118.707};
   var map = new google.maps.Map(document.getElementById('maps'), {
-      zoom: 8,
+      zoom: 5,
       center: initialLocation
   });
   
