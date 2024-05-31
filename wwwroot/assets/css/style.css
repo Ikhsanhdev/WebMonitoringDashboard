@@ -279,4 +279,14 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Menambahkan bayangan saat dihover */
 }
 
+.legend {
+  background: white;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
+.legend img {
+  vertical-align: middle;
+}

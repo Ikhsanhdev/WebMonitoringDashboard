@@ -6,6 +6,20 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://higertech.com">Higertech</a>',
 }).addTo(maps);
 
+//new google map api
+function initMap() {
+  var initialLocation = {lat: -1.558, lng: 118.707};
+  var map = new google.maps.Map(document.getElementById('maps'), {
+      zoom: 8,
+      center: initialLocation
+  });
+  
+  var marker = new google.maps.Marker({
+      position: initialLocation,
+      map: map
+  });
+}
+
 var legendControl = L.control({ position: 'bottomright' });
 legendControl.onAdd = function (maps) {
   var div = L.DomUtil.create('div', 'legend');
