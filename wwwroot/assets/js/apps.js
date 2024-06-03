@@ -14,10 +14,10 @@ function initMap() {
     center: initialLocation,
   });
 
-  var marker = new google.maps.Marker({
-    position: initialLocation,
-    map: map,
-  });
+  // var marker = new google.maps.Marker({
+  //   position: initialLocation,
+  //   map: map,
+  // });
 
   // Tambahkan legend di sini
   var legendDiv = document.createElement('div');
