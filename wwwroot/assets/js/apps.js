@@ -42,7 +42,7 @@ function initMap() {
     </div>
   `;
 
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legendDiv);
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legendDiv);
 
   //{{ POS DUGA AIR }}
   //BWS Sumatera IV
