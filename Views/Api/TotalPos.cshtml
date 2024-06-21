@@ -84,6 +84,7 @@
                             <th class="text-center">Status</th>
                             <th class="text-center">Tipe</th>
                             <th class="text-center">Reading At</th>
+                            <th class="text-center">Create At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,6 +152,9 @@
                     row.append($("<td class='text-center'>").text(item.stationType));
                    // Format lastReadingAt using Moment.js
                     var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
+                    row.append($("<td class='text-center'>").text(formattedDate));
+
+                    var formattedDate = item.installedDate ? moment(item.installedDate).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td class='text-center'>").text(formattedDate));
 
                     body.append(row);
@@ -290,6 +294,9 @@
                             row.append($("<td class='text-center'>").text(item.stationType));
                             // Format lastReadingAt using Moment.js
                             var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
+                            row.append($("<td class='text-center'>").text(formattedDate));
+
+                            var formattedDate = item.installedDate ? moment(item.installedDate).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                             row.append($("<td class='text-center'>").text(formattedDate));
 
                             tableBody.append(row);
