@@ -18,6 +18,24 @@ function initMap() {
       position: initialLocation,
       map: map
   });
+
+  var station = GetDataStation();
+}
+
+async function GetDataStation() {
+  try {
+    const endPoint = 'ORG021';
+    const response = await fetch('/Api/GetStationByOrgCode?orgCode=ORG021');
+    
+    if(response.ok) {
+        const data = await response.json();
+        return data;
+    } else {
+        console.error(`Error: ${response.status} - ${response.statusText}`);
+    }
+  } catch(error) {
+      console.error('Error: ', error);
+  }
 }
 
 var legendControl = L.control({ position: 'bottomright' });
