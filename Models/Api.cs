@@ -9,6 +9,8 @@ public class Api
     public string stationType { get; set;}
     public string? type {get; set;}
     public DateTime? lastReadingAt { get; set; }
+    public DateTime? createdAt { get; set; }
+    public DateTime? installedDate { get; set; }
     public string? deviceStatus { get; set; }
     public float? waterLevel {get; set;}
     public string? warningStatus { get; set; }

@@ -40,29 +40,35 @@
                     </div>
                 </div> *@
 
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h6 class="mb-3">Tipe Pos :</h6>
-                    <div class="col">
-                        <select id="tipeFilter" class="form-select text-dark mb-3">
-                            <option value="semua">SEMUA</option>
-                            <option value="AWLR">AWLR</option>
-                            <option value="ARR">ARR</option>
-                            <option value="AWS">AWS</option>
-                        </select>
-                    </div>
-                </div>
+     <div class="row gx-3">
+    <div class="col-md-4 mb-3 mb-md-0">
+        <h6 class="mb-3">Tipe Pos :</h6>
+        <div class="col">
+            <select id="tipeFilter" class="form-select text-dark mb-3">
+                <option value="semua">SEMUA</option>
+                <option value="AWLR">PDA (AWLR)</option>
+                <option value="ARR">PCH (ARR)</option>
+                <option value="AWS">Klimatologi (AWS)</option>
+            </select>
+        </div>
+    </div>
 
-                <div class="col-md-4">
-                    <h6 class="mb-3">Status :</h6>
-                    <div class="col">
-                        <select id="statusFilter" class="form-select text-dark">
-                            <option value="all">SEMUA</option>
-                            <option value="online">ONLINE</option>
-                            <option value="offline">OFFLINE</option>
-                        </select>
-                    </div>
+    <div class="col-md-4 mb-3 mb-md-0">
+        <h6 class="mb-3">Status :</h6>
+        <div class="col">
+            <select id="statusFilter" class="form-select text-dark">
+                <option value="all">SEMUA</option>
+                <option value="online">ONLINE</option>
+                <option value="offline">OFFLINE</option>
+            </select>
+        </div>
+    </div>
+  <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-end justify-content-end">
+         <button id="exportBtn" class="btn btn-success">Export to Excel</button>
+       
+                 </div>
+                      </div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -99,10 +105,18 @@
     <!-- Include jQuery and Moment.js -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- Include SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
+    <!-- Include jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
     <!-- Include DataTables -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
+            var balaiName = '';
+            var codeorg = '';
+            var subDomain = '';
             var fetchData = function(organizationCode) {
                 return $.ajax({
                     url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
@@ -120,7 +134,9 @@
                 const data = result.data;
 
                 // Menampilkan nama balai dari data yang dipilih
-                var balaiName = data.length > 0 ? data[0].balaiName : ""; // Ambil dari data pertama
+                balaiName = data.length > 0 ? data[0].balaiName : ""; // Ambil dari data pertama
+                codeorg = data.length > 0 ? data[0].organizationCode : "";
+                subDomain = data.length > 0 ? data[0].subDomain : "";
                 $("h1").text(balaiName);
 
                 var body = $("#offpos tbody");
@@ -147,60 +163,72 @@
                     }
                     row.append(statusText);
                     row.append($("<td class='text-center'>").text(item.stationType));
-                   // Format lastReadingAt using Moment.js
+                    // Format lastReadingAt using Moment.js
                     var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
                     row.append($("<td class='text-center'>").text(formattedDate));
 
                     body.append(row);
                 });
+
             }).fail(function(xhr, status, error) {
                 console.error('Request failed with status:', status);
             });
 
-            // Function to refresh DataTable and update last update time
-         @*  function refreshDataTable() {
-                $('#offpos').DataTable().ajax.reload(null, false);
-                updateLastUpdateTime();
-            }
-
-            // Function to update last update time
-            function updateLastUpdateTime() {
-                var now = new Date();
-                var formattedTime = moment(now).format("DD-MM-YYYY HH:mm:ss");
-
-                // Get the last update time from the Ajax response
-                $.ajax({
-                    url: '/Api/GetLastUpdateTime', // Replace with the appropriate URL
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        var lastUpdateTimeString = response.lastUpdateTime; // Replace with the correct property name
-                        if (lastUpdateTimeString) {
-                            var lastUpdateTime = moment(lastUpdateTimeString);
-                            formattedTime = lastUpdateTime.format("DD-MM-YYYY HH:mm:ss");
-                        }
-
-                        // Use the correct ID here
-                        $('#lastUpdateTime').text('Last Updated : ' + formattedTime);
-                    },
-                    error: function (error) {
-                        console.error('Error getting last update time:', error);
-                    }
-                });
-            }
-
-            // Set up auto-refresh using setInterval
-            var autoRefreshInterval = setInterval(function () {
-                refreshDataTable();
-            }, 300000); // 5 minutes in milliseconds
-
-            // Stop auto-refresh when the page is unloaded
-            $(window).on('beforeunload', function () {
-                clearInterval(autoRefreshInterval);
+            // Event listener for export button
+            $('#exportBtn').click(function() {
+                // Panggil fungsi exportToExcel saat tombol "Export to Excel" ditekan
+                exportToExcel();
             });
 
-            // Initial update of last update time
-            updateLastUpdateTime();*@ 
+            // Event listener for export PDF button
+            $('#exportPdfBtn').click(function() {
+                exportToPdf();
+            });
+
+            function exportToExcel() {
+                const table = document.getElementById('offpos');
+                const ws = XLSX.utils.table_to_sheet(table);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, subDomain);
+                XLSX.writeFile(wb, `${subDomain}_monitoring_data.xlsx`);
+            }
+
+            function exportToPdf() {
+            // Initialize jsPDF
+            var doc = new jsPDF();
+
+            // Define columns for PDF table
+            var columns = [
+                { title: "No.", dataKey: "no" },
+                { title: "Nama Pos", dataKey: "nama" },
+                { title: "Device ID", dataKey: "deviceId" },
+                { title: "Status", dataKey: "status" },
+                { title: "Tipe", dataKey: "tipe" },
+                { title: "Reading At", dataKey: "readingAt" },
+            ];
+
+            // Define data rows for PDF table
+            var rows = [];
+            $("#offpos tbody tr").each(function(index) {
+                var cells = $(this).find("td");
+                var rowData = {
+                    no: cells.eq(0).text(),
+                    nama: cells.eq(1).text(),
+                    deviceId: cells.eq(2).text(),
+                    status: cells.eq(3).text(),
+                    tipe: cells.eq(4).text(),
+                    readingAt: cells.eq(5).text()
+                };
+                rows.push(rowData);
+            });
+
+            // Add table to PDF document
+            doc.autoTable(columns, rows);
+
+            // Save PDF file
+            doc.save(`${subDomain}_monitoring_data.pdf`);
+        }
+
 
             // Function to filter data by device status (online or offline)
             function filterDataByStatus(status, orgCode, type) {
