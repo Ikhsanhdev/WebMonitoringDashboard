@@ -1,13 +1,16 @@
 function createDetailPanel(reading) {
   var photo = '/images/favicon.png';
 
-// Sesuaikan status berdasarkan data dari API
-var status_offline = '<small class="mdi mdi-circle text-danger"></small> OFFLINE'; // Status default
+  console.log('reading.deviceStatus:', reading.deviceStatus);
 
-// Cek status dari API
-if (reading.deviceStatus === 'online') {
-  status_offline = '<small class="mdi mdi-circle text-success"></small> ONLINE';
-}
+  var status_offline = '<small class="mdi mdi-checkbox-blank-circle text-danger"></small> OFFLINE';
+
+  if (reading.deviceStatus === 'online') {
+    status_offline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
+    console.log('Status is online');
+  } else {
+    console.log('Status is offline');
+  }
 
   var panelContent = '<table class="table mb-2 font-12"><tbody>';
 
@@ -53,6 +56,7 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('maps'), {
     zoom: 5,
     center: initialLocation,
+    mapTypeId: google.maps.MapTypeId.SATELLITE 
   });
 
   // // Menambahkan marker awal
@@ -104,10 +108,10 @@ async function GetDataStation(map) {
         var iconUrl = '';
         switch (station.stationType) {
           case 'ARR':
-            iconUrl = '/assets/img/duga.png'; // Ganti dengan URL ikon PDA/AWLR
+            iconUrl = '/assets/img/curah.png'; // Ganti dengan URL ikon PDA/AWLR
             break;
           case 'AWLR':
-            iconUrl = '/assets/img/curah.png'; // Ganti dengan URL ikon PCH/ARR
+            iconUrl = '/assets/img/duga.png'; // Ganti dengan URL ikon PCH/ARR
             break;
           case 'AWS':
             iconUrl = '/assets/img/klimatologi.png'; // Ganti dengan URL ikon PDA & PCH
