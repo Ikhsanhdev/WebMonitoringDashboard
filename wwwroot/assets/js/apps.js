@@ -59,12 +59,6 @@ function initMap() {
     mapTypeId: google.maps.MapTypeId.SATELLITE 
   });
 
-  // // Menambahkan marker awal
-  // var marker = new google.maps.Marker({
-  //   position: initialLocation,
-  //   map: map,
-  // });
-
   // Panggil fungsi untuk mendapatkan data stasiun dan menambahkan marker
   GetDataStation(map);
 
@@ -132,11 +126,6 @@ async function GetDataStation(map) {
           },
           title: station.slug, // Memberi nama pada marker
         });
-        // var marker = new google.maps.Marker({
-        //   position: position,
-        //   map: map,
-        //   title: station.name, // Memberi nama pada marker
-        // });
 
         // Buat infoWindow menggunakan createDetailPanel
         var infoWindow = new google.maps.InfoWindow({
