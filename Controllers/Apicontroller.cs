@@ -65,105 +65,105 @@ public class ApiController : Controller
         return View();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> GetList()
+[HttpPost]
+public async Task<IActionResult> GetList()
+{
+    try
     {
-        try
+        var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
+        var start = int.Parse(Request.Form["start"].FirstOrDefault());
+        var length = int.Parse(Request.Form["length"].FirstOrDefault());
+        var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+        var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+        // Call your API and get data
+        var apiResponse = await GetDataFromApi();
+        Console.WriteLine(apiResponse);
+
+        if (apiResponse == null || !apiResponse.Any())
         {
-            var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
-            var start = int.Parse(Request.Form["start"].FirstOrDefault());
-            var length = int.Parse(Request.Form["length"].FirstOrDefault());
-            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-            // Call your API and get data
-            var apiResponse = await GetDataFromApi();
-
-            if (apiResponse == null || !apiResponse.Any())
-            {
-                // Handle the case where the API response is empty or null
-                return Json(new DataTableResult<Api>
-                {
-                    draw = draw,
-                    recordsTotal = 0,
-                    recordsFiltered = 0,
-                    data = new List<Api>()
-                });
-            }
-
-            // Filtering
-            var filteredData = apiResponse.Where(a => 
-                (string.IsNullOrEmpty(searchValue) || 
-                    a.balaiName.Contains(searchValue) ||
-                    a.name.Contains(searchValue) ||
-                    a.subDomain.Contains(searchValue) ||
-                    a.jumlahPos.ToString().Contains(searchValue) ||
-                    a.jumlahPosOnline.ToString().Contains(searchValue) ||
-                    a.jumlahPosOffline.ToString().Contains(searchValue) ||
-                    // a.slug.Contains(searchValue) ||
-                    // a.stationType.Contains(searchValue) ||
-                    a.organizationCode.Contains(searchValue) ||
-                    a.deviceId.Contains(searchValue) )
-                    // (a.deviceStatus != null && a.deviceStatus.Contains(searchValue)) ||
-                    // a.lastReadingAt?.ToString().Contains(searchValue) == true)
-                )
-                .ToList();
-
-            // Grouping and calculating aggregated values
-            var groupedData = filteredData
-            .GroupBy(a => a.balaiName)
-            .Select(g => new Api
-            {
-                balaiName = g.Key,
-                jumlahPos = g.Count(),
-                jumlahPosOnline = g.Count(p => p.deviceStatus == "online"),
-                jumlahPosOffline = g.Count(p => p.deviceStatus == "offline"),
-
-                // slug = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.slug) : g.Max(p => p.slug),
-                subDomain = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.subDomain) : g.Max(p => p.subDomain),
-                name = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.name) : g.Max(p => p.name),
-                // stationType = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.stationType) : g.Max(p => p.stationType),
-                organizationCode = g.Any(p => p.deviceStatus == "offline")? g.Where(p => p.deviceStatus == "offline").Max(p => p.organizationCode) : g.Max(p => p.organizationCode),
-                // deviceStatus = g.Any(p => p.deviceStatus == "offline") ? "offline" : "online",
-                // lastReadingAt = g.Any(p => p.deviceStatus == "offline") ? g.Where(p => p.deviceStatus == "offline").Max(p => p.lastReadingAt) : g.Max(p => p.lastReadingAt)
-            })
-            .ToList();
-
-            // Paging
-            var result = new DataTableResult<Api>
-            {
-                draw = draw,
-                recordsTotal = apiResponse.Count(),
-                recordsFiltered = groupedData.Count(),
-                data = groupedData.Skip(start).Take(length).ToList()
-            };
-
-            var nomorColumn = start + 1;
-            result.data.ForEach(item =>
-            {
-                item.nomor = nomorColumn;
-                nomorColumn++;
-            });
-
-            return Json(result);
-        }
-        catch (Exception ex)
-        {
-            // Handle other exceptions
             return Json(new DataTableResult<Api>
             {
-                draw = 0,
+                draw = draw,
                 recordsTotal = 0,
                 recordsFiltered = 0,
                 data = new List<Api>()
             });
         }
+
+        // Filtering
+        var filteredData = apiResponse.Where(a =>
+            (string.IsNullOrEmpty(searchValue) ||
+                a.subDomainOld.Contains(searchValue) ||
+                a.subDomain.Contains(searchValue) ||
+                a.jumlahPos.ToString().Contains(searchValue) ||
+                a.jumlahPosOnline.ToString().Contains(searchValue) ||
+                a.jumlahPosOffline.ToString().Contains(searchValue) ||
+                a.organizationCode.Contains(searchValue) ||
+                a.deviceId.Contains(searchValue))
+        ).ToList();
+
+        // Grouping and calculating aggregated values
+        var groupedData = filteredData
+        .GroupBy(a => a.subDomainOld)
+        .Select(g => new Api
+        {
+            subDomainOld = g.Key,
+            jumlahPos = g.Count(),
+            jumlahPosOnline = g.Count(p =>
+                (p.stationType.ToLower() == "arr" && p.arrLastReading?.deviceStatus?.ToLower() == "online") ||
+                (p.stationType.ToLower() == "awlr" && p.awlrLastReading?.deviceStatus?.ToLower() == "online") ||
+                (p.stationType.ToLower() == "aws" && p.awsLastReading?.deviceStatus?.ToLower() == "online") ||
+                (p.stationType.ToLower() == "awlr_arr" && p.awlrArrLastReading?.deviceStatus?.ToLower() == "online")
+            ),
+
+            jumlahPosOffline = g.Count(p =>
+                (p.stationType.ToLower() == "arr" && (p.arrLastReading?.deviceStatus?.ToLower() == "offline" || p.arrLastReading?.deviceStatus == null)) ||
+                (p.stationType.ToLower() == "awlr" && (p.awlrLastReading?.deviceStatus?.ToLower() == "offline" || p.awlrLastReading?.deviceStatus == null)) ||
+                (p.stationType.ToLower() == "aws" && (p.awsLastReading?.deviceStatus?.ToLower() == "offline" || p.awsLastReading?.deviceStatus == null)) ||
+                (p.stationType.ToLower() == "awlr_arr" && (p.awlrArrLastReading?.deviceStatus?.ToLower() == "offline" || p.awlrArrLastReading?.deviceStatus == null))
+            ),
+
+        })
+        .ToList();
+
+        // Paging
+        var result = new DataTableResult<Api>
+        {
+            draw = draw,
+            recordsTotal = apiResponse.Count(),
+            recordsFiltered = groupedData.Count(),
+            data = groupedData.Skip(start).Take(length).ToList()
+        };
+
+        var nomorColumn = start + 1;
+        result.data.ForEach(item =>
+        {
+            item.nomor = nomorColumn;
+            nomorColumn++;
+        });
+
+        return Json(result);
     }
+    catch (Exception ex)
+    {
+        // Logging error
+        Console.WriteLine($"Error: {ex.Message}");
+        return Json(new DataTableResult<Api>
+        {
+            draw = 0,
+            recordsTotal = 0,
+            recordsFiltered = 0,
+            data = new List<Api>()
+        });
+    }
+}
+
 
     private async Task<List<Api>> GetDataFromApi()
     {
-        string apiUrl = "http://localhost:5000/Station/All";
+        string apiUrl = "http://localhost:5000/LastReading/all";
         string username = "m0n1tor_st4tion";
         string password = "H1gertech.1dua3";
 
@@ -208,7 +208,7 @@ public class ApiController : Controller
                     total = apiResponse.Count();
                     break;
                 case "totalinstansi":
-                    total = apiResponse.Select(a => a.balaiName).Distinct().Count();
+                    total = apiResponse.Select(a => a.subDomain).Distinct().Count();
                     break;
                 case "totaldugaair":
                     total = apiResponse.Count(a => a.stationType == "AWLR" || a.stationType == "AWLR_ARR");
@@ -220,12 +220,21 @@ public class ApiController : Controller
                     total = apiResponse.Count(a => a.stationType == "AWS");
                     break;
                 case "totalonline":
-                    total = apiResponse.Count(a => a.deviceStatus == "online");
+                    total = apiResponse.Count(a =>
+                        (a.stationType == "ARR" && a.arrLastReading?.deviceStatus == "Online") ||
+                        (a.stationType == "AWLR" && a.awlrLastReading?.deviceStatus == "Online") ||
+                        (a.stationType == "AWS" && a.awsLastReading?.deviceStatus == "Online") ||
+                        (a.stationType == "AWLR_ARR" && a.awlrArrLastReading?.deviceStatus == "Online"));
                     break;
                 case "totaloffline":
-                    total = apiResponse.Count(a => a.deviceStatus == "offline");
+                    total = apiResponse.Count(a =>
+                        (a.stationType == "ARR" && (a.arrLastReading?.deviceStatus == "Offline" || a.arrLastReading?.deviceStatus == null)) ||
+                        (a.stationType == "AWLR" && (a.awlrLastReading?.deviceStatus == "Offline" || a.awlrLastReading?.deviceStatus == null)) ||
+                        (a.stationType == "AWS" && (a.awsLastReading?.deviceStatus == "Offline" || a.awsLastReading?.deviceStatus == null)) ||
+                        (a.stationType == "AWLR_ARR" && (a.awlrArrLastReading?.deviceStatus == "Offline" || a.awlrArrLastReading?.deviceStatus == null))
+                    );
                     break;
-                default:
+            default:
                     // Jika totalType tidak valid, kembalikan total 0
                     total = 0;
                     break;
@@ -288,12 +297,12 @@ public class ApiController : Controller
     
     [HttpGet]
     public async Task<JsonResult> GetStationByOrgCode(string orgCode){
-        string endPoint = $"Station/Organization/{orgCode}";
+        string endPoint = $"LastReading/Organization/{orgCode}";
         var data = await GetDataApi(endPoint);
         return Json(data);
     }
      public async Task<JsonResult> GetStationAll(){
-        string endPoint = $"Station/All/";
+        string endPoint = $"LastReading/all/";
         var data = await GetDataApi(endPoint);
         return Json(data);
     }

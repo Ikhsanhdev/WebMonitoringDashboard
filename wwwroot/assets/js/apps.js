@@ -26,7 +26,7 @@ function createDetailPanel(reading) {
   panelContent += '<tr>';
   panelContent += `<td class="px-0 py-2" colspan="3">
         <div class="d-flex align-items-start">
-            <img class="me-2 rounded-3" src="/assets/img/PUPR.jpeg" width="45" height="45" alt="${reading.deviceId}">
+            <img class="me-2 rounded-3" src="/assets/img/pupr.jpg" width="45" height="45" alt="${reading.deviceId}">
             <div class="w-100">
                 <h5 class="mt-0 mb-1 fw-semibold font-12">${reading.name}</h5>
                 ${statusOffline}
