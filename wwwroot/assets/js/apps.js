@@ -38,13 +38,13 @@ function createDetailPanel(reading) {
   panelContent += '<tr>';
   panelContent += `<td class="py-1 px-0">Tipe POS</td>`;
   panelContent += `<td class="py-1 px-2">:</td>`;
-  panelContent += `<td class="py-1 px-0">${reading.stationType} m</td>`;
+  panelContent += `<td class="py-1 px-0">${reading.stationType}</td>`;
   panelContent += '</tr>';
   
   panelContent += '<tr>';
   panelContent += `<td class="py-1 px-0">Longitude</td>`;
   panelContent += `<td class="py-1 px-2">:</td>`;
-  panelContent += `<td class="py-1 px-0">${reading.longitude} lt/dt</td>`;
+  panelContent += `<td class="py-1 px-0">${reading.longitude}</td>`;
   panelContent += '</tr>';
 
   panelContent += '<tr>';
