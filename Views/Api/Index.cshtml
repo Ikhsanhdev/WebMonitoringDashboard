@@ -278,11 +278,11 @@
                 },
                 "columns": [
                     { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
-                    { "data": "balaiName", "name": "BalaiName", "autoWidth": true },
+                    { "data": "subDomainOld", "name": "subDomainOld", "autoWidth": true },
                     {
-                        "data": "name",
+                        "data": "subDomain",
                         "render": function (data, type, row) {
-                            return '<a href="https://' + row.subDomain + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.balaiName + '</a>';
+                            return '<a href="https://' + row.subDomainOld + '.higertech.com" target="_blank" style="text-decoration: none;">' + row.subDomainOld + '</a>';
                         },
                         "orderable": false,
                         "searchable": false,
