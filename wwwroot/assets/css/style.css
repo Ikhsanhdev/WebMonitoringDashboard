@@ -33,8 +33,44 @@
 
 #maps {
   width: 100%;
-  height: 400px; /* Sesuaikan tinggi sesuai kebutuhan */
+  height: 92vh; /* Sesuaikan tinggi sesuai kebutuhan */
+  position: relative;
+  margin: 0 auto;
 }
+
+.tile-overlay1 {
+  position: absolute;
+  top: 80px; /* Sesuaikan jika perlu */
+  right: 56px; /* Sesuaikan jika perlu */
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+}
+.tile-stats1{
+  background-color:rgba(255, 255, 255, 0.7) ;
+  padding: 10px;
+  border-radius: 5px 10px ;
+  width: 150px;
+  height: 60px;
+  text-align: center;
+  }
+.tile-overlay2{
+  position: absolute;
+  top: 150px; /* Sesuaikan jika perlu */
+  right: 56px; /* Sesuaikan jika perlu */
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+}
+.tile-stats2{
+  background-color: rgba(255, 255, 255, 0.7) ;
+  padding:  5px 10px;
+  border-radius: 5px  ;
+  width: 120px;
+  text-align: center;
+  }
+
+
 
 /* Untuk membuat tabel responsif */
 .table-responsive {
