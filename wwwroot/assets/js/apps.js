@@ -54,7 +54,7 @@ function createDetailPanel(reading) {
   panelContent += '</tr>';
 
   panelContent += '</tbody></table>';
-  panelContent += `<div class="text-end"><a href="/Home/Detail?code=${reading.code}" target="_blank">Lihat Detail <i class="mdi mdi-arrow-right"></i></a></div>`;
+  panelContent += `<div class="text-end"><a href="https://${reading.subDomain}.higertech.com/Station/Detail/${reading.slug}" target="_blank">Lihat Detail <i class="mdi mdi-arrow-right"></i></a></div>`;
 
   return panelContent;
 }
