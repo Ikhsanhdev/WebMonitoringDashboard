@@ -26,7 +26,7 @@ function createDetailPanel(reading) {
   panelContent += '<tr>';
   panelContent += `<td class="px-0 py-2" colspan="3">
         <div class="d-flex align-items-start">
-            <img class="me-2 rounded-3" src="/assets/img/pupr.jpg" width="45" height="45" alt="${reading.deviceId}">
+            <img class="me-2 rounded-3" src="/assets/img/PUPR.jpg" width="45" height="45" alt="${reading.deviceId}">
             <div class="w-100">
                 <h5 class="mt-0 mb-1 fw-semibold font-12">${reading.name}</h5>
                 ${statusOffline}
@@ -38,13 +38,13 @@ function createDetailPanel(reading) {
   panelContent += '<tr>';
   panelContent += `<td class="py-1 px-0">Tipe POS</td>`;
   panelContent += `<td class="py-1 px-2">:</td>`;
-  panelContent += `<td class="py-1 px-0">${reading.stationType}</td>`;
+  panelContent += `<td class="py-1 px-0">${reading.stationType} m</td>`;
   panelContent += '</tr>';
   
   panelContent += '<tr>';
   panelContent += `<td class="py-1 px-0">Longitude</td>`;
   panelContent += `<td class="py-1 px-2">:</td>`;
-  panelContent += `<td class="py-1 px-0">${reading.longitude}</td>`;
+  panelContent += `<td class="py-1 px-0">${reading.longitude} lt/dt</td>`;
   panelContent += '</tr>';
 
   panelContent += '<tr>';
@@ -54,7 +54,7 @@ function createDetailPanel(reading) {
   panelContent += '</tr>';
 
   panelContent += '</tbody></table>';
-  panelContent += `<div class="text-end"><a href="/Home/Detail?code=${reading.code}" target="_blank">Lihat Detail <i class="mdi mdi-arrow-right"></i></a></div>`;
+  panelContent += `<div class="text-end"><a href="https://${reading.subDomain}.higertech.com/Station/Detail/${reading.slug}" target="_blank">Lihat Detail <i class="mdi mdi-arrow-right"></i></a></div>`;
 
   return panelContent;
 }
@@ -64,7 +64,11 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('maps'), {
     zoom: 5,
     center: initialLocation,
-    mapTypeId: google.maps.MapTypeId.SATELLITE 
+    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    mapTypeControlOptions: {
+    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+    position: google.maps.ControlPosition.BOTTOM_LEFT // Pindahkan ke bawah kiri
+  }
   });
 
   // Panggil fungsi untuk mendapatkan data stasiun dan menambahkan marker
