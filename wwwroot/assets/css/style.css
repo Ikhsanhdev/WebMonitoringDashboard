@@ -51,9 +51,32 @@
 
 /* Mengatur ukuran tabel agar tetap responsif dan tidak melebihi ukuran peta */
 #instansiTable {
-  max-width: 100%; /* Lebar maksimal tabel mengikuti ukuran container */
-  overflow-x: auto; /* Scroll bar muncul jika tabel lebih lebar dari container */
+  width: 100%; /* Memastikan tabel mengisi seluruh lebar overlay */
+  max-width: 100%; /* Agar tabel tidak melampaui lebar overlay */
+  margin-top: 20px; /* Jarak antara judul dan tabel */
+  border-collapse: collapse; /* Menghilangkan jarak antara border sel tabel */
+  table-layout: fixed; /* Membagi lebar kolom secara proporsional */
+  
 }
+
+
+/* Mengatur lebar tabel agar responsif pada tampilan kecil */
+@media (max-width: 768px) {
+  #instansiTable {
+    font-size: 10px; /* Ukuran font lebih kecil pada tampilan mobile */
+  }
+}
+
+.table-overlay {
+  transition: opacity 0.3s ease;  /* Animasi transisi */
+}
+
+.table-overlay.hidden {
+  opacity: 0.5;  /* Mengurangi opacity saat card tertutup */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);  /* Bayangan halus untuk efek overlay */
+  background-color: rgba(0, 0, 0, 0.1); /* Efek background lebih terang saat pindah tab */
+}
+
 
 .gm-style-mtc {
   bottom: 175px !important; /* Atur jarak dari bawah, sesuaikan dengan kebutuhan */
@@ -89,10 +112,34 @@
   transform: rotate(90deg); /* Rotasi ikon saat tombol aktif */
 }
 
-/* Style untuk tabel yang akan muncul */
-#instansiTable {
-  margin-top: 20px; /* Beri jarak antara judul dan tabel */
+/* CSS untuk desktop */
+.table-responsive {
+  display: block;
+  overflow: hidden; /* Desktop tetap stabil */
 }
+
+/* Responsif hanya untuk mobile */
+@media (max-width: 768px) {
+  .table-responsive {
+      display: block;
+      overflow-x: auto; /* Hanya scroll di mobile */
+      -webkit-overflow-scrolling: touch; /* Smooth scroll */
+  }
+
+  /* Ukuran tabel lebih kecil */
+  #offpos thead th, #offpos tbody td {
+      font-size: 12px;
+      white-space: nowrap; /* Tetap satu baris di mobile */
+  }
+
+  /* Sembunyikan kolom tertentu di mobile */
+  #offpos thead th:nth-child(3), #offpos tbody td:nth-child(3),
+  #offpos thead th:nth-child(6), #offpos tbody td:nth-child(6) {
+      display: none; /* Hide in mobile */
+  }
+}
+
+
 
 /* Style untuk judul */
 .instansi-title {
@@ -140,9 +187,10 @@
 }
 
 #offpos {
-  padding: 10px;
-  width: 100%; /* Pastikan tabel mengisi kontainer */
-  max-width: 350px; /* Atur lebar maksimum tabel */
+  width: 100%; /* Mengisi seluruh lebar container */
+  max-width: 100%; /* Mengatur agar tabel tetap responsif */
+  margin: 0 auto; /* Menengahkannya di halaman */
+  overflow-x: auto; /* Tambahkan scroll horizontal jika perlu */
 }
 
 .table th, .table td {
@@ -335,16 +383,37 @@
     margin-bottom: 40px;
   }
 }
-
+/* Mengatur latar belakang tabel menjadi transparan */
 #offpos {
-  padding: 10px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: auto;
+  background-color: transparent !important; /* Pastikan transparansi diterapkan */
+  border-collapse: collapse; /* Menghilangkan jarak antara border sel */
 }
 
 #offpos thead th {
-  background-color: #eed388;
+  background-color: rgba(255, 255, 255, 0.2) !important; /* Header semi-transparan */
   text-align: center;
   font-weight: bold;
 }
+
+#offpos th, #offpos td {
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Transparansi pada sel tabel */
+}
+
+#offpos tbody tr {
+  background-color: transparent !important; /* Baris tabel transparan */
+}
+
+#offpos tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important; /* Efek hover dengan transparansi */
+}
+
 
 #phone {
   padding: 10px;
@@ -491,4 +560,17 @@
 
 .legend img {
   vertical-align: middle;
+}
+
+/* Mengubah hanya border kolom pencarian dan menambahkan jarak */
+input[type="search"], select {
+  border: 1px solid #000 !important; /* Mengubah warna border menjadi hitam */
+  padding: 8px; /* Menambahkan padding agar tetap nyaman digunakan */
+  border-radius: 5px; /* Menambahkan sudut yang membulat */
+  margin-bottom: 15px; /* Menambahkan margin bawah agar tidak terlalu dekat dengan tabel */
+}
+
+/* Mengubah efek hover pada input search */
+input[type="search"]:hover, select:hover {
+  border-color: #000; /* Border tetap hitam saat dihover */
 }

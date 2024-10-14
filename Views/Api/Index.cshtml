@@ -48,7 +48,7 @@
     </div>
 </div>
 
-<div class="table-overlay">
+<div class="table-overlay" id="tableOverlay">
     <div class="card mb-3" id="instansiContainer">
         <div class="card-body">
             <h5 class="instansi-title">
@@ -69,8 +69,8 @@
                             <th class="text-center">Total Pos</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Your data rows go here -->
+                    <tbody id="tableBody">
+                        <!-- Data dari API akan dimasukkan ke sini -->
                     </tbody>
                 </table>
             </div>
@@ -280,27 +280,40 @@
             updateLastUpdateTime();
         });
 
-         document.getElementById('toggleTableBtn').addEventListener('click', function() {
-        var table = document.getElementById('instansiTable');
-        var icon = document.getElementById('toggleIcon');
+   document.addEventListener("DOMContentLoaded", function() {
+    var table = document.getElementById('instansiTable');  // Tabel yang akan ditampilkan/disembunyikan
+    var icon = document.getElementById('toggleIcon');      // Ikon untuk toggle
+    var tableOverlay = document.querySelector('.table-overlay');  // Overlay
 
+    // Awalnya, pastikan tabel disembunyikan
+    table.style.display = "none";  // Awal tabel tidak ditampilkan
+
+    // Event untuk toggle tabel saat ikon diklik
+    icon.addEventListener('click', function() {
         if (table.style.display === "none") {
-            table.style.display = "block";  // Show the table
-            icon.classList.remove('bi-table');  // Change icon when open
-            icon.classList.add('bi-tablet-landscape'); // New icon
+            table.style.display = "block";  // Tampilkan tabel
+            icon.classList.remove('bi-table');  // Ganti ikon ke yang lain
+            icon.classList.add('bi-tablet-landscape');  // Ikon baru
+            tableOverlay.classList.add('expanded');  // Tambahkan kelas overlay jika diperlukan
         } else {
-            table.style.display = "none";   // Hide the table
-            icon.classList.remove('bi-tablet-landscape');  // Reset icon when closed
-            icon.classList.add('bi-table'); // Original icon
+            table.style.display = "none";  // Sembunyikan tabel
+            icon.classList.remove('bi-tablet-landscape');  // Kembalikan ikon ke yang asli
+            icon.classList.add('bi-table');  // Ikon asli
+            tableOverlay.classList.remove('expanded');  // Hapus kelas overlay jika diperlukan
         }
     });
-        document.addEventListener("DOMContentLoaded", function() {
-        var tableOverlay = document.querySelector('.table-overlay');
-        
-        tableOverlay.addEventListener('click', function() {
-        // Toggle kelas expanded
-        tableOverlay.classList.toggle('expanded');
-        });
+
+    // Event untuk visibilitychange (saat pindah tab browser)
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
+            // Sembunyikan tabel dan reset ikon jika tab browser tidak aktif
+            table.style.display = "none";  
+            icon.classList.remove('bi-tablet-landscape');  // Reset ikon
+            icon.classList.add('bi-table');  // Ikon asli
+            tableOverlay.classList.remove('expanded');  // Hapus kelas overlay
+        }
     });
+});
+
     </script>
 }
