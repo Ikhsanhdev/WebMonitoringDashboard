@@ -95,7 +95,6 @@ public async Task<IActionResult> GetList()
         // Filtering
         var filteredData = apiResponse.Where(a =>
             (string.IsNullOrEmpty(searchValue) ||
-                a.balaiName.Contains(searchValue) ||
                 a.subDomainOld.Contains(searchValue) ||
                 a.subDomain.Contains(searchValue) ||
                 a.jumlahPos.ToString().Contains(searchValue) ||
@@ -107,18 +106,10 @@ public async Task<IActionResult> GetList()
 
         // Grouping and calculating aggregated values
         var groupedData = filteredData
-        .GroupBy(a => new { 
-            a.balaiName, 
-            a.organizationCode,
-            a.subDomain,    // Tambahkan ini
-            a.subDomainOld // Dan ini
-        })
+        .GroupBy(a => a.subDomainOld)
         .Select(g => new Api
         {
-            balaiName = g.Key.balaiName,
-            organizationCode = g.Key.organizationCode,
-            subDomain = g.Key.subDomain,       // Masukkan ke hasil
-            subDomainOld = g.Key.subDomainOld, // Masukkan ke hasil
+            subDomainOld = g.Key,
             jumlahPos = g.Count(),
             jumlahPosOnline = g.Count(p =>
                 (p.stationType.ToLower() == "arr" && p.arrLastReading?.deviceStatus?.ToLower() == "online") ||
@@ -168,8 +159,6 @@ public async Task<IActionResult> GetList()
         });
     }
 }
-
-//bismiillah
 
 
     private async Task<List<Api>> GetDataFromApi()

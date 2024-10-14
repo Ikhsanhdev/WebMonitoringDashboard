@@ -29,11 +29,82 @@
 #map {
   width: 100%;
   height: 500px; /* Sesuaikan tinggi sesuai kebutuhan */
+  position: absolute;
+  overflow: hidden; /* Pastikan tidak ada scroll di dalam elemen ini */
 }
 
 #maps {
-  width: 100%;
-  height: 400px; /* Sesuaikan tinggi sesuai kebutuhan */
+  width: 100vw; /* Lebar layar penuh */
+  height: 100vh; /* Tinggi layar penuh */
+  position: absolute; /* Menutupi seluruh layar */
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden; /* Hilangkan scroll di dalam peta */
+}
+
+/* Mengatur lebar maksimal card agar tidak melebihi ukuran peta */
+#instansiContainer {
+  max-width: 100%; /* Lebar maksimal container */
+  overflow-x: auto; /* Tambahkan scroll horizontal jika tabel terlalu besar */
+}
+
+/* Mengatur ukuran tabel agar tetap responsif dan tidak melebihi ukuran peta */
+#instansiTable {
+  max-width: 100%; /* Lebar maksimal tabel mengikuti ukuran container */
+  overflow-x: auto; /* Scroll bar muncul jika tabel lebih lebar dari container */
+}
+
+.gm-style-mtc {
+  bottom: 175px !important; /* Atur jarak dari bawah, sesuaikan dengan kebutuhan */
+  right: 85px !important;    /* Sesuaikan jarak dari kiri */
+  }
+
+  /* Style untuk tombol ikon */
+#toggleTableBtn {
+  background-color: transparent; /* Menghilangkan background default */
+  border: none; /* Menghilangkan border tombol */
+  padding: 0; /* Menghilangkan padding default */
+  cursor: pointer; /* Menampilkan cursor pointer saat hover */
+  outline: none; /* Menghilangkan outline saat tombol di klik */
+  float: right; /* Posisi tombol di sebelah kanan */
+}
+
+#toggleTableBtn i {
+  font-size: 24px; /* Ukuran ikon */
+  color: #007bff; /* Warna ikon (biru Bootstrap) */
+  transition: transform 0.3s ease; /* Animasi untuk transformasi ikon */
+}
+
+#toggleTableBtn:hover i {
+  color: #0056b3; /* Ubah warna ikon saat dihover */
+}
+
+#toggleTableBtn:focus i {
+  color: #0056b3; /* Ubah warna ikon saat tombol difokus */
+  outline: none; /* Hilangkan outline pada ikon */
+}
+
+#toggleTableBtn.active i {
+  transform: rotate(90deg); /* Rotasi ikon saat tombol aktif */
+}
+
+/* Style untuk tabel yang akan muncul */
+#instansiTable {
+  margin-top: 20px; /* Beri jarak antara judul dan tabel */
+}
+
+/* Style untuk judul */
+.instansi-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.card {
+  margin: 20px auto; /* Jarak atas-bawah 20px, tengah otomatis */
+  max-width: 90%; /* Mengatur lebar maksimal card agar tidak terlalu lebar di layar besar */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Memberikan bayangan halus pada card */
+  border-radius: 10px; /* Menambahkan sudut yang membulat pada card */
 }
 
 /* Untuk membuat tabel responsif */
@@ -41,13 +112,19 @@
   overflow-x: auto;
 }
 
-/* Container overlay positioning */
+/* Mengatur posisi dan transparansi tabel dengan lebih baik */
 .table-overlay {
   position: absolute;
-  top: 65px;
-  left: 10px;
-  width: auto;
-  z-index: 1000;
+  top: 80px; /* Sesuaikan jarak dari atas */
+  left: 10px; /* Sesuaikan jarak dari kiri */
+  width: 300px; /* Sesuaikan lebar tabel */
+  z-index: 1000; /* Agar berada di atas elemen lain */
+  border-radius: 10px;
+  padding: 5px; /* Mengurangi padding untuk mengecilkan tinggi tabel */
+  transition: width 0.3s ease; /* Animasi lebar yang halus saat diubah */
+}
+.table-overlay.expanded {
+  width: 800px; /* Lebar tabel ketika melebar */
 }
 
 /* Responsivitas untuk tampilan mobile */

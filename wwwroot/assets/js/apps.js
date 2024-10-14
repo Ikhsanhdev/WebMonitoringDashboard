@@ -26,7 +26,7 @@ function createDetailPanel(reading) {
   panelContent += '<tr>';
   panelContent += `<td class="px-0 py-2" colspan="3">
         <div class="d-flex align-items-start">
-            <img class="me-2 rounded-3" src="/assets/img/PUPR.jpg" width="45" height="45" alt="${reading.deviceId}">
+            <img class="me-2 rounded-3" src="/assets/img/pupr.jpg" width="45" height="45" alt="${reading.deviceId}">
             <div class="w-100">
                 <h5 class="mt-0 mb-1 fw-semibold font-12">${reading.name}</h5>
                 ${statusOffline}
@@ -38,13 +38,13 @@ function createDetailPanel(reading) {
   panelContent += '<tr>';
   panelContent += `<td class="py-1 px-0">Tipe POS</td>`;
   panelContent += `<td class="py-1 px-2">:</td>`;
-  panelContent += `<td class="py-1 px-0">${reading.stationType} m</td>`;
+  panelContent += `<td class="py-1 px-0">${reading.stationType}</td>`;
   panelContent += '</tr>';
   
   panelContent += '<tr>';
   panelContent += `<td class="py-1 px-0">Longitude</td>`;
   panelContent += `<td class="py-1 px-2">:</td>`;
-  panelContent += `<td class="py-1 px-0">${reading.longitude} lt/dt</td>`;
+  panelContent += `<td class="py-1 px-0">${reading.longitude}</td>`;
   panelContent += '</tr>';
 
   panelContent += '<tr>';
@@ -54,7 +54,7 @@ function createDetailPanel(reading) {
   panelContent += '</tr>';
 
   panelContent += '</tbody></table>';
-  panelContent += `<div class="text-end"><a href="https://${reading.subDomain}.higertech.com/Station/Detail/${reading.slug}" target="_blank">Lihat Detail <i class="mdi mdi-arrow-right"></i></a></div>`;
+  panelContent += `<div class="text-end"><a href="/Home/Detail?code=${reading.code}" target="_blank">Lihat Detail <i class="mdi mdi-arrow-right"></i></a></div>`;
 
   return panelContent;
 }
@@ -64,13 +64,16 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('maps'), {
     zoom: 5,
     center: initialLocation,
+    gestureHandling: 'greedy', // Mengizinkan zoom menggunakan scroll
     mapTypeId: google.maps.MapTypeId.SATELLITE,
     mapTypeControlOptions: {
-    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-    position: google.maps.ControlPosition.BOTTOM_LEFT // Pindahkan ke bawah kiri
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.BOTTOM_LEFT // Pindahkan ke bawah kiri
   }
+
   });
 
+  const customMapTypeControl = new CustomMapTypeControl(map);
   // Panggil fungsi untuk mendapatkan data stasiun dan menambahkan marker
   GetDataStation(map);
 
@@ -173,4 +176,59 @@ async function GetDataStation(map) {
   } catch (error) {
     console.error('Error: ', error);
   }
+}
+
+function CustomMapTypeControl(map) {
+  const controlDiv = document.createElement('div');
+  controlDiv.style.padding = '10px';
+
+  const controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.borderRadius = '2px';
+  controlUI.style.boxShadow = '0 1px 4px -1px rgba(0,0,0,.3)';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.marginBottom = '22px';
+  controlUI.style.marginTop = '750px';
+  controlUI.style.textAlign = 'center';
+  controlUI.style.height = '40px';
+  controlUI.style.width = '250px';
+  controlDiv.appendChild(controlUI);
+
+  const mapButton = document.createElement('div');
+  mapButton.style.float = 'left';
+  mapButton.style.height = '100%';
+  mapButton.style.width = '50%';
+  mapButton.style.padding = '11px 0';
+  mapButton.style.borderRight = '1px solid #e6e6e6';
+  mapButton.innerHTML = 'Map';
+  mapButton.style.fontSize = '16px';
+  mapButton.style.color = '#999';
+  controlUI.appendChild(mapButton);
+
+  const satelliteButton = document.createElement('div');
+  satelliteButton.style.float = 'left';
+  satelliteButton.style.height = '100%';
+  satelliteButton.style.width = '50%';
+  satelliteButton.style.padding = '11px 0';
+  satelliteButton.innerHTML = 'Satellite';
+  satelliteButton.style.fontSize = '16px';
+  satelliteButton.style.color = '#000';
+  controlUI.appendChild(satelliteButton);
+
+  function updateButtons(mapTypeId) {
+      mapButton.style.color = mapTypeId === 'roadmap' ? '#000' : '#999';
+      satelliteButton.style.color = mapTypeId === 'satellite' ? '#000' : '#999';
+  }
+
+  mapButton.addEventListener('click', () => {
+      map.setMapTypeId('roadmap');
+      updateButtons('roadmap');
+  });
+
+  satelliteButton.addEventListener('click', () => {
+      map.setMapTypeId('satellite');
+      updateButtons('satellite');
+  });
+
+  return controlDiv;
 }
