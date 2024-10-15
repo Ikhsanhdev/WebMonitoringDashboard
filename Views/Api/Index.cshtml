@@ -14,15 +14,15 @@
     <!-- Memindahkan elemen tile ke dalam peta -->
     <div class="tile_overlay tile-overlay1">
         <div class="tile_stats tile-stats1 ">
-            <span class="count_top"><i class="fa fa-user"></i> Pos Duga Air</span>
+            <span class="count_top"><i class="fa fa-tint"></i> Pos Duga Air</span>
             <div class="count" id="totalDugaAir"></div>
         </div>
         <div class="tile_stats tile-stats1">
-            <span class="count_top"><i class="fa fa-user"></i> Pos Curah Hujan</span>
+            <span class="count_top"><i class="fa fa-cloud-showers-heavy"></i> Pos Curah Hujan</span>
             <div class="count" id="totalCurahHujan"></div>
         </div>
         <div class="tile_stats tile-stats1">
-            <span class="count_top"><i class="fa fa-user"></i> Pos Klimatologi</span>
+            <span class="count_top"><i class="fa fa-cloud-sun"></i> Pos Klimatologi</span>
             <div class="count" id="totalKlimatologi"></div>
         </div>
     </div>
@@ -31,19 +31,19 @@
 <!-- Kontainer tile tambahan -->
 <div class="tile_overlay tile-overlay2">
     <div class="tile_stats tile-stats2">
-        <span class="count_top"><i class="fa fa-user"></i> Total Online</span>
+        <span class="count_top"><i class="fa fa-wifi"></i> Total Online</span>
         <div class="count green" id="totalOnline"></div>
     </div>
     <div class="tile_stats tile-stats2">
-        <span class="count_top"><i class="fa fa-user"></i> Total Offline</span>
+        <span class="count_top"><i class="fa fa-times-circle"></i> Total Offline</span>
         <div class="count red" id="totalOffline"></div>
     </div>
     <div class="tile_stats tile-stats2">
-        <span class="count_top"><i class="fa fa-user"></i> Total POS</span>
+        <span class="count_top"><i class="fa fa-map-marker-alt"></i> Total POS</span>
         <div class="count blue" id="totalPos"></div>
     </div>
     <div class="tile_stats tile-stats2">
-        <span class="count_top"><i class="fa fa-user"></i> Total Instansi</span>
+        <span class="count_top"><i class="fa fa-building"></i> Total Instansi</span>
         <div class="count" id="totalInstansi"></div>
     </div>
 </div>
@@ -58,7 +58,7 @@
                 </button>
             </h5>
             <div class="table-responsive" id="instansiTable" style="display: none;"> <!-- Initially hidden -->
-                <table id="offpos" class="display table table-sm table-bordered table-responsive-sm">
+                <table id="offpos" class="table table-sm table-bordered">
                     <thead>
                         <tr>
                             <th class="text-center">No.</th>
@@ -69,9 +69,6 @@
                             <th class="text-center">Total Pos</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
-                        <!-- Data dari API akan dimasukkan ke sini -->
-                    </tbody>
                 </table>
             </div>
             <div id="lastUpdateTime" style="margin-top: 10px; color: gray;"></div>

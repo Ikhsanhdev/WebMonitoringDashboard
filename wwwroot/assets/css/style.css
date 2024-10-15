@@ -1,36 +1,36 @@
 /*--------------------------------------------------------------
 # Dashboard
 --------------------------------------------------------------*/
-/* Info Cards */
 
+/* Info Cards */
 .pagetitle {
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* Jarak bawah pada judul halaman */
 }
 
 .pagetitle h1 {
-  font-size: 24px;
-  margin-bottom: 0;
-  font-weight: 600;
-  color: #012970;
+  font-size: 24px; /* Ukuran font untuk judul */
+  margin-bottom: 0; /* Menghilangkan margin bawah */
+  font-weight: 600; /* Ketebalan font */
+  color: #012970; /* Warna font */
 }
 
 /* Footer */
 .footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+  position: fixed; /* Menetapkan posisi footer tetap di bawah */
+  bottom: 0; /* Menetapkan posisi footer di bagian bawah */
+  width: 100%; /* Lebar footer penuh */
 }
 
 .counter {
-  min-width: 150px;
+  min-width: 150px; /* Lebar minimum untuk counter */
 }
 
 /* Untuk membuat peta responsif */
 #map {
-  width: 100%;
-  height: 500px; /* Sesuaikan tinggi sesuai kebutuhan */
-  position: absolute;
-  overflow: hidden; /* Pastikan tidak ada scroll di dalam elemen ini */
+  width: 100%; /* Lebar penuh untuk peta */
+  height: 500px; /* Tinggi peta */
+  position: absolute; /* Posisi absolut untuk peta */
+  overflow: hidden; /* Menghilangkan scroll */
 }
 
 #maps {
@@ -39,26 +39,24 @@
   position: absolute; /* Menutupi seluruh layar */
   top: 0;
   left: 0;
-  z-index: 0;
-  overflow: hidden; /* Hilangkan scroll di dalam peta */
+  z-index: 0; /* Urutan tumpukan */
+  overflow: hidden; /* Menghilangkan scroll */
 }
 
 /* Mengatur lebar maksimal card agar tidak melebihi ukuran peta */
 #instansiContainer {
   max-width: 100%; /* Lebar maksimal container */
-  overflow-x: auto; /* Tambahkan scroll horizontal jika tabel terlalu besar */
+  overflow-x: auto; /* Scroll horizontal jika tabel terlalu besar */
 }
 
-/* Mengatur ukuran tabel agar tetap responsif dan tidak melebihi ukuran peta */
+/* Mengatur ukuran tabel agar tetap responsif */
 #instansiTable {
   width: 100%; /* Memastikan tabel mengisi seluruh lebar overlay */
-  max-width: 100%; /* Agar tabel tidak melampaui lebar overlay */
+  max-width: 100%; /* Tabel tidak melampaui lebar overlay */
   margin-top: 20px; /* Jarak antara judul dan tabel */
   border-collapse: collapse; /* Menghilangkan jarak antara border sel tabel */
-  table-layout: fixed; /* Membagi lebar kolom secara proporsional */
-  
+  table-layout: auto; /* Membagi lebar kolom secara proporsional */
 }
-
 
 /* Mengatur lebar tabel agar responsif pada tampilan kecil */
 @media (max-width: 768px) {
@@ -68,28 +66,27 @@
 }
 
 .table-overlay {
-  transition: opacity 0.3s ease;  /* Animasi transisi */
+  transition: opacity 0.3s ease; /* Animasi transisi untuk overlay */
 }
 
 .table-overlay.hidden {
-  opacity: 0.5;  /* Mengurangi opacity saat card tertutup */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);  /* Bayangan halus untuk efek overlay */
+  opacity: 0.5; /* Mengurangi opacity saat card tertutup */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Bayangan halus */
   background-color: rgba(0, 0, 0, 0.1); /* Efek background lebih terang saat pindah tab */
 }
 
-
 .gm-style-mtc {
-  bottom: 175px !important; /* Atur jarak dari bawah, sesuaikan dengan kebutuhan */
-  right: 85px !important;    /* Sesuaikan jarak dari kiri */
-  }
+  bottom: 175px !important; /* Atur jarak dari bawah */
+  right: 85px !important; /* Sesuaikan jarak dari kanan */
+}
 
-  /* Style untuk tombol ikon */
+/* Style untuk tombol ikon */
 #toggleTableBtn {
   background-color: transparent; /* Menghilangkan background default */
   border: none; /* Menghilangkan border tombol */
   padding: 0; /* Menghilangkan padding default */
   cursor: pointer; /* Menampilkan cursor pointer saat hover */
-  outline: none; /* Menghilangkan outline saat tombol di klik */
+  outline: none; /* Menghilangkan outline saat tombol diklik */
   float: right; /* Posisi tombol di sebelah kanan */
 }
 
@@ -121,68 +118,67 @@
 /* Responsif hanya untuk mobile */
 @media (max-width: 768px) {
   .table-responsive {
-      display: block;
-      overflow-x: auto; /* Hanya scroll di mobile */
-      -webkit-overflow-scrolling: touch; /* Smooth scroll */
+    display: block;
+    overflow-x: auto; /* Hanya scroll di mobile */
+    -webkit-overflow-scrolling: touch; /* Smooth scroll */
   }
 
   /* Ukuran tabel lebih kecil */
   #offpos thead th, #offpos tbody td {
-      font-size: 12px;
-      white-space: nowrap; /* Tetap satu baris di mobile */
+    font-size: 12px; /* Ukuran font lebih kecil pada mobile */
+    white-space: nowrap; /* Tetap satu baris di mobile */
   }
 
   /* Sembunyikan kolom tertentu di mobile */
   #offpos thead th:nth-child(3), #offpos tbody td:nth-child(3),
   #offpos thead th:nth-child(6), #offpos tbody td:nth-child(6) {
-      display: none; /* Hide in mobile */
+    display: none; /* Sembunyikan di mobile */
   }
 }
 
-
-
 /* Style untuk judul */
 .instansi-title {
-  font-weight: bold;
-  font-size: 18px;
+  font-weight: bold; /* Menebalkan teks judul */
+  font-size: 18px; /* Ukuran font untuk judul */
 }
 
 .card {
   margin: 20px auto; /* Jarak atas-bawah 20px, tengah otomatis */
-  max-width: 90%; /* Mengatur lebar maksimal card agar tidak terlalu lebar di layar besar */
+  max-width: 90%; /* Lebar maksimal card agar tidak terlalu lebar */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Memberikan bayangan halus pada card */
-  border-radius: 10px; /* Menambahkan sudut yang membulat pada card */
+  border-radius: 10px; /* Sudut yang membulat pada card */
 }
 
 /* Untuk membuat tabel responsif */
 .table-responsive {
-  overflow-x: auto;
+  overflow-x: auto; /* Tambahkan scroll horizontal */
 }
 
-/* Mengatur posisi dan transparansi tabel dengan lebih baik */
+/* Mengatur posisi dan transparansi tabel */
 .table-overlay {
-  position: absolute;
-  top: 80px; /* Sesuaikan jarak dari atas */
-  left: 10px; /* Sesuaikan jarak dari kiri */
-  width: 300px; /* Sesuaikan lebar tabel */
+  position: absolute; /* Posisi absolut */
+  top: 80px; /* Jarak dari atas */
+  left: 10px; /* Jarak dari kiri */
+  width: 300px; /* Lebar tabel */
   z-index: 1000; /* Agar berada di atas elemen lain */
-  border-radius: 10px;
-  padding: 5px; /* Mengurangi padding untuk mengecilkan tinggi tabel */
-  transition: width 0.3s ease; /* Animasi lebar yang halus saat diubah */
+  border-radius: 10px; /* Sudut yang membulat pada tabel */
+  padding: 5px; /* Padding untuk tabel */
+  transition: width 0.3s ease; /* Animasi lebar yang halus */
 }
+
 .table-overlay.expanded {
-  width: 800px; /* Lebar tabel ketika melebar */
+  width: 800px; /* Lebar tabel ketika diperluas */
 }
 
 /* Responsivitas untuk tampilan mobile */
 @media (max-width: 768px) {
   .table-overlay {
     position: relative; /* Ganti menjadi relative untuk tampilan mobile */
-    top: 0; /* Pastikan tabel overlay berada di bawah elemen lain */
+    top: 0; /* Reset posisi ke atas */
     left: 0; /* Reset posisi ke kiri */
     width: 100%; /* Lebar penuh untuk tampilan mobile */
-    margin-top: 20px; /* Beri jarak atas untuk memisahkan dari elemen sebelumnya */
-    z-index: 1; /* Atur z-index agar tetap di atas tetapi tidak mengganggu elemen lain */
+    margin-top: 20px; /* Jarak atas untuk memisahkan dari elemen sebelumnya */
+    z-index: 1; /* Atur z-index agar tetap di atas */
   }
 }
 
@@ -194,15 +190,16 @@
 }
 
 .table th, .table td {
-  padding: 4px; /* Mengurangi padding untuk mengurangi tinggi tabel */
-  font-size: 11px; /* Mengatur ukuran font untuk mengurangi tinggi tabel */
+  padding: 4px; /* Mengurangi padding */
+  font-size: 11px; /* Mengatur ukuran font */
   line-height: 1.2; /* Mengatur tinggi baris untuk kompak */
 }
+
 /* Overlay untuk desktop */
 .tile-overlay1, .tile-overlay2 {
-  position: absolute;
-  z-index: 1000;
-  display: flex;
+  position: absolute; /* Posisi absolut untuk overlay */
+  z-index: 1000; /* Urutan tumpukan */
+  display: flex; /* Menggunakan flexbox */
   gap: 5px; /* Jarak antar tile */
 }
 
@@ -220,10 +217,10 @@
 
 /* Mengatur tampilan tile stats */
 .tile-stats1, .tile-stats2 {
-  background-color: rgba(255, 255, 255, 0.7);
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7); /* Background semi-transparan */
+  padding: 10px; /* Padding untuk tile */
+  border-radius: 5px; /* Sudut yang membulat pada tile */
+  text-align: center; /* Rata tengah untuk teks */
 }
 
 /* Responsivitas */
@@ -236,16 +233,35 @@
     overflow-x: auto; /* Memungkinkan scroll horizontal */
     gap: 10px; /* Jarak antar tile */
     top: 10px; /* Posisi overlay tidak naik ke navbar */
-    right: 0; /* Mengatur agar tetap di tengah */
-    margin: 0 auto; /* Memusatkan overlay */
-    width: 100%; /* Lebar penuh untuk tampilan mobile */
-    white-space: nowrap; /* Mencegah wrapping pada tile */
+    right: 0; /* Reset posisi dari kanan */
+    margin: 0 10px; /* Margin di kiri dan kanan */
   }
 
   .tile-stats1, .tile-stats2 {
-    min-width: 120px; /* Lebar minimum tile */
-    flex: 0 0 auto; /* Mencegah tile menyesuaikan ukuran */
-    margin-bottom: 5px; /* Jarak antar tile */
+    width: 200px; /* Mengatur lebar tile untuk mobile */
+    min-width: 100px; /* Lebar minimum untuk tile */
+    flex: none; /* Menghindari fleksibilitas untuk tile */
+  }
+}
+
+/* Mengatur posisi overlay */
+.overlay {
+  position: absolute; /* Posisi absolut */
+  width: 90%; /* Lebar 90% dari container */
+  max-width: 400px; /* Lebar maksimal overlay */
+  padding: 20px; /* Padding untuk overlay */
+  background: rgba(255, 255, 255, 0.8); /* Background semi-transparan */
+  border-radius: 10px; /* Sudut membulat pada overlay */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Bayangan untuk overlay */
+  transition: opacity 0.3s ease; /* Animasi transisi untuk opacity */
+}
+
+/* Responsivitas */
+@media (max-width: 768px) {
+  .overlay {
+    width: 95%; /* Lebar 95% di tampilan mobile */
+    left: 2.5%; /* Memusatkan overlay */
+    /* Lebar penuh dengan margin */
   }
 }
 
