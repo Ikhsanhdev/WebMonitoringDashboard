@@ -49,6 +49,25 @@
   overflow-x: auto; /* Scroll horizontal jika tabel terlalu besar */
 }
 
+.top_nav {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 1000; /* z-index yang tinggi agar selalu di atas konten lainnya */
+}
+
+.navbar-right .dropdown-menu {
+  position: absolute; /* Untuk memastikan dropdown berada di atas */
+  z-index: 1100; /* Lebih tinggi dari top_nav */
+  background-color: white; /* Atur warna background agar terlihat */
+}
+
+.navbar-right .dropdown-item {
+  color: #000; /* Warna tulisan di dalam dropdown */
+}
+
 /* Mengatur ukuran tabel agar tetap responsif */
 #instansiTable {
   width: 100%; /* Memastikan tabel mengisi seluruh lebar overlay */
@@ -58,15 +77,15 @@
   table-layout: auto; /* Membagi lebar kolom secara proporsional */
 }
 
-/* Mengatur lebar tabel agar responsif pada tampilan kecil */
-@media (max-width: 768px) {
-  #instansiTable {
-    font-size: 10px; /* Ukuran font lebih kecil pada tampilan mobile */
-  }
-}
-
 .table-overlay {
   transition: opacity 0.3s ease; /* Animasi transisi untuk overlay */
+  position: absolute;
+  top: 80px;
+  left: 10px;
+  width: 100%;
+  z-index: 1000;
+  padding: 10px;
+  transition: width 0.3s ease;
 }
 
 .table-overlay.hidden {
@@ -128,12 +147,6 @@
     font-size: 12px; /* Ukuran font lebih kecil pada mobile */
     white-space: nowrap; /* Tetap satu baris di mobile */
   }
-
-  /* Sembunyikan kolom tertentu di mobile */
-  #offpos thead th:nth-child(3), #offpos tbody td:nth-child(3),
-  #offpos thead th:nth-child(6), #offpos tbody td:nth-child(6) {
-    display: none; /* Sembunyikan di mobile */
-  }
 }
 
 /* Style untuk judul */
@@ -152,6 +165,7 @@
 /* Untuk membuat tabel responsif */
 .table-responsive {
   overflow-x: auto; /* Tambahkan scroll horizontal */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Mengatur posisi dan transparansi tabel */
@@ -167,18 +181,20 @@
 }
 
 .table-overlay.expanded {
-  width: 800px; /* Lebar tabel ketika diperluas */
+  width: 90%; /* Lebar tabel ketika diperluas */
 }
 
-/* Responsivitas untuk tampilan mobile */
+/* Aturan responsif untuk tampilan mobile */
 @media (max-width: 768px) {
   .table-overlay {
-    position: relative; /* Ganti menjadi relative untuk tampilan mobile */
-    top: 0; /* Reset posisi ke atas */
-    left: 0; /* Reset posisi ke kiri */
-    width: 100%; /* Lebar penuh untuk tampilan mobile */
-    margin-top: 20px; /* Jarak atas untuk memisahkan dari elemen sebelumnya */
-    z-index: 1; /* Atur z-index agar tetap di atas */
+    width: 100%; /* Lebar penuh di handphone */
+    position: relative; /* Tidak menggunakan absolute di mobile */
+    top: 0;
+    left: 0;
+    margin-top: 20px;
+  }
+  .card {
+    max-width: 100%; /* Lebar penuh card */
   }
 }
 
@@ -198,7 +214,7 @@
 /* Overlay untuk desktop */
 .tile-overlay1, .tile-overlay2 {
   position: absolute; /* Posisi absolut untuk overlay */
-  z-index: 1000; /* Urutan tumpukan */
+  z-index: 500; /* Z-index lebih rendah agar tile berada di bawah dropdown */
   display: flex; /* Menggunakan flexbox */
   gap: 5px; /* Jarak antar tile */
 }
