@@ -181,7 +181,7 @@
 }
 
 .table-overlay.expanded {
-  width: 90%; /* Lebar tabel ketika diperluas */
+  width: 65%; /* Lebar tabel ketika diperluas */
 }
 
 /* Aturan responsif untuk tampilan mobile */
@@ -193,6 +193,10 @@
     left: 0;
     margin-top: 20px;
   }
+  .table-overlay.expanded {
+    width: 100%; /* Lebar tabel ketika diperluas */
+  }
+  
   .card {
     max-width: 100%; /* Lebar penuh card */
   }
