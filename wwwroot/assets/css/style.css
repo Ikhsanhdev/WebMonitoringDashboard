@@ -610,3 +610,106 @@ input[type="search"], select {
 input[type="search"]:hover, select:hover {
   border-color: #000; /* Border tetap hitam saat dihover */
 }
+.mainContent {
+  width: 35%;
+  margin: 2.5em auto;
+  background: #fff;
+  padding: 2.5em;
+}
+.contactFrm h4 {
+  font-size: 1em;
+  color: #252525;
+  margin-bottom: 0.5em;
+  font-weight: 300;
+  letter-spacing: 5px;
+}
+.contactFrm input[type="text"], .contactFrm input[type="email"] {
+  width: 70%;
+  outline: none;
+  font-size: 0.9em;
+  padding: .7em 1em;
+  border: 1px solid #000;
+  display: block;
+  margin-bottom: 1.2em;
+  border-radius: 8px; /* Sudut tumpul pada input */
+}
+.contactFrm textarea {
+  resize: none;
+  width: 93.5%;
+  font-size: 0.9em;
+  outline: none;
+  padding: .6em 1em;
+  border: 1px solid #000;
+  min-height: 10em;
+  border-radius: 8px; /* Sudut tumpul pada input */
+}
+
+p.statusMsg { font-size: 18px; }
+p.succdiv { color: #008000; }
+p.errordiv { color: #E80000; }
+body {
+  font-family: Arial, sans-serif;
+  
+}
+.mainContent {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  background-color: #f9f9f9;
+  position: relative;
+  margin-top: 100px; /* Jarak dari atas untuk memberi ruang dengan navbar */
+}
+.email-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  background-color: #f9f9f9;
+  position: relative;
+}
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.top-bar .time {
+  font-size: 14px;
+  color: #666;
+}
+.top-bar .actions {
+  display: flex;
+  align-items: center;
+}
+.top-bar .actions button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.top-bar .actions button:hover {
+  color: #007bff;
+}
+.email-form div {
+  margin-bottom: 15px;
+}
+.email-form label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.email-form input, .email-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.email-form textarea {
+  resize: none;
+  height: 100px;
+}
