@@ -139,36 +139,56 @@
                 subDomain = data.length > 0 ? data[0].subDomain : "";
                 $("h1").text(balaiName);
 
-                var body = $("#offpos tbody");
-                body.empty();
-                let i = 1;
-                $.each(data, function(index, item) {
-                    var row = $("<tr>");
+var body = $("#offpos tbody");
+body.empty();
+let i = 1;
+$.each(data, function(index, item) {
+    var row = $("<tr>");
 
-                    row.append($("<td class='text-center'>").text(i++));
-                    row.append($("<td>").text(item.slug));
-                    row.append($("<td class='text-center'>").text(item.deviceId));
-                    // Define color and text position based on device status
-                    var statusText = $("<td>").text(item.deviceStatus);
-                    if (item.deviceStatus === 'offline') {
-                        statusText.css({
-                            'color': 'red',
-                            'text-align': 'center'
-                        });
-                    } else {
-                        statusText.css({
-                            'color': 'green',
-                            'text-align': 'center'
-                        });
-                    }
-                    row.append(statusText);
-                    row.append($("<td class='text-center'>").text(item.stationType));
-                    // Format lastReadingAt using Moment.js
-                    var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
-                    row.append($("<td class='text-center'>").text(formattedDate));
+    row.append($("<td class='text-center'>").text(i++));
+    row.append($("<td>").text(item.slug));
+    row.append($("<td class='text-center'>").text(item.deviceId));
 
-                    body.append(row);
-                });
+    // Tentukan status device dan readingAt dari arrLastReading, awlrLastReading, awsLastReading, awlrArrLastReading
+    var status = 'offline'; // default status
+    var readingAt = ''; // default reading date
+    if (item.arrLastReading && item.arrLastReading.deviceStatus) {
+        status = item.arrLastReading.deviceStatus;
+        readingAt = item.arrLastReading.readingAt;
+    } else if (item.awlrLastReading && item.awlrLastReading.deviceStatus) {
+        status = item.awlrLastReading.deviceStatus;
+        readingAt = item.awlrLastReading.readingAt;
+    } else if (item.awsLastReading && item.awsLastReading.deviceStatus) {
+        status = item.awsLastReading.deviceStatus;
+        readingAt = item.awsLastReading.readingAt;
+    } else if (item.awlrArrLastReading && item.awlrArrLastReading.deviceStatus) {
+        status = item.awlrArrLastReading.deviceStatus;
+        readingAt = item.awlrArrLastReading.readingAt;
+    }
+
+    // Definisikan warna dan posisi teks berdasarkan status
+    var statusText = $("<td>").text(status);
+    if (status === 'offline') {
+        statusText.css({
+            'color': 'red',
+            'text-align': 'center'
+        });
+    } else {
+        statusText.css({
+            'color': 'green',
+            'text-align': 'center'
+        });
+    }
+    row.append(statusText);
+
+    row.append($("<td class='text-center'>").text(item.stationType));
+
+    // Format readingAt menggunakan Moment.js, pastikan nilainya ada
+    var formattedDate = readingAt ? moment(readingAt).format("DD-MM-YYYY HH:mm") : ''; // Kosongkan jika tidak ada tanggal
+    row.append($("<td class='text-center'>").text(formattedDate));
+
+    body.append(row);
+});
 
             }).fail(function(xhr, status, error) {
                 console.error('Request failed with status:', status);
