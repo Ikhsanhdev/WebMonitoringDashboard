@@ -53,12 +53,14 @@ public class ArrLastReading
 {
     public string deviceId { get; set; }
     public string deviceStatus { get; set; }
+    public DateTime? readingAt { get; set; }
 }
 // Model for AwlrLastReading (similar to ArrLastReading)
 public class AwlrLastReading
 {
     public string deviceId { get; set; }
     public string deviceStatus { get; set; }
+    public DateTime? readingAt { get; set; }
 }
 
 // Model for AwsLastReading (similar to ArrLastReading)
@@ -66,6 +68,7 @@ public class AwsLastReading
 {
     public string deviceId { get; set; }
     public string deviceStatus { get; set; }
+    public DateTime? readingAt { get; set; }
 }
 
 // Model for AwlrArrLastReading (combination of Awlr and Arr)
@@ -73,4 +76,5 @@ public class AwlrArrLastReading
 {
     public string deviceId { get; set; }
     public string deviceStatus { get; set; }
+    public DateTime? readingAt { get; set; }
 }

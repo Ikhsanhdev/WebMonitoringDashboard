@@ -314,87 +314,129 @@ public async Task<IActionResult> GetList()
         var data = await GetDataApi(endPoint);
         return Json(data);
     }
-    [HttpPost]
-    public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
-        string apiUrl = "https://wa.higertech.com/send-message";
-        string username = "higertech";
-        string password = "1234";
+   [HttpPost]
+public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
+    string apiUrl = "https://wa.higertech.com/send/message";
 
-        try {
-            using (HttpClient client = new HttpClient()) {
-                string endPointData = $"Station/Organization/{orgCode}";
-                var organizationData = await GetDataApi(endPointData);
-                var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
-                var result = stationData.Data;
+    try {
+        using (HttpClient client = new HttpClient()) {
+            string endPointData = $"LastReading/Organization/{orgCode}";
+            var organizationData = await GetDataApi(endPointData);
+            var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
+            var result = stationData.Data;
 
-                int lengthPos = result?.Count ?? 0;
+            int lengthPos = result?.Count ?? 0;
 
-                DateTime currentDate = DateTime.Now;
-                string today = currentDate.ToString("dd/MM/yyyy HH:mm");
+            DateTime currentDate = DateTime.Now;
+            string today = currentDate.ToString("dd/MM/yyyy HH:mm");
 
-                //message
-                string msg = "Selamat Pagi\n";
-                msg += "Bapak/Ibu Yth,\n";
-                msg += $"Dari total {lengthPos} pos, kami informasikan rekapitulasi data pos offline :\n";
-                msg += $"Tanggal  : {today}\n";
-                msg += $"Instansi : {result[0].balaiName}\n";
-                msg += $"Website  : https://{result[0].subDomain}.higertech.com\n";
+            // Pesan
+            string msg = "Selamat Pagi\n";
+            msg += "Bapak/Ibu Yth,\n";
+            msg += $"Dari total {lengthPos} pos, kami informasikan rekapitulasi data pos offline :\n";
+            msg += $"Tanggal  : {today}\n";
+            msg += $"Instansi : {result[0].balaiName}\n";
+            msg += $"Website  : https://{result[0].subDomain}.higertech.com\n";
 
-                var i = 1;
-                var dataList = result as List<Api>;
-                if (dataList != null) {
-                    var offlineDevices = dataList.Where(item => item.deviceStatus == "offline").ToList();
+            var i = 1;
+            var dataList = result as List<Api>;
+            if (dataList != null) {
+                var offlineDevices = new List<Api>();
 
-                    if (offlineDevices.Count > 0) {
-                        foreach(var device in offlineDevices) {
-                            string lastReading = device.lastReadingAt?.ToString("dd/MM/yyyy, HH:mm:ss") ?? "00/00/0000, 00:00";
+                // Loop melalui dataList untuk menangani tipe station yang berbeda
+                foreach (var item in dataList) {
+                    string deviceStatus = null;
 
-                            msg += $"{i}. {device.slug} Alat tidak mengirim data, {lastReading} localtime\n";
-                            i++;
-                        }
-                    } else {
-                        msg += "Keterangan : Alat Aktif Semua\n";
+                    // Gunakan switch untuk memeriksa deviceStatus berdasarkan stationType
+                    switch (item.stationType) {
+                        case "AWS":
+                            deviceStatus = item.awsLastReading?.deviceStatus;
+                            break;
+                        case "AWLR":
+                            deviceStatus = item.awlrLastReading?.deviceStatus;
+                            break;
+                        case "ARR":
+                            deviceStatus = item.arrLastReading?.deviceStatus;
+                            break;
+                        case "AWLR_ARR":
+                            deviceStatus = item.awlrArrLastReading?.deviceStatus;
+                            break;
                     }
-                } else {
-                    Console.WriteLine("Failed to cast data to YourItemType[].");
+
+                    // Tambahkan ke daftar offline jika deviceStatus "offline" atau null
+                if (string.IsNullOrEmpty(deviceStatus) || deviceStatus.Equals("offline", StringComparison.OrdinalIgnoreCase)) {
+                        offlineDevices.Add(item);
+                    }
                 }
 
-                msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
-                msg += "Terima Kasih 🙏🏻.";
+                // Jika ada perangkat offline, tampilkan
+            if (offlineDevices.Count > 0) {
+                foreach (var device in offlineDevices) {
+                    string lastReading = "00/00/0000, 00:00"; // Default value jika tidak ditemukan
+                    
+                    // Cek tipe station dan ambil readingAt yang sesuai
+                    DateTime? readingAt = null;
+                    // Cek tipe station dan ambil readingAt yang sesuai
+                    if (device.stationType == "ARR" && device.arrLastReading != null) {
+                                readingAt = device.arrLastReading.readingAt;
+                            } else if (device.stationType == "AWLR" && device.awlrLastReading != null) {
+                                readingAt = device.awlrLastReading.readingAt;
+                            } else if (device.stationType == "AWS" && device.awsLastReading != null) {
+                                readingAt = device.awsLastReading.readingAt;
+                            } else if (device.stationType == "AWLR_ARR" && device.awlrArrLastReading != null) {
+                                readingAt = device.awlrArrLastReading.readingAt;
+                            }
 
-                msg = msg.Replace("\n", "\\n");
+                            // Jika readingAt tidak null, konversi ke waktu lokal
+                    if (readingAt.HasValue) {
+                        lastReading = readingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
+                    }
 
-                string jsonBody = $@"{{
-                    ""number"" : ""{number}"",
-                    ""message"": ""{msg}""
-                }}";
-
-                // Set authentication header
-                string authHeaderValue = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{username}:{password}"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
-
-                // Create content for POST request
-                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                // Send POST request
-                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-                // Check response status
-                if (response.IsSuccessStatusCode) {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("API Response:");
-                    Console.WriteLine(apiResponse);
-                    return Ok(apiResponse);
-                } else {
-                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                    return StatusCode((int)response.StatusCode);
+                    // Tambahkan ke pesan
+                    msg += $"{i}. {device.slug} Alat tidak mengirim data, {lastReading} localtime\n";
+                    i++;
                 }
+            } else {
+                msg += "Keterangan : Alat Aktif Semua\n";
             }
-        } catch (Exception ex) {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            return StatusCode(500, "An error occurred");
+
+            } else {
+                Console.WriteLine("Failed to cast data to List<Api>.");
+            }
+
+            msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
+            msg += "Terima Kasih 🙏🏻.";
+
+            msg = msg.Replace("\n", "\\n");
+
+            string jsonBody = $@"{{
+                ""phone"" : ""{number}"",
+                ""message"": ""{msg}""
+            }}";
+
+            // Buat konten untuk POST request
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+            // Kirim POST request
+            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+            // Periksa status respons
+            if (response.IsSuccessStatusCode) {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API Response:");
+                Console.WriteLine(apiResponse);
+                return Ok(apiResponse);
+            } else {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                return StatusCode((int)response.StatusCode);
+            }
         }
+    } catch (Exception ex) {
+        Console.WriteLine($"An error occurred: {ex.Message}");
+        return StatusCode(500, "An error occurred");
     }
+}
+
 
     [HttpPost]
     public async Task<IActionResult> SendMessageGroup(string orgCode, string number) {
