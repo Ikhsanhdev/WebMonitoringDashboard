@@ -17,50 +17,54 @@ public class TiketController : Controller
         {
             try
             {
-                // Pengaturan penerima email dan subjek email
-                var toEmail = "email@namadomain.com"; // Ganti dengan alamat email yang diinginkan
-                var emailSubject = $"Pesan website dari {model.Name}";
-                var body = $"<h2>via Form Kontak Website</h2>" +
-                           $"<h4>Name</h4><p>{model.Name}</p>" +
-                           $"<h4>Email</h4><p>{model.Email}</p>" +
-                           $"<h4>Subject</h4><p>{model.Subject}</p>" +
-                           $"<h4>Message</h4><p>{model.Message}</p>";
+                // Email pengirim berdasarkan input pengguna
+                var senderEmail = new MailAddress(model.Email); 
+                var receiverEmail = new MailAddress("akushafaa27@gmail.com", "WebMonitoring"); // Email penerima tetap
+                var smtpUser = "akushafaa27@gmail.com"; // Email tetap untuk otentikasi SMTP
+                var password = "ronmxwoxvkxqbnyj"; // Password untuk SMTP
+   
+                // Isi email dari model form
+                var subject = model.Subject; 
+                var body = $"Pesan dari: {model.Email} \n\nPesan: {model.Message}";
 
-                // Mengirim email menggunakan SMTP
-                var smtpClient = new SmtpClient("smtp.your-email-provider.com")
+                // Konfigurasi SMTP untuk pengiriman email
+                var smtp = new SmtpClient
                 {
+                    Host = "smtp.gmail.com",
                     Port = 587,
-                    Credentials = new NetworkCredential("your-email@example.com", "your-email-password"),
                     EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(smtpUser, password)
                 };
 
-                var mailMessage = new MailMessage
+                // Membuat objek MailMessage
+                using (var message = new MailMessage(senderEmail, receiverEmail)
                 {
-                    From = new MailAddress(model.Email, model.Name),
-                    Subject = emailSubject,
-                    Body = body,
-                    IsBodyHtml = true,
-                };
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    smtp.Send(message); // Kirim email
+                }
 
-                mailMessage.To.Add(toEmail);
-
-                smtpClient.Send(mailMessage);
-
-                ViewBag.StatusMessage = "Pesan Anda sudah terkirim dengan sukses!";
-                ViewBag.StatusClass = "succdiv";
+                // Jika email berhasil dikirim, tampilkan pesan sukses
+                ViewBag.StatusMessage = "Tiket berhasil dikirim.";
+                 // Kembalikan view yang sama (tanpa redirect)
+                return View(model);
             }
-            catch
+            catch (Exception ex)
             {
-                ViewBag.StatusMessage = "Maaf, pesan Anda gagal terkirim. Silakan coba lagi.";
-                ViewBag.StatusClass = "errordiv";
+                // Jika ada kesalahan dalam pengiriman email
+                ViewBag.StatusMessage = $"Terjadi kesalahan: {ex.Message}";
+                return View(model);
             }
         }
-        else
-        {
-            ViewBag.StatusMessage = "Harap mengisi semua field data.";
-            ViewBag.StatusClass = "errordiv";
-        }
+        return View(model); // Jika data tidak valid, kembali ke form
+    }
 
-        return View(model);
+    public IActionResult Success()
+    {
+        return View();
     }
 }
