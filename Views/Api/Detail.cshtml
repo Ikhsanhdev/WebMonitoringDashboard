@@ -152,17 +152,18 @@ $.each(data, function(index, item) {
     // Tentukan status device dan readingAt dari arrLastReading, awlrLastReading, awsLastReading, awlrArrLastReading
     var status = 'offline'; // default status
     var readingAt = ''; // default reading date
+
     if (item.arrLastReading && item.arrLastReading.deviceStatus) {
-        status = item.arrLastReading.deviceStatus;
+        status = item.arrLastReading.deviceStatus.trim().toLowerCase();
         readingAt = item.arrLastReading.readingAt;
     } else if (item.awlrLastReading && item.awlrLastReading.deviceStatus) {
-        status = item.awlrLastReading.deviceStatus;
+        status = item.awlrLastReading.deviceStatus.trim().toLowerCase();
         readingAt = item.awlrLastReading.readingAt;
     } else if (item.awsLastReading && item.awsLastReading.deviceStatus) {
-        status = item.awsLastReading.deviceStatus;
+        status = item.awsLastReading.deviceStatus.trim().toLowerCase();
         readingAt = item.awsLastReading.readingAt;
     } else if (item.awlrArrLastReading && item.awlrArrLastReading.deviceStatus) {
-        status = item.awlrArrLastReading.deviceStatus;
+        status = item.awlrArrLastReading.deviceStatus.trim().toLowerCase();
         readingAt = item.awlrArrLastReading.readingAt;
     }
 
@@ -170,12 +171,12 @@ $.each(data, function(index, item) {
     var statusText = $("<td>").text(status);
     if (status === 'offline') {
         statusText.css({
-            'color': 'red',
+            'color': 'red',  // Ubah warna menjadi merah jika offline
             'text-align': 'center'
         });
     } else {
         statusText.css({
-            'color': 'green',
+            'color': 'green',  // Ubah warna menjadi hijau jika online
             'text-align': 'center'
         });
     }
