@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mail;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+
 
 public class TiketController : Controller
 {
+     private const string recaptchaSecretKey = "6LcSX2gqAAAAALaplCFO-Bl7b_dKZ8Tu3o5ZCZ3P"; // Ganti dengan secret key reCAPTCHA Anda
     [HttpGet]
     public IActionResult Tiket()
     {
@@ -48,9 +52,14 @@ public class TiketController : Controller
                     smtp.Send(message); // Kirim email
                 }
 
-                // Jika email berhasil dikirim, tampilkan pesan sukses
-                ViewBag.StatusMessage = "Tiket berhasil dikirim.";
-                 // Kembalikan view yang sama (tanpa redirect)
+                 // Berikan pesan sukses
+                ViewBag.StatusMessage = "Tiket berhasil dikirim!";
+                ViewBag.StatusClass = "alert-success";
+                 
+                // Kembalikan form kosong
+                ModelState.Clear(); // Reset form validation
+                return View(new TiketModel()); // Kirim model baru yang kosong
+                
                 return View(model);
             }
             catch (Exception ex)
