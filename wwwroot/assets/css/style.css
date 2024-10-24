@@ -243,6 +243,28 @@
   text-align: center; /* Rata tengah untuk teks */
   color: #000;
 }
+.fa-tint {
+  color: blue !important; /* Menambahkan !important */
+}
+.fa-cloud-showers-heavy {
+  color: rgb(134, 203, 225) !important; /* Menambahkan !important */
+}
+.fa-cloud-sun {
+  color: rgb(238, 211, 63) !important; /* Menambahkan !important */
+}
+.fa-wifi {
+  color: green !important; /* Menambahkan !important */
+}
+.fa-times-circle {
+  color: red !important; /* Menambahkan !important */
+}
+.fa-map-marker-alt {
+  color: rgb(185, 7, 135) !important; /* Menambahkan !important */
+}
+.fa-building {
+  color: brown !important; /* Menambahkan !important */
+}
+
 
 /* Responsivitas */
 @media (max-width: 768px) {
@@ -262,7 +284,8 @@
     width: 200px; /* Mengatur lebar tile untuk mobile */
     min-width: 100px; /* Lebar minimum untuk tile */
     flex: none; /* Menghindari fleksibilitas untuk tile */
-  }
+}
+ 
 }
 
 /* Mengatur posisi overlay */
