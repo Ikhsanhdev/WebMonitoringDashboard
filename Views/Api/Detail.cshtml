@@ -1,15 +1,5 @@
 @{
     ViewData["Title"] = "Tabel Monitoring";
-    @* var org = new List<string>() { "","ORG001", "ORG002", "ORG003","ORG004","ORG005",
-                "ORG006","ORG007","ORG008","ORG009","ORG010",
-                "ORG011","ORG012","ORG013","ORG014","ORG015",
-                "ORG016","ORG017","ORG018","ORG019","ORG020",
-                "ORG021","ORG022","ORG023","ORG024","ORG025",
-                "ORG026","ORG027","ORG028","ORG029","ORG030",
-                "ORG031","ORG032","ORG033","ORG034","ORG035",
-                "ORG036","ORG037","ORG038","ORG039","ORG040",
-                "ORG041","ORG042","ORG043","ORG044","ORG045",
-                "ORG046","ORG047","ORG048","ORG049",}; *@
 }
 
 @model IEnumerable<Api>
@@ -29,46 +19,33 @@
     <div class="card">
         <div class="card-body">
             <div class="row gx-3">
-                @* <div class="col-md-4 mb-3 mb-md-0">
-                    <h6 class="mb-3">Nama Balai :</h6>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h6 class="mb-3">Tipe Pos :</h6>
                     <div class="col">
-                        <select id="orgCode" class="form-select text-dark">
-                            @foreach(var o in org){
-                                <option value="@o">@o</option>
-                            }
+                        <select id="tipeFilter" class="form-select text-dark mb-3">
+                            <option value="semua">SEMUA</option>
+                            <option value="AWLR">PDA (AWLR)</option>
+                            <option value="ARR">PCH (ARR)</option>
+                            <option value="AWS">Klimatologi (AWS)</option>
                         </select>
                     </div>
-                </div> *@
-
-     <div class="row gx-3">
-    <div class="col-md-4 mb-3 mb-md-0">
-        <h6 class="mb-3">Tipe Pos :</h6>
-        <div class="col">
-            <select id="tipeFilter" class="form-select text-dark mb-3">
-                <option value="semua">SEMUA</option>
-                <option value="AWLR">PDA (AWLR)</option>
-                <option value="ARR">PCH (ARR)</option>
-                <option value="AWS">Klimatologi (AWS)</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="col-md-4 mb-3 mb-md-0">
-        <h6 class="mb-3">Status :</h6>
-        <div class="col">
-            <select id="statusFilter" class="form-select text-dark">
-                <option value="all">SEMUA</option>
-                <option value="online">ONLINE</option>
-                <option value="offline">OFFLINE</option>
-            </select>
-        </div>
-    </div>
-  <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-end justify-content-end">
-         <button id="exportBtn" class="btn btn-success">Export to Excel</button>
-       
-                 </div>
-                      </div>
                 </div>
+
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h6 class="mb-3">Status :</h6>
+                    <div class="col">
+                        <select id="statusFilter" class="form-select text-dark">
+                            <option value="all">SEMUA</option>
+                            <option value="online">ONLINE</option>
+                            <option value="offline">OFFLINE</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-end justify-content-end">
+                    <button id="exportBtn" class="btn btn-success">Export to Excel</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -92,7 +69,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Your data rows go here -->
+                        <!-- Data rows will be populated here -->
                     </tbody>
                 </table>
             </div>
@@ -102,176 +79,18 @@
 </main>
 
 @section Scripts {
-    <!-- Include jQuery and Moment.js -->
+    <!-- Include necessary libraries -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <!-- Include SheetJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
-    <!-- Include jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-
-    <!-- Include DataTables -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
+
+     <script>
         $(document).ready(function () {
             var balaiName = '';
-            var codeorg = '';
-            var subDomain = '';
-            var fetchData = function(organizationCode) {
-                return $.ajax({
-                    url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
-                    method: 'GET',
-                    dataType: 'json'
-                });
-            };
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const orgParam = urlParams.get('orgCode');
-            console.log(orgParam);
-
-            fetchData(orgParam).done(function(response) {
-                var result = JSON.parse(response);
-                const data = result.data;
-
-                // Menampilkan nama balai dari data yang dipilih
-                balaiName = data.length > 0 ? data[0].balaiName : ""; // Ambil dari data pertama
-                codeorg = data.length > 0 ? data[0].organizationCode : "";
-                subDomain = data.length > 0 ? data[0].subDomain : "";
-                $("h1").text(balaiName);
-
-var body = $("#offpos tbody");
-body.empty();
-let i = 1;
-$.each(data, function(index, item) {
-    var row = $("<tr>");
-
-    row.append($("<td class='text-center'>").text(i++));
-    row.append($("<td>").text(item.slug));
-    row.append($("<td class='text-center'>").text(item.deviceId));
-
-    // Tentukan status device dan readingAt dari arrLastReading, awlrLastReading, awsLastReading, awlrArrLastReading
-    var status = 'offline'; // default status
-    var readingAt = ''; // default reading date
-
-    if (item.arrLastReading && item.arrLastReading.deviceStatus) {
-        status = item.arrLastReading.deviceStatus.trim().toLowerCase();
-        readingAt = item.arrLastReading.readingAt;
-    } else if (item.awlrLastReading && item.awlrLastReading.deviceStatus) {
-        status = item.awlrLastReading.deviceStatus.trim().toLowerCase();
-        readingAt = item.awlrLastReading.readingAt;
-    } else if (item.awsLastReading && item.awsLastReading.deviceStatus) {
-        status = item.awsLastReading.deviceStatus.trim().toLowerCase();
-        readingAt = item.awsLastReading.readingAt;
-    } else if (item.awlrArrLastReading && item.awlrArrLastReading.deviceStatus) {
-        status = item.awlrArrLastReading.deviceStatus.trim().toLowerCase();
-        readingAt = item.awlrArrLastReading.readingAt;
-    }
-
-    // Definisikan warna dan posisi teks berdasarkan status
-    var statusText = $("<td>").text(status);
-    if (status === 'offline') {
-        statusText.css({
-            'color': 'red',  // Ubah warna menjadi merah jika offline
-            'text-align': 'center'
-        });
-    } else {
-        statusText.css({
-            'color': 'green',  // Ubah warna menjadi hijau jika online
-            'text-align': 'center'
-        });
-    }
-    //nnnn///
-    row.append(statusText);
-
-    row.append($("<td class='text-center'>").text(item.stationType));
-
-    // Format readingAt menggunakan Moment.js, pastikan nilainya ada
-    var formattedDate = readingAt ? moment(readingAt).format("DD-MM-YYYY HH:mm") : ''; // Kosongkan jika tidak ada tanggal
-    row.append($("<td class='text-center'>").text(formattedDate));
-
-    body.append(row);
-});
-
-            }).fail(function(xhr, status, error) {
-                console.error('Request failed with status:', status);
-            });
-
-            // Event listener for export button
-            $('#exportBtn').click(function() {
-                // Panggil fungsi exportToExcel saat tombol "Export to Excel" ditekan
-                exportToExcel();
-            });
-
-            // Event listener for export PDF button
-            $('#exportPdfBtn').click(function() {
-                exportToPdf();
-            });
-
-            function exportToExcel() {
-                const table = document.getElementById('offpos');
-                const ws = XLSX.utils.table_to_sheet(table);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, subDomain);
-                XLSX.writeFile(wb, `${subDomain}_monitoring_data.xlsx`);
-            }
-
-            function exportToPdf() {
-            // Initialize jsPDF
-            var doc = new jsPDF();
-
-            // Define columns for PDF table
-            var columns = [
-                { title: "No.", dataKey: "no" },
-                { title: "Nama Pos", dataKey: "nama" },
-                { title: "Device ID", dataKey: "deviceId" },
-                { title: "Status", dataKey: "status" },
-                { title: "Tipe", dataKey: "tipe" },
-                { title: "Reading At", dataKey: "readingAt" },
-            ];
-
-            // Define data rows for PDF table
-            var rows = [];
-            $("#offpos tbody tr").each(function(index) {
-                var cells = $(this).find("td");
-                var rowData = {
-                    no: cells.eq(0).text(),
-                    nama: cells.eq(1).text(),
-                    deviceId: cells.eq(2).text(),
-                    status: cells.eq(3).text(),
-                    tipe: cells.eq(4).text(),
-                    readingAt: cells.eq(5).text()
-                };
-                rows.push(rowData);
-            });
-
-            // Add table to PDF document
-            doc.autoTable(columns, rows);
-
-            // Save PDF file
-            doc.save(`${subDomain}_monitoring_data.pdf`);
-        }
-
-
-            // Function to filter data by device status (online or offline)
-            function filterDataByStatus(status, orgCode, type) {
-                var rows = $("#offpos tbody tr");
-                rows.show(); // Show all rows initially
-
-                var visibleRows = rows.filter(function() {
-                    var statusCell = $(this).find("td:eq(3)"); // Get the cell containing device status
-                    var deviceStatus = statusCell.text().toLowerCase();
-                    return (status === 'all' || deviceStatus === status) && (type === 'semua' || $(this).find("td:eq(4)").text().toLowerCase().includes(type.toLowerCase()));
-                });
-
-                // Hide rows that don't match the selected status and type
-                rows.not(visibleRows).hide();
-
-                // Reset numbering for visible rows
-                visibleRows.each(function(index) {
-                    $(this).find("td:eq(0)").text(index + 1);
-                });
-
-                // Update card color and text based on filter status
+            // Function to update card color and text based on filter status
+            function updateCardStatus(status) {
                 var cardHeader = $(".card-header");
                 var cardTitle = $(".card-title");
 
@@ -287,109 +106,129 @@ $.each(data, function(index, item) {
                 }
             }
 
-            // Function untuk select tipe
-            function filterDataByType(type, status) {
-                var rows = $("#offpos tbody tr");
-                rows.show();
+            // Fetching data and initializing the table
+            var fetchData = function(organizationCode) {
+                return $.ajax({
+                    url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
+                    method: 'GET',
+                    dataType: 'json'
+                });
+            };
 
-                rows.each(function(index) {
-                    $(this).find("td:eq(0)").text(index + 1);
+            const urlParams = new URLSearchParams(window.location.search);
+            const orgParam = urlParams.get('orgCode');
+
+            fetchData(orgParam).done(function(response) {
+                var result = JSON.parse(response);
+                const data = result.data;
+
+                //menampilkan nama balai
+                balaiName = data.length > 0 ? data[0].balaiName : "";
+                $("h1").text(balaiName);
+
+                var body = $("#offpos tbody");
+                body.empty();
+                let i = 1;
+
+                $.each(data, function(index, item) {
+                    var row = $("<tr>");
+                    row.append($("<td class='text-center'>").text(i++));
+                    row.append($("<td>").text(item.slug));
+                    row.append($("<td class='text-center'>").text(item.deviceId));
+
+                    // Default status offline and check last reading date
+                    var status = 'offline';
+                    var readingAt = '';
+                    var today = moment().startOf('day');
+
+                    // Get the readingAt timestamp
+                    if (item.arrLastReading && item.arrLastReading.readingAt) {
+                        readingAt = item.arrLastReading.readingAt;
+                    } else if (item.awlrLastReading && item.awlrLastReading.readingAt) {
+                        readingAt = item.awlrLastReading.readingAt;
+                    } else if (item.awsLastReading && item.awsLastReading.readingAt) {
+                        readingAt = item.awsLastReading.readingAt;
+                    } else if (item.awlrArrLastReading && item.awlrArrLastReading.readingAt) {
+                        readingAt = item.awlrArrLastReading.readingAt;
+                    }
+
+                    // Determine online/offline status based on readingAt
+                    if (readingAt && moment(readingAt).isSame(today, 'day')) {
+                        status = 'online';
+                    }
+
+                    var statusText = $("<td>").text(status);
+                    statusText.css({
+                        'color': status === 'offline' ? 'red' : 'green',
+                        'text-align': 'center'
+                    });
+                    row.append(statusText);
+
+                    row.append($("<td class='text-center'>").text(item.stationType));
+                    var formattedDate = readingAt ? moment(readingAt).format("DD-MM-YYYY HH:mm") : 'Tidak Ada Data';
+                    row.append($("<td class='text-center'>").text(formattedDate));
+
+                    body.append(row);
                 });
 
-                if (type !== 'semua') { // Periksa jika tipe yang dipilih bukan "semua"
-                    var visibleRows = rows.filter(function() {
-                        var typeCell = $(this).find("td:eq(4)");
-                        var stationType = typeCell.text().toLowerCase();
-                        return stationType.includes(type.toLowerCase());
-                    });
-                    rows.not(visibleRows).hide();
+                // Set initial card status based on default filter values
+                var defaultStatus = $("#statusFilter").val();
+                updateCardStatus(defaultStatus);
+            });
 
-                    visibleRows.each(function(index) {
-                        $(this).find("td:eq(0)").text(index + 1);
-                    });
-                }
+            // Event handler for export button
+            $('#exportBtn').click(function() {
+                const table = document.getElementById('offpos');
+                const ws = XLSX.utils.table_to_sheet(table);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Monitoring Data");
+                XLSX.writeFile(wb, `monitoring_data.xlsx`);
+            });
 
-                // Filter data by status after filtering by type
-                var selectedStatus = $("#statusFilter").val();
-                var selectedOrgCode = $("#orgCode").val();
-                filterDataByStatus(selectedStatus, selectedOrgCode, type);
-            }
-
-            // Event handler for filter dropdown change
             $("#statusFilter").change(function() {
                 var selectedStatus = $(this).val();
                 var selectedType = $("#tipeFilter").val();
-                var selectedOrgCode = $("#orgCode").val(); // Perbarui nilai selectedOrgCode
-                filterDataByStatus(selectedStatus, selectedOrgCode, selectedType);
+                filterData(selectedType, selectedStatus);
+                updateCardStatus(selectedStatus); // Update card status based on selected filter
             });
 
             $("#tipeFilter").change(function() {
                 var selectedType = $(this).val();
                 var selectedStatus = $("#statusFilter").val();
-                var selectedOrgCode = $("#orgCode").val(); // Perbarui nilai selectedOrgCode
-                filterDataByType(selectedType, selectedStatus);
+                filterData(selectedType, selectedStatus);
+                updateCardStatus(selectedStatus); // Update card status based on selected filter
             });
 
-            $("#orgCode").change(function() {
-                var selectedOrgCode = $(this).val(); // Perbarui nilai selectedOrgCode
-                getStationByOrgCode(); // Panggil fungsi untuk mengambil data stasiun sesuai dengan orgCode yang dipilih
-            });
+            function filterData(type, status) {
+                var rows = $("#offpos tbody tr");
+                rows.show();
 
-            // Initial filter based on default selected status
-            var defaultStatus = $("#statusFilter").val();
-            var defaultOrgCode = $("#orgCode").val();
-            var defaultType = $("#tipeFilter").val();
-            filterDataByType(defaultType, defaultStatus);
-            filterDataByStatus(defaultStatus, defaultOrgCode, defaultType);
+                if (type !== 'semua') {
+                    rows.filter(function() {
+                        var typeCell = $(this).find("td:eq(4)");
+                        return !typeCell.text().toLowerCase().includes(type.toLowerCase());
+                    }).hide();
+                }
 
-            function getStationByOrgCode() {
-                var orgCode = $("#orgCode").val(); // Mengambil nilai orgCode dari dropdown
-                $.ajax({
-                    url: '/Api/GetStationByOrgCode?orgCode=' + orgCode,
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        var result = JSON.parse(response);
-                        const data = result.data;
+                // Filter by status
+                if (status !== 'all') {
+                    rows.filter(function() {
+                        var statusCell = $(this).find("td:eq(3)").text().toLowerCase();
+                        return statusCell !== status;
+                    }).hide();
+                }
 
-                        var tableBody = $("#offpos tbody");
-                        tableBody.empty();
-                        let i = 1;
-                        $.each(data, function (index, item) {
-                            var row = $("<tr>");
-
-                            row.append($("<td class='text-center'>").text(i++));
-                            row.append($("<td>").text(item.slug));
-                            row.append($("<td class='text-center'>").text(item.deviceId));
-                            // Define color and text position based on device status
-                            var statusText = $("<td>").text(item.deviceStatus);
-                            if (item.deviceStatus === 'offline') {
-                                statusText.css({
-                                    'color': 'red',
-                                    'text-align': 'center'
-                                });
-                            } else {
-                                statusText.css({
-                                    'color': 'green',
-                                    'text-align': 'center'
-                                });
-                            }
-                            row.append(statusText);
-                            row.append($("<td class='text-center'>").text(item.stationType));
-                            // Format lastReadingAt using Moment.js
-                            var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
-                            row.append($("<td class='text-center'>").text(formattedDate));
-
-                            tableBody.append(row);
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Request failed with status:', status);
-                    }
+                // Update row numbers
+                rows.each(function(index) {
+                    $(this).find("td:eq(0)").text(index + 1);
                 });
             }
+
+            // Initial filter application on page load
+            var defaultStatus = $("#statusFilter").val();
+            var defaultType = $("#tipeFilter").val();
+            filterData(defaultType, defaultStatus);
+            updateCardStatus(defaultStatus); // Update card status on initial load
         });
     </script>
 }
-
-@* ha *@
