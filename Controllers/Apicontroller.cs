@@ -414,8 +414,8 @@ public async Task<IActionResult> SendMessageToApi(string orgCode, string number)
                 Console.WriteLine("Failed to cast data to List<Api>.");
             }
 
-            msg += "Saat ini kami sedang melakukan testing untuk persiapan pengiriman pesan broadcast\n";
-            //  msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
+            // msg += "Saat ini kami sedang melakukan testing untuk persiapan pengiriman pesan broadcast\n";
+             msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
             msg += "Terima Kasih 🙏🏻.";
 
             // Format pesan dengan karakter escape untuk baris baru
