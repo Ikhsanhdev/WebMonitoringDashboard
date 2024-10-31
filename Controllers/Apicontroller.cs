@@ -314,7 +314,7 @@ public async Task<IActionResult> GetList()
         var data = await GetDataApi(endPoint);
         return Json(data);
     }
-   [HttpPost]
+[HttpPost]
 public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
     string apiUrl = "https://wa.higertech.com/send/message";
 
@@ -345,68 +345,74 @@ public async Task<IActionResult> SendMessageToApi(string orgCode, string number)
 
                 // Loop melalui dataList untuk menangani tipe station yang berbeda
                 foreach (var item in dataList) {
-                    string deviceStatus = null;
+                    DateTime? readingAt = null;
 
-                    // Gunakan switch untuk memeriksa deviceStatus berdasarkan stationType
+                    // Tentukan readingAt berdasarkan tipe station
                     switch (item.stationType) {
                         case "AWS":
-                            deviceStatus = item.awsLastReading?.deviceStatus;
+                            readingAt = item.awsLastReading?.readingAt;
                             break;
                         case "AWLR":
-                            deviceStatus = item.awlrLastReading?.deviceStatus;
+                            readingAt = item.awlrLastReading?.readingAt;
                             break;
                         case "ARR":
-                            deviceStatus = item.arrLastReading?.deviceStatus;
+                            readingAt = item.arrLastReading?.readingAt;
                             break;
                         case "AWLR_ARR":
-                            deviceStatus = item.awlrArrLastReading?.deviceStatus;
+                            readingAt = item.awlrArrLastReading?.readingAt;
                             break;
                     }
 
-                    // Tambahkan ke daftar offline jika deviceStatus "offline" atau null
-                if (string.IsNullOrEmpty(deviceStatus) || deviceStatus.Equals("offline", StringComparison.OrdinalIgnoreCase)) {
+                    // Tambahkan ke daftar offline jika readingAt null atau sebelum hari ini
+                    if (!readingAt.HasValue || readingAt.Value.Date < DateTime.Today) {
                         offlineDevices.Add(item);
                     }
                 }
 
-                // Jika ada perangkat offline, tampilkan
-            if (offlineDevices.Count > 0) {
-                foreach (var device in offlineDevices) {
-                    string lastReading = "00/00/0000, 00:00"; // Default value jika tidak ditemukan
-                    
-                    // Cek tipe station dan ambil readingAt yang sesuai
-                    DateTime? readingAt = null;
-                    // Cek tipe station dan ambil readingAt yang sesuai
-                    if (device.stationType == "ARR" && device.arrLastReading != null) {
-                                readingAt = device.arrLastReading.readingAt;
-                            } else if (device.stationType == "AWLR" && device.awlrLastReading != null) {
-                                readingAt = device.awlrLastReading.readingAt;
-                            } else if (device.stationType == "AWS" && device.awsLastReading != null) {
-                                readingAt = device.awsLastReading.readingAt;
-                            } else if (device.stationType == "AWLR_ARR" && device.awlrArrLastReading != null) {
-                                readingAt = device.awlrArrLastReading.readingAt;
-                            }
+                // Jika ada perangkat offline, tambahkan ke pesan
+                if (offlineDevices.Count > 0) {
+                    foreach (var device in offlineDevices) {
+                        string lastReading = "00/00/0000, 00:00"; // Default jika readingAt tidak ditemukan
+                        
+                        // Ambil readingAt yang sesuai
+                        DateTime? deviceReadingAt = null;
+                        switch (device.stationType) {
+                            case "AWS":
+                                deviceReadingAt = device.awsLastReading?.readingAt;
+                                break;
+                            case "AWLR":
+                                deviceReadingAt = device.awlrLastReading?.readingAt;
+                                break;
+                            case "ARR":
+                                deviceReadingAt = device.arrLastReading?.readingAt;
+                                break;
+                            case "AWLR_ARR":
+                                deviceReadingAt = device.awlrArrLastReading?.readingAt;
+                                break;
+                        }
 
-                            // Jika readingAt tidak null, konversi ke waktu lokal
-                    if (readingAt.HasValue) {
-                        lastReading = readingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
+                        // Konversi tanggal dan waktu jika ada readingAt
+                        if (deviceReadingAt.HasValue) {
+                            lastReading = deviceReadingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
+                        }
+
+                        // Tambahkan informasi perangkat ke pesan
+                        msg += $"{i}. {device.slug} Alat tidak mengirim data sejak, {lastReading}\n";
+                        i++;
                     }
-
-                    // Tambahkan ke pesan
-                    msg += $"{i}. {device.slug} Alat tidak mengirim data, {lastReading} localtime\n";
-                    i++;
+                } else {
+                    msg += "Keterangan : Alat Aktif Semua\n";
                 }
-            } else {
-                msg += "Keterangan : Alat Aktif Semua\n";
-            }
 
             } else {
                 Console.WriteLine("Failed to cast data to List<Api>.");
             }
 
-            msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
+            msg += "Saat ini kami sedang melakukan testing untuk persiapan pengiriman pesan broadcast\n";
+            //  msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi 081120217941 (admin CS teknis Higertech)\n";
             msg += "Terima Kasih 🙏🏻.";
 
+            // Format pesan dengan karakter escape untuk baris baru
             msg = msg.Replace("\n", "\\n");
 
             string jsonBody = $@"{{
@@ -436,7 +442,6 @@ public async Task<IActionResult> SendMessageToApi(string orgCode, string number)
         return StatusCode(500, "An error occurred");
     }
 }
-
 
     [HttpPost]
     public async Task<IActionResult> SendMessageGroup(string orgCode, string number) {
