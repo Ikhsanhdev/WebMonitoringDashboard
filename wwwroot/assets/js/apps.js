@@ -3,36 +3,49 @@ function createDetailPanel(reading) {
   console.log('reading:', reading); // Log reading untuk debugging
 
   // Default status OFFLINE
-  var statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-danger"></small> OFFLINE';
+var statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-danger"></small> OFFLINE';
 
-  // Cek status dari setiap jenis pembacaan
-  if (reading.arrLastReading && reading.arrLastReading.deviceStatus.toLowerCase() === 'online') {
-    statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
-    console.log('Status from ARR is online');
-  } else if (reading.awlrLastReading && reading.awlrLastReading.deviceStatus.toLowerCase() === 'online') {
-    statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
-    console.log('Status from AWLR is online');
-  } else if (reading.awsLastReading && reading.awsLastReading.deviceStatus.toLowerCase() === 'online') {
-    statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
-    console.log('Status from AWS is online');
-  } else if (reading.awlrArrLastReading && reading.awlrArrLastReading.deviceStatus.toLowerCase() === 'online') {
-    statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
-    console.log('Status from AWLR ARR is online');
-  } else {
-    console.log('All statuses are offline');
-  }
+// Mendapatkan tanggal hari ini tanpa waktu
+var today = new Date();
+today.setHours(0, 0, 0, 0);  // Set jam, menit, detik, dan milidetik ke nol
 
-  var panelContent = '<table class="table mb-2 font-12"><tbody>';
-  panelContent += '<tr>';
-  panelContent += `<td class="px-0 py-2" colspan="3">
-        <div class="d-flex align-items-start">
-            <img class="me-2 rounded-3" src="/assets/img/pupr.jpg" width="45" height="45" alt="${reading.deviceId}">
-            <div class="w-100">
-                <h5 class="mt-0 mb-1 fw-semibold font-12">${reading.name}</h5>
-                ${statusOffline}
-            </div>
-        </div>
-    </td>`;
+// Fungsi untuk memeriksa status berdasarkan readingAt
+function isReadingToday(readingDate) {
+  if (!readingDate) return false; // Jika readingDate null atau tidak ada
+  var readingAtDate = new Date(readingDate);
+  readingAtDate.setHours(0, 0, 0, 0);  // Set jam, menit, detik, dan milidetik ke nol
+  return readingAtDate.getTime() === today.getTime();
+}
+
+// Cek status dari setiap jenis pembacaan berdasarkan tanggal readingAt
+if (reading.arrLastReading && isReadingToday(reading.arrLastReading.readingAt)) {
+  statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
+  console.log('Status from ARR is online');
+} else if (reading.awlrLastReading && isReadingToday(reading.awlrLastReading.readingAt)) {
+  statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
+  console.log('Status from AWLR is online');
+} else if (reading.awsLastReading && isReadingToday(reading.awsLastReading.readingAt)) {
+  statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
+  console.log('Status from AWS is online');
+} else if (reading.awlrArrLastReading && isReadingToday(reading.awlrArrLastReading.readingAt)) {
+  statusOffline = '<small class="mdi mdi-checkbox-blank-circle text-success"></small> ONLINE';
+  console.log('Status from AWLR ARR is online');
+} else {
+  console.log('All statuses are offline');
+}
+
+var panelContent = '<table class="table mb-2 font-12"><tbody>';
+panelContent += '<tr>';
+panelContent += `<td class="px-0 py-2" colspan="3">
+      <div class="d-flex align-items-start">
+          <img class="me-2 rounded-3" src="/assets/img/pupr.jpg" width="45" height="45" alt="${reading.deviceId}">
+          <div class="w-100">
+              <h5 class="mt-0 mb-1 fw-semibold font-12">${reading.name}</h5>
+              ${statusOffline}
+          </div>
+      </div>
+  </td>`;
+
   panelContent += '</tr>';
 
   panelContent += '<tr>';
