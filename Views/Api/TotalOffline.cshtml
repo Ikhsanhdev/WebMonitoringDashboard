@@ -1,15 +1,5 @@
 @{
     ViewData["Title"] = "Tabel Monitoring";
-    @* var org = new List<string>() { "","ORG001", "ORG002", "ORG003","ORG004","ORG005",
-                "ORG006","ORG007","ORG008","ORG009","ORG010",
-                "ORG011","ORG012","ORG013","ORG014","ORG015",
-                "ORG016","ORG017","ORG018","ORG019","ORG020",
-                "ORG021","ORG022","ORG023","ORG024","ORG025",
-                "ORG026","ORG027","ORG028","ORG029","ORG030",
-                "ORG031","ORG032","ORG033","ORG034","ORG035",
-                "ORG036","ORG037","ORG038","ORG039","ORG040",
-                "ORG041","ORG042","ORG043","ORG044","ORG045",
-                "ORG046","ORG047","ORG048","ORG049",}; *@
 }
 
 @model IEnumerable<Api>
@@ -102,77 +92,101 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Include DataTables -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var fetchData = function(orgParam) {
-                return $.ajax({
-                    url: '/Api/GetStationAll',
-                    method: 'GET',
-                    dataType: 'json',
-                    data: { orgCode: orgParam } // Kirim parameter orgCode jika diperlukan
-                });
-            };
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const orgParam = urlParams.get('orgCode');
-            console.log(orgParam);
-
-            fetchData(orgParam).done(function(response) {
-                var result = JSON.parse(response);
-                const data = result.data;
-
-             $("h1").text("Total Pos Offline");
-
-                var body = $("#offpos tbody");
-                body.empty();
-                let i = 1;
-                $.each(data, function(index, item) {
-                    // Hanya tampilkan data dengan deviceStatus online
-                    if (item.deviceStatus === 'offline') {
-                        var row = $("<tr>");
-
-                        row.append($("<td class='text-center'>").text(i++));
-                        row.append($("<td>").text(item.slug));
-                        row.append($("<td class='text-center'>").text(item.balaiName));
-                        row.append($("<td class='text-center'>").text(item.deviceId));
-                        // Define color and text position based on device status
-                        var statusText = $("<td>").text(item.deviceStatus);
-                        statusText.css({
-                            'color': 'red',
-                            'text-align': 'center'
-                        });
-                        row.append(statusText);
-                        row.append($("<td class='text-center'>").text(item.stationType));
-                        // Format lastReadingAt using Moment.js
-                        var formattedDate = item.lastReadingAt ? moment(item.lastReadingAt).format("DD-MM-YYYY HH:mm") : ''; // Jika tanggal tidak ada, kosongkan
-                        row.append($("<td class='text-center'>").text(formattedDate));
-
-                        body.append(row);
-                    }
-                });
-                // Inisialisasi DataTables dengan paging
-                $('#offpos').DataTable({
-                    "paging": true
-                });
-
-                // Update card color and text based on filter status
-                var cardHeader = $(".card-header");
-                var cardTitle = $(".card-title");
-                var status = urlParams.get('statusFilter');
-
-                if (status === 'online') {
-                    cardHeader.css('background', '#28a745');
-                    cardTitle.text('ONLINE').removeClass('text-white').addClass('text-white');
-                } else if (status === 'offline') {
-                    cardHeader.css('background', '#dc3545');
-                    cardTitle.text('OFFLINE').removeClass('text-white').addClass('text-white');
-                } else {
-                    cardHeader.css('background', '#dc3545');
-                    cardTitle.text('OFFLINE').removeClass('text-white').addClass('text-white');
-                }
-            }).fail(function(xhr, status, error) {
-                console.error('Request failed with status:', status);
+<script>
+    $(document).ready(function () {
+        var fetchData = function(orgParam) {
+            return $.ajax({
+                url: '/Api/GetStationAll',
+                method: 'GET',
+                dataType: 'json',
+                data: { orgCode: orgParam } // Kirim parameter orgCode jika diperlukan
             });
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const orgParam = urlParams.get('orgCode');
+        console.log(orgParam);
+
+        fetchData(orgParam).done(function(response) {
+            var result = JSON.parse(response);
+            const data = result.data;
+
+            $("h1").text("Total Pos Offline");
+
+            var body = $("#offpos tbody");
+            body.empty();
+            let i = 1;
+            const today = moment().startOf('day'); // Ambil tanggal hari ini tanpa waktu
+
+            $.each(data, function(index, item) {
+                let isOffline = false;
+                let lastReadingAt = '';
+
+                // Tentukan status offline dan waktu pembacaan berdasarkan stationType
+                if (item.stationType === 'ARR') {
+                    lastReadingAt = item.arrLastReading ? item.arrLastReading.readingAt : '';
+                } else if (item.stationType === 'AWLR') {
+                    lastReadingAt = item.awlrLastReading ? item.awlrLastReading.readingAt : '';
+                } else if (item.stationType === 'AWS') {
+                    lastReadingAt = item.awsLastReading ? item.awsLastReading.readingAt : '';
+                } else if (item.stationType === 'AWLR_ARR') {
+                    lastReadingAt = item.awlrArrLastReading ? item.awlrArrLastReading.readingAt : '';
+                }
+
+                // Periksa jika lastReadingAt kosong atau bukan hari ini
+                if (!lastReadingAt || !moment(lastReadingAt).isSame(today, 'day')) {
+                    isOffline = true;
+                }
+
+                // Tampilkan data hanya jika statusnya offline
+                if (isOffline) {
+                    var row = $("<tr>");
+
+                    row.append($("<td class='text-center'>").text(i++));
+                    row.append($("<td>").text(item.slug));
+                    row.append($("<td class='text-center'>").text(item.balaiName));
+                    row.append($("<td class='text-center'>").text(item.deviceId));
+
+                    // Warna dan posisi teks untuk status offline
+                    var statusText = $("<td>").text("Offline").css({
+                        'color': 'red',
+                        'text-align': 'center'
+                    });
+                    row.append(statusText);
+                    row.append($("<td class='text-center'>").text(item.stationType));
+
+                    // Gunakan lastReadingAt jika ada, jika tidak tampilkan waktu saat ini
+                    var formattedDate = lastReadingAt ? moment(lastReadingAt).format("DD-MM-YYYY") : moment().format("DD-MM-YYYY");
+                    row.append($("<td class='text-center'>").text(formattedDate));
+
+                    body.append(row);
+                }
+            });
+
+            // Inisialisasi DataTables dengan paging
+            $('#offpos').DataTable({
+                "paging": true
+            });
+
+            // Update card color and text based on filter status
+            var cardHeader = $(".card-header");
+            var cardTitle = $(".card-title");
+            var status = urlParams.get('statusFilter');
+
+            if (status === 'offline') {
+                cardHeader.css('background', '#dc3545');
+                cardTitle.text('OFFLINE').removeClass('text-white').addClass('text-white');
+            } else if (status === 'online') {
+                cardHeader.css('background', '#28a745');
+                cardTitle.text('ONLINE').removeClass('text-white').addClass('text-white');
+            } else {
+                cardHeader.css('background', '#dc3545');
+                cardTitle.text('OFFLINE').removeClass('text-white').addClass('text-white');
+            }
+        }).fail(function(xhr, status, error) {
+            console.error('Request failed with status:', status);
         });
-    </script>
+    });
+</script>
+
 }

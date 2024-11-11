@@ -105,37 +105,41 @@ public async Task<IActionResult> GetList()
                 a.deviceId.Contains(searchValue))
         ).ToList();
 
+        var today = DateTime.Today;
+
         // Grouping and calculating aggregated values
         var groupedData = filteredData
-        .GroupBy(a => new { 
-            a.balaiName, 
-            a.organizationCode,
-            a.subDomain,    // Tambahkan ini
-            a.subDomainOld // Dan ini
-        })
-        .Select(g => new Api
-        {
-            balaiName = g.Key.balaiName,
-            organizationCode = g.Key.organizationCode,
-            subDomain = g.Key.subDomain,       // Masukkan ke hasil
-            subDomainOld = g.Key.subDomainOld, // Masukkan ke hasil
-            jumlahPos = g.Count(),
-            jumlahPosOnline = g.Count(p =>
-                (p.stationType.ToLower() == "arr" && p.arrLastReading?.deviceStatus?.ToLower() == "online") ||
-                (p.stationType.ToLower() == "awlr" && p.awlrLastReading?.deviceStatus?.ToLower() == "online") ||
-                (p.stationType.ToLower() == "aws" && p.awsLastReading?.deviceStatus?.ToLower() == "online") ||
-                (p.stationType.ToLower() == "awlr_arr" && p.awlrArrLastReading?.deviceStatus?.ToLower() == "online")
-            ),
+            .GroupBy(a => new { 
+                a.balaiName, 
+                a.organizationCode,
+                a.subDomain,    // Tambahkan ini
+                a.subDomainOld // Dan ini
+            })
+            .Select(g => new Api
+            {
+                balaiName = g.Key.balaiName,
+                organizationCode = g.Key.organizationCode,
+                subDomain = g.Key.subDomain,       // Masukkan ke hasil
+                subDomainOld = g.Key.subDomainOld, // Masukkan ke hasil
+                jumlahPos = g.Count(),
 
-            jumlahPosOffline = g.Count(p =>
-                (p.stationType.ToLower() == "arr" && (p.arrLastReading?.deviceStatus?.ToLower() == "offline" || p.arrLastReading?.deviceStatus == null)) ||
-                (p.stationType.ToLower() == "awlr" && (p.awlrLastReading?.deviceStatus?.ToLower() == "offline" || p.awlrLastReading?.deviceStatus == null)) ||
-                (p.stationType.ToLower() == "aws" && (p.awsLastReading?.deviceStatus?.ToLower() == "offline" || p.awsLastReading?.deviceStatus == null)) ||
-                (p.stationType.ToLower() == "awlr_arr" && (p.awlrArrLastReading?.deviceStatus?.ToLower() == "offline" || p.awlrArrLastReading?.deviceStatus == null))
-            ),
+                // Hitung jumlahPosOnline berdasarkan readingAt
+                jumlahPosOnline = g.Count(p =>
+                    (p.stationType.ToLower() == "arr" && p.arrLastReading?.readingAt?.Date == today) ||
+                    (p.stationType.ToLower() == "awlr" && p.awlrLastReading?.readingAt?.Date == today) ||
+                    (p.stationType.ToLower() == "aws" && p.awsLastReading?.readingAt?.Date == today) ||
+                    (p.stationType.ToLower() == "awlr_arr" && p.awlrArrLastReading?.readingAt?.Date == today)
+                ),
 
-        })
-        .ToList();
+                // Hitung jumlahPosOffline berdasarkan readingAt
+                jumlahPosOffline = g.Count(p =>
+                    (p.stationType.ToLower() == "arr" && (p.arrLastReading?.readingAt == null || p.arrLastReading?.readingAt?.Date < today)) ||
+                    (p.stationType.ToLower() == "awlr" && (p.awlrLastReading?.readingAt == null || p.awlrLastReading?.readingAt?.Date < today)) ||
+                    (p.stationType.ToLower() == "aws" && (p.awsLastReading?.readingAt == null || p.awsLastReading?.readingAt?.Date < today)) ||
+                    (p.stationType.ToLower() == "awlr_arr" && (p.awlrArrLastReading?.readingAt == null || p.awlrArrLastReading?.readingAt?.Date < today))
+                ),
+            })
+            .ToList();
 
         // Paging
         var result = new DataTableResult<Api>
@@ -209,6 +213,7 @@ public async Task<IActionResult> GetList()
             }
 
             int total = 0;
+            var today = DateTime.Today; // Menyimpan tanggal hari ini
 
             switch (totalType.ToLower())
             {
@@ -229,20 +234,21 @@ public async Task<IActionResult> GetList()
                     break;
                 case "totalonline":
                     total = apiResponse.Count(a =>
-                        (a.stationType == "ARR" && a.arrLastReading?.deviceStatus == "Online") ||
-                        (a.stationType == "AWLR" && a.awlrLastReading?.deviceStatus == "Online") ||
-                        (a.stationType == "AWS" && a.awsLastReading?.deviceStatus == "Online") ||
-                        (a.stationType == "AWLR_ARR" && a.awlrArrLastReading?.deviceStatus == "Online"));
+                        (a.stationType == "ARR" && a.arrLastReading?.readingAt?.Date == today) ||
+                        (a.stationType == "AWLR" && a.awlrLastReading?.readingAt?.Date == today) ||
+                        (a.stationType == "AWS" && a.awsLastReading?.readingAt?.Date == today) ||
+                        (a.stationType == "AWLR_ARR" && a.awlrArrLastReading?.readingAt?.Date == today)
+                    );
                     break;
                 case "totaloffline":
                     total = apiResponse.Count(a =>
-                        (a.stationType == "ARR" && (a.arrLastReading?.deviceStatus == "Offline" || a.arrLastReading?.deviceStatus == null)) ||
-                        (a.stationType == "AWLR" && (a.awlrLastReading?.deviceStatus == "Offline" || a.awlrLastReading?.deviceStatus == null)) ||
-                        (a.stationType == "AWS" && (a.awsLastReading?.deviceStatus == "Offline" || a.awsLastReading?.deviceStatus == null)) ||
-                        (a.stationType == "AWLR_ARR" && (a.awlrArrLastReading?.deviceStatus == "Offline" || a.awlrArrLastReading?.deviceStatus == null))
+                        (a.stationType == "ARR" && (a.arrLastReading?.readingAt == null || a.arrLastReading?.readingAt?.Date < today)) ||
+                        (a.stationType == "AWLR" && (a.awlrLastReading?.readingAt == null || a.awlrLastReading?.readingAt?.Date < today)) ||
+                        (a.stationType == "AWS" && (a.awsLastReading?.readingAt == null || a.awsLastReading?.readingAt?.Date < today)) ||
+                        (a.stationType == "AWLR_ARR" && (a.awlrArrLastReading?.readingAt == null || a.awlrArrLastReading?.readingAt?.Date < today))
                     );
                     break;
-            default:
+                default:
                     // Jika totalType tidak valid, kembalikan total 0
                     total = 0;
                     break;
