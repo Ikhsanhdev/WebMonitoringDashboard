@@ -387,7 +387,7 @@ public async Task<IActionResult> GetList()
                     var i = 1;
                     if (offlineDevices.Count > 0) {
                         foreach (var device in offlineDevices) {
-                            string lastReading = "00/00/0000, 00:00"; // Default jika readingAt tidak ditemukan
+                            string lastReading ; // Default jika readingAt tidak ditemukan
                             
                             // Ambil readingAt yang sesuai
                             DateTime? deviceReadingAt = null;
@@ -406,18 +406,22 @@ public async Task<IActionResult> GetList()
                                     break;
                             }
 
-                            // Konversi tanggal dan waktu jika ada readingAt
-                            if (deviceReadingAt.HasValue) {
-                                lastReading = deviceReadingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
-                            }
-
-                            // Tambahkan informasi perangkat offline ke pesan
-                            msg += $"{i}. {device.slug} Alat tidak mengirim data sejak, {lastReading}\n";
-                            i++;
-                        }
+                    // Tentukan lastReading berdasarkan kondisi
+                    if (!deviceReadingAt.HasValue) {
+                        // Jika readingAt null atau lebih dari 6 bulan yang lalu
+                        lastReading = "lebih dari 6 bulan";
                     } else {
-                        msg += "Keterangan : Alat Aktif Semua\n";
+                        // Konversi tanggal dan waktu jika ada readingAt
+                        lastReading = deviceReadingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
                     }
+
+                    // Tambahkan informasi perangkat offline ke pesan
+                    msg += $"{i}. {device.slug} Alat tidak mengirim data sejak, {lastReading}\n";
+                    i++;
+                }
+            } else {
+                msg += "Keterangan : Alat Aktif Semua\n";
+            }
                 } else {
                     Console.WriteLine("Failed to cast data to List<Api>.");
                 }
