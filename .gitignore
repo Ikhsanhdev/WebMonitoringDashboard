@@ -1,0 +1,20 @@
+# Folder hasil build
+bin/
+obj/
+
+# File dan folder dari Visual Studio
+.vs/
+*.user
+*.suo
+
+# File sementara
+*.log
+*.tmp
+
+# Folder paket NuGet
+*.nupkg
+packages/
+
+# Lain-lain
+.DS_Store
+Thumbs.db
