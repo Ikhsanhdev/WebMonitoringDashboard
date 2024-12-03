@@ -1,0 +1,118 @@
+@{
+    ViewData["Title"] = "Detail Tickets";
+}
+
+@model IEnumerable<Tiket>
+
+<main id="main" class="main" style="margin-top: 70px;">
+    <!-- Judul Halaman -->
+    <div class="pagetitle">
+        <h1 style="color: white; margin-top: 30px; margin-left: 25px;">Detail Tickets</h1>
+        <nav>
+            <ol class="breadcrumb" style="margin-left: 25px;">
+                <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Detail Tickets</li>
+            </ol>
+        </nav>
+    </div>
+
+
+    <!-- Tabel Detail Ticket -->
+    <div class="card my-4">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center">Instansi</th>
+                        <th class="text-center">Subject</th>
+                        <th class="text-center">Deskripsi</th>
+                        <th class="text-center">Gambar</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Aksi</th> <!-- Tambahkan kolom Aksi -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var tiket in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@tiket.instansi</td>
+                                <td class="text-center">@tiket.subject</td>
+                                <td>@tiket.deskripsi</td>
+                                <td class="text-center">
+                                    @if (!string.IsNullOrEmpty(tiket.gambar))
+                                    {
+                                        <img src="@Url.Content(tiket.gambar)" alt="Gambar Tiket" style="width: 100px; height: auto;" />
+                                    }
+                                    else
+                                    {
+                                        <span>Tidak ada gambar</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge 
+                                        @(tiket.status == "Resolved" ? "bg-success" : tiket.status == "Processing" ? "bg-warning" : "bg-danger")">
+                                        @(string.IsNullOrEmpty(tiket.status) ? "Pending" : tiket.status)
+                                    </span>
+                                </td>
+                                   <td class="text-center">
+                                        <!-- Tombol aksi -->
+                                        <button class="btn btn-success btn-sm update-status" data-id="@tiket.id" data-status="Resolved">Resolved</button>
+                                        <button class="btn btn-warning btn-sm update-status" data-id="@tiket.id" data-status="Processing">Processing</button>
+                                    </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">Tidak ada tiket yang tersedia</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <!-- JavaScript tambahan jika diperlukan -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const updateStatusButtons = document.querySelectorAll(".update-status");
+
+            updateStatusButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const ticketId = this.getAttribute("data-id");
+                    const newStatus = this.getAttribute("data-status");
+
+                    fetch(`/Tiket/UpdateStatus`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id: ticketId, status: newStatus })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Tiket berhasil diupdate menjadi ${newStatus}.`);
+                            location.reload(); // Refresh halaman untuk memperbarui tampilan
+                        } else {
+                            alert("Gagal mengupdate tiket: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Terjadi kesalahan.");
+                    });
+                });
+            });
+        });
+</script>
+
+}

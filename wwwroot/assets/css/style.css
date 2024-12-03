@@ -721,25 +721,7 @@ body {
 .top-bar .actions button:hover {
   color: #007bff;
 }
-.email-form div {
-  margin-bottom: 15px;
-}
-.email-form label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-.email-form input, .email-form textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-.email-form textarea {
-  resize: none;
-  height: 100px;
-}
+
 button#sendButton {
   background-color: #007bff;
   color: white;
@@ -770,5 +752,135 @@ button#sendButton:hover {
 .pagetitle {
   margin-top: 20px; /* Tambahkan jarak 20px di atas pagetitle */
 }
+/* Styling untuk area header dengan garis bawah */
+.header-section {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  margin: 20px 0 0 0;
+  width: 100vw;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.container-fluid {
+  padding: 0;
+}
 
-/* hai */
+.header-buttons .btn-icon {
+  padding: 8px 10px;
+  margin-left: 8px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px; /* Jarak antar tombol */
+}
+.btn-icon i {
+  margin-right: 5px;
+}
+.header-buttons .btn {
+  border: 1px solid #ddd; /* Garis tepi dengan warna abu-abu */
+  border-radius: 4px; /* Opsional: Menambahkan sudut yang melengkung */
+  
+}
+.form-group {
+  display: flex;
+  align-items: center;
+}
+.form-group label {
+  width: 25%;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.form-group .form-control, .form-group select, .form-group textarea {
+  width: 75%;
+  border-color: #3a3a44; /* Ubah #007bff sesuai warna yang Anda inginkan */
+}
+/* CSS untuk mengatur warna border setiap field */
+/* Mengatur warna border untuk setiap field */
+.form-control, select, textarea {
+  border: 1px solid #3a3a44 !important; /* Warna border sesuai keinginan, dengan !important */
+  box-shadow: none; /* Menghapus efek bayangan yang kadang muncul di elemen select */
+}
+
+/* Mengatur warna border saat elemen aktif atau difokuskan */
+.form-control:focus, select:focus, textarea:focus {
+  border-color: #293ad8 !important; /* Warna border saat fokus */
+  outline: none; /* Menghapus outline default */
+}
+
+.ticket-details {
+  margin-left: 25%; /* Menyelaraskan seluruh form dengan bagian Ticket Details */
+}
+.text-custom {
+        font-weight: normal; /* Mengatur tulisan tidak tebal */
+        color: #6c757d; /* Mengatur warna tulisan ke biru ke abu-abu */
+    }
+    /* Warna hijau untuk tombol "Tutup" */
+    .btn-green {
+      background-color: green !important;
+      color: white !important;
+      border-color: green !important;
+  }
+  .btn-green:hover {
+      background-color: darkgreen !important;
+      border-color: darkgreen !important;
+  }
+  .modal-success {
+    background-color: #28a745; /* Warna hijau */
+    color: white;
+}
+.nav-link i.fa-bell {
+  color: white !important;
+}
+    /* Styling untuk navbar */
+    .navbar-custom {
+      background-color: #2d3e50;
+  }
+  .navbar-custom .navbar-brand, 
+  .navbar-custom .nav-link {
+      color: #ffffff;
+  }
+  .navbar-custom .nav-link:hover {
+      color: #d1d1d1;
+  }
+
+  /* Styling card */
+  .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+  }
+  .ticket-card {
+      width: 100%; /* Membuat card menyesuaikan lebar layar */
+      max-width: 300px; /* Maksimal lebar card */
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+  }
+  .ticket-card img {
+      width: 100%; /* Membuat gambar menyesuaikan lebar card */
+      height: auto;
+  }
+  .ticket-card .card-body {
+      padding: 15px;
+  }
+  .ticket-card h5 {
+      margin-bottom: 10px;
+  }
+
+  /* Media query untuk menyesuaikan layar kecil */
+  @media (max-width: 768px) {
+      .navbar-custom .navbar-brand, 
+      .navbar-custom .nav-link {
+          font-size: 14px;
+      }
+      .ticket-card {
+          max-width: 100%; /* Card lebih besar di layar kecil */
+      }
+  }

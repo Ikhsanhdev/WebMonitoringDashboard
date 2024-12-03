@@ -21,6 +21,7 @@
     <!-- Favicons -->
     <link href="~/assets/img/hgt.png" rel="icon">
     <link href="~/assets/img/hgt.png" rel="apple-touch-icon">
+    
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet">
@@ -50,12 +51,22 @@
 </head>
 <body>
     <header>
-           <div class="top_nav">
+        <div class="top_nav">
           <div class="nav_menu d-flex align-items-center">
               <img src="~/assets/img/hgt.png" alt="Bootstrap" width="50" height="50" class="me-2">
                 <a class="navbar-brand" asp-area="" asp-controller="Api" asp-action="Index">Higertech</a>
                <nav class="nav navbar-nav ms-auto"> <!-- Tambahkan ms-auto pada navbar-nav -->
-                    <ul class="navbar-right">
+                    <ul class="navbar-right d-flex align-items-center">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="notificationIcon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                <span id="notificationCount" class="badge bg-danger"></span>
+                            </a>
+                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationIcon" id="notificationDropdown">
+                            <li><h6 class="dropdown-header text-center">pesan masuk</h6></li>
+                            <li id="instansiListContainer" style="max-height: 200px; overflow-y: auto;"></li>
+                        </ul>
+                        </li>
                         <li class="nav-item dropdown open ms-auto" style="padding-left: 15px; z-index: 1100;"> <!-- Tambahkan z-index disini -->
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
                                 <span class="image">
@@ -65,9 +76,9 @@
                             </a>
 
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="z-index: 1100;">
-                                <li><a class="dropdown-item" href="#">Home</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Pengguna" asp-action="index">User Management</a></li>
                                 <li><a class="dropdown-item" href="#">Skema</a></li>
-                                <li><a class="dropdown-item" href="#">Phone Book</a></li>
+                                <li><a class="dropdown-item" href="/Tiket/Detail">Detail Tiket</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Akun" asp-action="Logout">Log Out</a></li>
                             </ul>
                         </li>
@@ -83,6 +94,32 @@
         </main>
     </div>
 
+<!-- Modal kedua untuk detail tiket -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Detail Tiket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Instansi:</strong> <span id="ticketInstansi"></span></p>
+                <p><strong>Subject:</strong> <span id="ticketSubject"></span></p>
+                <p><strong>Deskripsi:</strong> <span id="ticketDeskripsi"></span></p>
+                <img id="ticketGambar" style="display: none; width: 100%; height: auto;" alt="Gambar Tiket"/>
+            </div>
+            <div class="modal-footer">
+                <!-- Formulir untuk CSRF token -->
+                <form method="post" id="antrianForm">
+                    @Html.AntiForgeryToken()
+                    <button type="button" id="KirimAntrian" class="btn btn-primary send-queue-btn" data-id="">
+                        Kirim Antrian Tiket
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
     <br>
     <br>
 
@@ -110,8 +147,114 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+<script>
+    // Inisialisasi koneksi SignalR ke NotificationHub
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/NotificationHub")
+        .build();
 
-  
+    connection.start().then(() => {
+        console.log("SignalR connected");
+        updateNotifications();
+    }).catch(err => console.error(err.toString()));
+
+    // Mendengarkan notifikasi baru dari server
+    connection.on("ReceiveNotification", () => {
+        updateNotifications();
+    });
+
+    // Fungsi untuk mengambil data notifikasi dari server
+    function updateNotifications() {
+    fetch('/Tiket/GetUnreadTickets')
+        .then(response => response.json())
+        .then(data => {
+            const notificationCount = document.getElementById("notificationCount");
+            const instansiListContainer = document.getElementById("instansiListContainer");
+
+            // Menampilkan jumlah notifikasi
+            notificationCount.textContent = data.length > 0 ? data.length : '';
+
+            // Mengisi daftar instansi di dropdown
+            instansiListContainer.innerHTML = '';
+            data.forEach(tiket => {
+                const listItem = document.createElement("li");
+                listItem.className = "dropdown-item";
+                listItem.textContent = tiket.instansi;
+                listItem.style.cursor = 'pointer';
+
+                // Set event klik untuk menampilkan detail tiket di modal detail
+                listItem.onclick = () => showTicketDetail(tiket);
+
+                instansiListContainer.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error("Error fetching notifications:", error));
+}
+
+    // Fungsi untuk menampilkan detail tiket di modal kedua
+        function showTicketDetail(tiket) {
+        document.getElementById("ticketInstansi").textContent = tiket.instansi;
+        document.getElementById("ticketSubject").textContent = tiket.subject;
+        document.getElementById("ticketDeskripsi").textContent = tiket.deskripsi;
+
+        const ticketGambar = document.getElementById("ticketGambar");
+        if (tiket.gambar) {
+            ticketGambar.src = tiket.gambar;
+            ticketGambar.style.display = 'block';
+        } else {
+            ticketGambar.style.display = 'none';
+        }
+            // Mengatur data-id pada tombol "Kirim Antrian Tiket"
+        const sendQueueButton = document.querySelector('.send-queue-btn');
+        if (sendQueueButton) {
+            sendQueueButton.setAttribute("data-id", tiket.id);
+        } else {
+            console.error("Tombol 'Kirim Antrian Tiket' tidak ditemukan.");
+        }
+
+        // Tampilkan modal detail tiket
+        const detailModal = new bootstrap.Modal(document.getElementById("detailModal"));
+        detailModal.show();
+
+        // Mengirim permintaan untuk menandai tiket sebagai "read"
+        fetch(`/Tiket/MarkAsRead?id=${tiket.id}`, {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                // Setelah status "read" diperbarui, refresh notifikasi
+                updateNotifications();
+            }
+        }).catch(error => console.error("Error marking ticket as read:", error));
+    }
+     // Menangani pengiriman tiket ke antrian
+        document.getElementById("KirimAntrian").addEventListener("click", function() {
+            const tiketId = this.getAttribute('data-id');
+            if (!tiketId) return;
+
+            fetch('/Tiket/KirimAntrian', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ id: tiketId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Tiket berhasil dimasukkan ke antrian!');
+                    updateNotifications(); // Memperbarui daftar notifikasi
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("detailModal"));
+                    modal.hide();
+                } else {
+                    alert('Gagal mengirim tiket ke antrian.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+</script>  
     @await RenderSectionAsync("Scripts", required: false)
     @RenderSection("styles", required: false)
 </body>

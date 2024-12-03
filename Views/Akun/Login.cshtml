@@ -72,7 +72,7 @@
                                         <br>
                                         <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
                                     </div>
-                                    <form class="row g-3 needs-validation" method="post" novalidate>
+                                    <form class="row g-3 needs-validation" method="post" novalidate onsubmit="return validateRecaptcha()">
                                         <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
                                         <div class="col-12">
                                             <label for="yourUsername" class="form-label fw-semibold">Username</label>
@@ -97,6 +97,10 @@
                                                 <label class="form-check-label" for="rememberMe">Remember me</label>
                                             </div>
                                         </div>
+
+                                        <!-- Elemen reCAPTCHA -->
+                                        <div class="g-recaptcha" data-sitekey="6LcSX2gqAAAAALGYscEU7wZa2oULJlI5gk1dxqaX"></div>
+                                        
                                         <div class="col-12">
                                             <!-- Menggunakan input type="submit" untuk submit form -->
                                             <input type="submit" class="btn btn-primary w-100" value="Login">
@@ -131,14 +135,27 @@
 
     <!-- Vendor JS Files -->
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('yourPassword');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('bi-eye');
-            this.querySelector('i').classList.toggle('bi-eye-slash');
-        });
-    </script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordInput = document.getElementById('yourPassword');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        // Toggle icon
+        const icon = this.querySelector('i');
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+    });
+
+    function validateRecaptcha() {
+        var response = grecaptcha.getResponse();
+        if (response.length === 0) {
+            alert("Tolong verifikasi bahwa Anda bukan robot.");
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

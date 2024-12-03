@@ -1,17 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-
-public class TiketModel
+public class Tiket
 {
-    [Required(ErrorMessage = "Email wajib diisi.")]
-    [EmailAddress(ErrorMessage = "Masukkan alamat email yang valid.")]
-    [MaxLength(100, ErrorMessage = "Email tidak boleh lebih dari 100 karakter.")]
-    public string Email { get; set; }
-
-    [Required(ErrorMessage = "Subjek wajib diisi.")]
-    [MaxLength(150, ErrorMessage = "Subjek tidak boleh lebih dari 150 karakter.")]
-    public string Subject { get; set; }
-
-    [Required(ErrorMessage = "Pesan wajib diisi.")]
-    [MaxLength(1000, ErrorMessage = "Pesan tidak boleh lebih dari 1000 karakter.")]
-    public string Message { get; set; }
+    public Guid id { get; set; } = Guid.NewGuid();
+    public string? instansi { get; set; }
+    public string? subject { get; set; }
+    public string? deskripsi { get; set; }
+    public string? gambar { get; set; }
+    public int read { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now; // Default ke waktu saat ini
+    public string? status { get; set; } // Tambahkan tanda '?' untuk nullable
 }
