@@ -7,6 +7,8 @@ using Menyala.Data;
 using menyala.Models;
 using System.Security.Cryptography;
 using System;
+using Microsoft.AspNetCore.Authorization;
+
     public class PenggunaController : Controller
     {
         private readonly AppDbContext _context;
@@ -15,7 +17,7 @@ using System;
         {
             _context = context;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
             var pengguna = _context.Pengguna.ToList();
@@ -23,6 +25,7 @@ using System;
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Create(Pengguna pengguna)
         {
             if (ModelState.IsValid)
@@ -58,7 +61,7 @@ using System;
                 return (hash, salt);
             }
         }
-
+        [Authorize]
         public IActionResult Update(Guid id, Pengguna updatedPengguna)
     {
         var pengguna = _context.Pengguna.FirstOrDefault(p => p.Id == id);

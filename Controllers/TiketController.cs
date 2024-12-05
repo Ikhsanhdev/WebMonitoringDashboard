@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
 using menyala.Hubs; // Sesuaikan dengan namespace NotificationHub Anda
 using Menyala.Services;
+using Microsoft.AspNetCore.Authorization;
 
 public class TiketController : Controller
 {
@@ -30,8 +31,8 @@ public class TiketController : Controller
     }
 
 
-
     // Menampilkan semua tiket
+    [Authorize] 
     public IActionResult Index()
 {
     // Ambil username dari user yang login
@@ -51,7 +52,7 @@ public class TiketController : Controller
     return View(tickets);
 }
 
-
+    [Authorize]
     // Menampilkan form untuk membuat tiket baru
     public IActionResult Create()
     {
@@ -138,33 +139,34 @@ public async Task<IActionResult> Create(Tiket tiket, IFormFile gambarFile)
             }
             return Ok();
         }
+        [Authorize]
         public IActionResult Detail()
         {
             var tiketList = _context.Tikets.ToList(); // Mengambil semua data dari tabel Tikets
             return View(tiketList); // Mengirimkan data ke view
         }
       // Private static dictionary untuk menyimpan nomor antrian berdasarkan hari
-    private static readonly Dictionary<DateTime, int> QueueNumbers = new Dictionary<DateTime, int>();
+        private static readonly Dictionary<DateTime, int> QueueNumbers = new Dictionary<DateTime, int>();
 
-    // Fungsi untuk mendapatkan nomor urut antrian berikutnya
-    private int GetNextQueueNumber()
-    {
-        var today = DateTime.Today;
-
-        // Jika hari baru, mulai dari 1
-        if (!QueueNumbers.ContainsKey(today))
+        // Fungsi untuk mendapatkan nomor urut antrian berikutnya
+        private int GetNextQueueNumber()
         {
-            QueueNumbers[today] = 1;
-        }
-        else
-        {
-            QueueNumbers[today]++;
+            var today = DateTime.Today;
+
+            // Jika hari baru, mulai dari 1
+            if (!QueueNumbers.ContainsKey(today))
+            {
+                QueueNumbers[today] = 1;
+            }
+            else
+            {
+                QueueNumbers[today]++;
+            }
+
+            return QueueNumbers[today];
         }
 
-        return QueueNumbers[today];
-    }
-
-   [HttpPost]
+    [HttpPost]
     public IActionResult KirimAntrian([FromBody] Guid id)
     {
         if (id == Guid.Empty)
