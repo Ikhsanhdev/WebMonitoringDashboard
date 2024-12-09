@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading;
 using menyala.Models;
+using Menyala.Data;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using menyala.Controllers;
@@ -18,10 +19,12 @@ using Microsoft.AspNetCore.Authorization;
 public class ApiController : Controller
 {
     private readonly HttpClient _httpClient;
+    private readonly AppDbContext _context;
 
-    public ApiController() {
+    public ApiController(AppDbContext context) {
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new System.Uri("http://live2.higertech.com");
+        _context = context;
     }
 
     public class ApiResponse
@@ -458,6 +461,195 @@ public async Task<IActionResult> GetList()
         } catch (Exception ex) {
             Console.WriteLine($"An error occurred: {ex.Message}");
             return StatusCode(500, "An error occurred");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendMessageToLog(string orgCode, string number) {
+        string apiUrl = "https://wa.higertech.com/send/message";
+
+        try {
+            using (HttpClient client = new HttpClient()) {
+                string endPointData = $"LastReading/Organization/{orgCode}";
+                var organizationData = await GetDataApi(endPointData);
+                var stationData = JsonConvert.DeserializeObject<ApiResponse>(organizationData.ToString());
+                var result = stationData.Data;
+
+                int lengthPos = result?.Count ?? 0;
+                int lengthOnline = 0;
+                int lengthOffline = 0;
+
+                DateTime currentDate = DateTime.Now;
+                string today = currentDate.ToString("dd/MM/yyyy HH:mm");
+
+            // Ambil semua data PIC terkait orgCode
+            var picDataList = _context.pic.Where(p => p.orgCode == orgCode).ToList();
+            if (picDataList == null || picDataList.Count == 0)
+            {
+                return NotFound($"Tidak ditemukan data PIC untuk orgCode: {orgCode}");
+            }
+
+                // Pesan
+                string msg = "Selamat Pagi\n";
+                msg += "Bapak/Ibu Yth,\n";
+                msg += "Kami informasikan rekapitulasi data pos :\n";
+
+                var dataList = result as List<Api>;
+                if (dataList != null) {
+                    var offlineDevices = new List<Api>();
+
+                    // Loop untuk menentukan perangkat online atau offline
+                    foreach (var item in dataList) {
+                        DateTime? readingAt = null;
+
+                        // Tentukan readingAt berdasarkan tipe station
+                        switch (item.stationType) {
+                            case "AWS":
+                                readingAt = item.awsLastReading?.readingAt;
+                                break;
+                            case "AWLR":
+                                readingAt = item.awlrLastReading?.readingAt;
+                                break;
+                            case "ARR":
+                                readingAt = item.arrLastReading?.readingAt;
+                                break;
+                            case "AWLR_ARR":
+                                readingAt = item.awlrArrLastReading?.readingAt;
+                                break;
+                        }
+
+                        // Klasifikasi online atau offline
+                        if (readingAt.HasValue && readingAt.Value.Date >= DateTime.Today) {
+                            lengthOnline++;
+                        } else {
+                            lengthOffline++;
+                            offlineDevices.Add(item);
+                        }
+                    }
+
+                    // Update pesan dengan perhitungan online/offline
+                    msg += $"Dari *Total* : {lengthPos} pos, \n";
+                    msg += $"*Online* : {lengthOnline} pos, \n";
+                    msg += $"*Offline* : {lengthOffline} pos, \n";
+                    msg += $"Di Tanggal  : {today}\n";
+                    msg += $"Instansi : {result[0].balaiName}\n";
+                    msg += $"Website  : https://{result[0].subDomain}.higertech.com\n";
+
+                    var i = 1;
+                    if (offlineDevices.Count > 0) {
+                        foreach (var device in offlineDevices) {
+                            string lastReading ; // Default jika readingAt tidak ditemukan
+                            
+                            // Ambil readingAt yang sesuai
+                            DateTime? deviceReadingAt = null;
+                            switch (device.stationType) {
+                                case "AWS":
+                                    deviceReadingAt = device.awsLastReading?.readingAt;
+                                    break;
+                                case "AWLR":
+                                    deviceReadingAt = device.awlrLastReading?.readingAt;
+                                    break;
+                                case "ARR":
+                                    deviceReadingAt = device.arrLastReading?.readingAt;
+                                    break;
+                                case "AWLR_ARR":
+                                    deviceReadingAt = device.awlrArrLastReading?.readingAt;
+                                    break;
+                            }
+
+                    // Tentukan lastReading berdasarkan kondisi
+                    if (!deviceReadingAt.HasValue) {
+                        // Jika readingAt null atau lebih dari 6 bulan yang lalu
+                        lastReading = "lebih dari 6 bulan";
+                    } else {
+                        // Konversi tanggal dan waktu jika ada readingAt
+                        lastReading = deviceReadingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
+                    }
+
+                    // Tambahkan informasi perangkat offline ke pesan
+                    msg += $"{i}. {device.slug} Alat tidak mengirim data sejak, {lastReading}\n";
+                    i++;
+                }
+            } else {
+                msg += "Keterangan : Alat Aktif Semua\n";
+            }
+                } else {
+                    Console.WriteLine("Failed to cast data to List<Api>.");
+                }
+
+                msg += "Sekian kami sampaikan, untuk informasi lebih lanjut hubungi \n";
+                msg += "081120217941 (admin CS teknis Higertech)\n";
+                msg += "Terima Kasih 🙏🏻.\n";
+                msg += $"Pesan ini telah terkirim ke balai {result[0].balaiName} melalui PIC berikut:\n";
+                foreach (var picData in picDataList)
+                {
+                    string noPic = picData.no_pic ?? "Tidak ada nomor";
+                    msg += $"- PIC-{picData.pic}: {noPic}\n";
+                }
+
+                // Format pesan dengan karakter escape untuk baris baru
+                msg = msg.Replace("\n", "\\n");
+
+                string jsonBody = $@"{{
+                    ""phone"" : ""{number}"",
+                    ""message"": ""{msg}""
+                }}";
+
+                // Buat konten untuk POST request
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Kirim POST request
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                // Periksa status respons
+                if (response.IsSuccessStatusCode) {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                } else {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+        } catch (Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+    }
+
+    [HttpGet("print-pic-data")]
+    public void PrintPicData()
+    {
+        try
+        {
+            // Ambil data dari tabel Pics
+            var picData = _context.pic
+                .Select(p => new 
+                {
+                    OrgCode = p.orgCode,
+                    NoPic = p.no_pic,
+                    Pic = p.pic
+                })
+                .ToList();
+
+            // Jika data ditemukan, tampilkan di console
+            if (picData.Any())
+            {
+                foreach (var data in picData)
+                {
+                    Console.WriteLine($"OrgCode: {data.OrgCode}, NoPic: {data.NoPic}, Pic: {data.Pic}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No data found in the database.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error jika terjadi
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 

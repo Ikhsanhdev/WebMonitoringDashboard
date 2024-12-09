@@ -78,3 +78,13 @@ public class AwlrArrLastReading
     public string deviceStatus { get; set; }
     public DateTime? readingAt { get; set; }
 }
+
+    public class Pic
+    {
+       
+        public Guid id { get; set; } // Pastikan tipe datanya Guid jika menggunakan UUID
+        public string orgCode { get; set; }
+        public string no_pic { get; set; }
+        public int pic { get; set; }
+        
+    }
