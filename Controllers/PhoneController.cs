@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using menyala.Models;
 using System.Diagnostics;
 using System.Linq;
-using dotnetIcon.Data;
+using Menyala.Data;
 using Microsoft.AspNetCore.Authorization;
 
 namespace menyala.Controllers
