@@ -10,7 +10,6 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
 using menyala.Hubs; // Sesuaikan dengan namespace NotificationHub Anda
-using Menyala.Services;
 using Microsoft.AspNetCore.Authorization;
 
 public class TiketController : Controller
@@ -18,16 +17,14 @@ public class TiketController : Controller
     private readonly AppDbContext _context;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IHubContext<NotificationHub> _hubContext;
-    private readonly QueueService _queueService; // Tambahkan QueueService
 
 
     // Menyuntikkan IWebHostEnvironment dan IHubContext untuk notifikasi SignalR
-    public TiketController(AppDbContext context, IWebHostEnvironment webHostEnvironment, IHubContext<NotificationHub> hubContext,QueueService queueService)
+    public TiketController(AppDbContext context, IWebHostEnvironment webHostEnvironment, IHubContext<NotificationHub> hubContext)
     {
         _context = context;
         _webHostEnvironment = webHostEnvironment;
         _hubContext = hubContext;
-        _queueService = queueService; // Inisialisasi QueueService
     }
 
 

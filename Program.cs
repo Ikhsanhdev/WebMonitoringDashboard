@@ -4,13 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Menyala.Data; // Sesuaikan namespace dengan nama proyek Anda
 using menyala.Hubs; // Sesuaikan namespace dengan nama proyek Anda
-using Menyala.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddSignalR();
 
 // Konfigurasi autentikasi dan authorization
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -31,8 +27,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Tambahkan layanan MemoryCache
 builder.Services.AddMemoryCache();
 
-// Registrasikan QueueService
-builder.Services.AddSingleton<QueueService>();
+builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -54,8 +50,6 @@ app.UseAuthentication();
 
 // Tambahkan middleware authorization
 app.UseAuthorization();
-// Tambahkan endpoint SignalR
-app.MapHub<NotificationHub>("/notificationHub");
 
 app.MapControllerRoute(
     name: "default",
