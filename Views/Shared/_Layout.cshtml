@@ -151,7 +151,7 @@
 <script>
     // Inisialisasi koneksi SignalR ke NotificationHub
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://live.higertech.com/NotificationHub")
+        .withUrl("https://live.higertech.com/NotificationHub")
         .build();
 
     connection.start().then(() => {
