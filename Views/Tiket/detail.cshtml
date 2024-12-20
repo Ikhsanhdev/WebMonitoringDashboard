@@ -4,10 +4,10 @@
 
 @model IEnumerable<Tiket>
 
-<main id="main" class="main" style="margin-top: 70px;">
+<main id="main" class="main" style="margin-top: 50px;">
     <!-- Judul Halaman -->
     <div class="pagetitle">
-        <h1 style="color: white; margin-top: 30px; margin-left: 25px;">Detail Tickets</h1>
+        <h1 style="color: white; margin-top: 10px; margin-left: 25px;">Detail Tickets</h1>
         <nav>
             <ol class="breadcrumb" style="margin-left: 25px;">
                 <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
@@ -16,13 +16,13 @@
         </nav>
     </div>
 
-
     <!-- Tabel Detail Ticket -->
     <div class="card my-4">
         <div class="card-body">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
+                        <th class="text-center">No</th> <!-- Kolom Urutan -->
                         <th class="text-center">Instansi</th>
                         <th class="text-center">Subject</th>
                         <th class="text-center">Deskripsi</th>
@@ -32,11 +32,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model != null && Model.Any())
+                     @if (Model != null && Model.Any())
                     {
-                        @foreach (var tiket in Model)
+                        var counter = 1; // Variabel untuk nomor urut
+                        foreach (var tiket in Model.OrderBy(t => t.id)) // Mengurutkan tiket berdasarkan ID
                         {
                             <tr>
+                                <td class="text-center">@counter</td> <!-- Nomor urut -->
                                 <td class="text-center">@tiket.instansi</td>
                                 <td class="text-center">@tiket.subject</td>
                                 <td>@tiket.deskripsi</td>
@@ -62,6 +64,7 @@
                                         <button class="btn btn-warning btn-sm update-status" data-id="@tiket.id" data-status="Processing">Processing</button>
                                     </td>
                             </tr>
+                            counter++; // Increment counter untuk nomor urut berikutnya
                         }
                     }
                     else

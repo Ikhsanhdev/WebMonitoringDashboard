@@ -23,8 +23,7 @@ namespace Menyala.Data
         public DbSet<Test> Tests { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Pengguna> Pengguna { get; set; }
-        public DbSet<Tiket> Tikets { get; set; }
-        public DbSet<Pic> pic { get; set; }
+         public DbSet<Tiket> Tikets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 {

@@ -38,9 +38,7 @@
                             @User.Identity.Name
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Home</a></li>
-                            <li><a class="dropdown-item" href="#">Skema</a></li>
-                            <li><a class="dropdown-item" href="#">Phone Book</a></li>
+                            <li><a class="dropdown-item" href="/Tiket/Index">Home</a></li>
                             <li><a class="dropdown-item" asp-area="" asp-controller="Akun" asp-action="Logout">Log Out</a></li>
                         </ul>
                     </li>
@@ -48,20 +46,42 @@
             </div>
         </div>
     </nav>
-
-
-    <!-- Section Header -->
-<div class="container-fluid px-3 mt-4 mb-3">
-    <div class="d-flex align-items-center justify-content-between">
-        <h1 class="h5 m-0"style="padding-left: 10px;">Tickets</h1>
-        <div class="header-buttons d-flex align-items-center">
-            <a href="/Tiket/Create" class="btn btn-primary me-2 btn-sm">Create Ticket</a>
-            <a href="/Ticket/Filters" class="btn btn-light btn-icon me-2 d-flex align-items-center btn-sm">
-                <i class="fas fa-filter me-2"></i> Filters
-                <i class="fas fa-chevron-right ms-2"></i>
-            </a>
-            <button class="btn btn-light btn-sm d-flex me-2 align-items-center" onclick="location.reload()">
-                <i class="fas fa-sync-alt"></i>
+        <!-- Section Header -->
+        <div class="container-fluid px-3 mt-4 mb-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <h1 class="h5 m-0" style="padding-left: 10px;">Tickets</h1>
+                <div class="header-buttons d-flex align-items-center">
+                    <a href="/Tiket/Create" class="btn btn-primary btn-sm uniform-button">Create Ticket</a>
+                <div class="dropdown">
+                <button class="btn btn-light btn-sm uniform-button d-flex align-items-center" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-filter me-2"></i> Filters
+                    <i class="fas fa-chevron-right ms-2"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="filterDropdown" style="min-width: 200px;">
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="?filter=all">
+                            <i class="fas fa-th-large me-2"></i> Semua Tipe
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="?filter=processing">
+                            <i class="fas fa-spinner me-2"></i> Processing
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="?filter=resolved">
+                            <i class="fas fa-check-circle me-2"></i> Resolved
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="?filter=pending">
+                            <i class="fas fa-clock me-2"></i> Pending
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-light btn-sm uniform-button d-flex align-items-center" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i> Refresh
             </button>
         </div>
     </div>
@@ -81,83 +101,76 @@
         }
         else
         {
-<div class="card-container">
-    @foreach (var tiket in Model)
-    {
-        <div class="ticket-card" data-id="@tiket.id">
-            @if (!string.IsNullOrEmpty(tiket.gambar))
-            {
-                <img src="@Url.Content(tiket.gambar)" alt="Gambar Tiket" />
-            }
-            else
-            {
-                <img src="~/assets/img/default.png" alt="Tidak ada gambar" />
-            }
-            <div class="card-body">
-                <h5 class="card-title">@tiket.subject</h5>
-                <p class="card-text"><strong>Instansi:</strong> @tiket.instansi</p>
-                <p class="card-text"><strong>Deskripsi:</strong> @tiket.deskripsi</p>
-                <p class="card-text"><strong>CreatedAt:</strong> @tiket.CreatedAt.ToString("dd MMM yyyy HH:mm:ss")</p>
-                <p>
-                <strong>Status:</strong> 
-                <span class="badge status-badge 
-                    @(string.IsNullOrEmpty(tiket.status) ? "bg-danger" : 
-                        (tiket.status == "Resolved" ? "bg-success" : 
-                        (tiket.status == "Processing" ? "bg-warning" : "bg-danger")) )">
-                    @(string.IsNullOrEmpty(tiket.status) ? "Pending" : tiket.status)
-                </span>
-                </p>
-                <button class="btn btn-primary view-detail-btn mt-2" 
-                    data-instansi="@tiket.instansi" 
-                    data-subject="@tiket.subject" 
-                    data-deskripsi="@tiket.deskripsi" 
-                    data-gambar="@Url.Content(tiket.gambar ?? "~/assets/img/default.png")">
-                    View Details
-                </button>
+    <div class="card-container">
+        @foreach (var tiket in Model)
+        {
+            <div class="ticket-card" data-id="@tiket.id">
+                @if (!string.IsNullOrEmpty(tiket.gambar))
+                {
+                    <img src="@Url.Content(tiket.gambar)" alt="Gambar Tiket" />
+                }
+                else
+                {
+                    <img src="~/assets/img/default.png" alt="Tidak ada gambar" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@tiket.subject</h5>
+                    <p class="card-text"><strong>Instansi:</strong> @tiket.instansi</p>
+                    <p class="card-text"><strong>Deskripsi:</strong> @tiket.deskripsi</p>
+                    <p class="card-text"><strong>CreatedAt:</strong> @tiket.CreatedAt.ToString("dd MMM yyyy HH:mm:ss")</p>
+                    <p>
+                    <strong>Status:</strong> 
+                    <span class="badge status-badge 
+                        @(string.IsNullOrEmpty(tiket.status) ? "bg-danger" : 
+                            (tiket.status == "Resolved" ? "bg-success" : 
+                            (tiket.status == "Processing" ? "bg-warning" : "bg-danger")) )">
+                        @(string.IsNullOrEmpty(tiket.status) ? "Pending" : tiket.status)
+                    </span>
+                    </p>
+                    <button class="btn btn-primary view-detail-btn mt-2" 
+                        data-instansi="@tiket.instansi" 
+                        data-subject="@tiket.subject" 
+                        data-deskripsi="@tiket.deskripsi" 
+                        data-gambar="@Url.Content(tiket.gambar ?? "~/assets/img/default.png")">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        }
+    </div>        
+    }
+</div>
+<!-- Modal untuk notifikasi -->
+<div class="modal fade" id="notifModal" tabindex="-1" aria-labelledby="notifModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0 text-center" style="border-radius: 15px; background-color: #00d37b;">
+            <div class="modal-body p-4">
+                <h5 class="text-success fw-bold">Tiket berhasil dibuat!</h5>
             </div>
         </div>
-    }
-</div>        }
+    </div>
 </div>
-
-    <!-- Modal untuk notifikasi -->
-    <div class="modal fade" id="notifModal" tabindex="-1" aria-labelledby="notifModalLabel" aria-hidden="true">
+    <!-- Modal untuk Detail Tiket -->
+    <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-labelledby="ticketDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="notifModalLabel">Notifikasi</h5>
+                    <h5 class="modal-title" id="ticketDetailModalLabel">Detail Tiket</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Isi pesan notifikasi akan diisi oleh JavaScript -->
+                    <p><strong>Instansi:</strong> <span id="detail-instansi"></span></p>
+                    <p><strong>Subject:</strong> <span id="detail-subject"></span></p>
+                    <p><strong>Deskripsi:</strong> <span id="detail-deskripsi"></span></p>
+                    <p><strong>Gambar:</strong></p>
+                    <img id="detail-gambar" src="" alt="Gambar Tiket" class="img-fluid" />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-green" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
-<!-- Modal untuk Detail Tiket -->
-<div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-labelledby="ticketDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ticketDetailModalLabel">Detail Tiket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Instansi:</strong> <span id="detail-instansi"></span></p>
-                <p><strong>Subject:</strong> <span id="detail-subject"></span></p>
-                <p><strong>Deskripsi:</strong> <span id="detail-deskripsi"></span></p>
-                <p><strong>Gambar:</strong></p>
-                <img id="detail-gambar" src="" alt="Gambar Tiket" class="img-fluid" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 
     <!-- JavaScript Bootstrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -206,26 +219,6 @@
         });
     });
 </script>
- <!-- JavaScript untuk menangani Kirim Antrian Tiket -->
-     <script>
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/notificationHub") // URL hub SignalR Anda
-            .build();
-
-        connection.on("UpdateTicketQueue", (ticketId, status) => {
-            const card = document.getElementById(`ticket-${ticketId}`);
-            if (card) {
-                const statusLabel = card.querySelector(".status-label");
-                if (statusLabel) {
-                    statusLabel.innerText = status;
-                }
-            }
-        });
-
-        connection.start()
-            .then(() => console.log("SignalR connected"))
-            .catch(err => console.error("SignalR connection error:", err));
-    </script>
     <script>
         function updateCardStatus(ticketId, status) {
         const card = document.querySelector(`[data-id="${ticketId}"]`);
@@ -276,6 +269,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
     </script>
+    <script>
+    // Fungsi untuk menampilkan modal dan otomatis menghilangkannya setelah 5 detik
+    const showNotifModal = () => {
+        const notifModal = new bootstrap.Modal(document.getElementById('notifModal'));
+        notifModal.show();
+
+        // Atur timeout untuk menyembunyikan modal setelah 5 detik
+        setTimeout(() => {
+            notifModal.hide();
+        }, 5000);
+    };
+
+    // Contoh pemanggilan fungsi untuk menampilkan modal
+    // showNotifModal();
+</script>
 
 </body>
 </html>

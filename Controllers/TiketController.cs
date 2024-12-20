@@ -17,6 +17,7 @@ public class TiketController : Controller
     private readonly AppDbContext _context;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IHubContext<NotificationHub> _hubContext;
+  
 
 
     // Menyuntikkan IWebHostEnvironment dan IHubContext untuk notifikasi SignalR
@@ -30,24 +31,47 @@ public class TiketController : Controller
 
     // Menampilkan semua tiket
     [Authorize] 
-    public IActionResult Index()
-{
-    // Ambil username dari user yang login
-    var username = User.Identity.Name;
-    
-    // Filter tiket berdasarkan instansi atau kondisi yang sesuai dengan username
-    var tickets = _context.Tikets
-        .Where(t => t.instansi == username) // Sesuaikan kondisi ini dengan logika yang relevan
-        .ToList();
-    
-    // Jika tidak ada tiket ditemukan, Anda bisa log atau menampilkan pesan di halaman
-    if (!tickets.Any())
+    public async Task<IActionResult> Index(string? filter)
     {
-        Console.WriteLine("No tickets found for this user");
-    }
+        // Ambil username dari user yang login
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username))
+        {
+            TempData["ErrorMessage"] = "Pengguna tidak terautentikasi.";
+            return RedirectToAction("Login", "Account"); // Arahkan ke halaman login jika username tidak valid
+        }
 
-    return View(tickets);
-}
+         IQueryable<Tiket> ticketsQuery = _context.Tikets;
+
+        // Terapkan filter jika ada
+         if (!string.IsNullOrEmpty(filter))
+    {
+        switch (filter.ToLower())
+        {
+            case "processing":
+                ticketsQuery = ticketsQuery.Where(t => t.status == "Processing");
+                break;
+            case "resolved":
+                ticketsQuery = ticketsQuery.Where(t => t.status == "Resolved");
+                break;
+            case "pending":
+                ticketsQuery = ticketsQuery.Where(t => string.IsNullOrEmpty(t.status) || t.status == "Pending");
+                break;
+            case "all":
+                // Tidak ada filter, tampilkan semua tiket
+                break;
+            default:
+                ticketsQuery = ticketsQuery.Where(t => t.status == filter);
+                break;
+        }
+    }
+        // Filter berdasarkan instansi pengguna
+        ticketsQuery = ticketsQuery.Where(t => t.instansi == username);
+
+        var ticketList = await ticketsQuery.ToListAsync();
+
+        return View(ticketList);
+    }
 
     [Authorize]
     // Menampilkan form untuk membuat tiket baru
@@ -57,55 +81,55 @@ public class TiketController : Controller
     }
 
     // Menyimpan tiket baru ke database dan mengirim notifikasi
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(Tiket tiket, IFormFile gambarFile)
-{
-    if (ModelState.IsValid)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Tiket tiket, IFormFile gambarFile)
     {
-        // Konversi waktu UTC ke lokal (WIB)
-        var localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        tiket.CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, localTimeZone);
-
-        // Generate unique ID untuk tiket
-        tiket.id = Guid.NewGuid();
-
-        // Proses upload file gambar
-        if (gambarFile != null && gambarFile.Length > 0)
+        if (ModelState.IsValid)
         {
-            var fileName = Path.GetFileNameWithoutExtension(gambarFile.FileName);
-            var extension = Path.GetExtension(gambarFile.FileName);
-            var newFileName = $"{fileName}_{DateTime.Now.Ticks}{extension}";
-            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", newFileName);
+            // Konversi waktu UTC ke lokal (WIB)
+            var localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            tiket.CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, localTimeZone);
 
-            using (var fileStream = new FileStream(uploadPath, FileMode.Create))
+            // Generate unique ID untuk tiket
+            tiket.id = Guid.NewGuid();
+
+            // Proses upload file gambar
+            if (gambarFile != null && gambarFile.Length > 0)
             {
-                await gambarFile.CopyToAsync(fileStream);
+                var fileName = Path.GetFileNameWithoutExtension(gambarFile.FileName);
+                var extension = Path.GetExtension(gambarFile.FileName);
+                var newFileName = $"{fileName}_{DateTime.Now.Ticks}{extension}";
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", newFileName);
+
+                using (var fileStream = new FileStream(uploadPath, FileMode.Create))
+                {
+                    await gambarFile.CopyToAsync(fileStream);
+                }
+
+                tiket.gambar = $"/uploads/{newFileName}";
             }
 
-            tiket.gambar = $"/uploads/{newFileName}";
+            // Menambahkan tiket ke database
+            _context.Add(tiket);
+            await _context.SaveChangesAsync();
+
+            // Kirim notifikasi menggunakan SignalR
+            await _hubContext.Clients.All.SendAsync("SendNotification", "Tiket baru telah ditambahkan!");
+
+            // Set TempData untuk pesan sukses
+            TempData["SuccessMessage"] = "Tiket berhasil dibuat!";
+
+            // Kirim notifikasi ke lonceng navbar
+            await _hubContext.Clients.All.SendAsync("SendNotification", "Tiket baru telah ditambahkan!");
+
+            return RedirectToAction("Index");
         }
 
-        // Menambahkan tiket ke database
-        _context.Add(tiket);
-        await _context.SaveChangesAsync();
-
-        // Kirim notifikasi menggunakan SignalR
-        await _hubContext.Clients.All.SendAsync("SendNotification", "Tiket baru telah ditambahkan!");
-
-        // Set TempData untuk pesan sukses
-        TempData["SuccessMessage"] = "Tiket berhasil dibuat!";
-
-        // Kirim notifikasi ke lonceng navbar
-        await _hubContext.Clients.All.SendAsync("SendNotification", "Tiket baru telah ditambahkan!");
-
-        return RedirectToAction("Index");
+        // Set TempData untuk pesan error jika gagal
+        TempData["ErrorMessage"] = "Gagal membuat tiket. Mohon periksa data Anda.";
+        return View(tiket);
     }
-
-    // Set TempData untuk pesan error jika gagal
-    TempData["ErrorMessage"] = "Gagal membuat tiket. Mohon periksa data Anda.";
-    return View(tiket);
-}
 
 
 
@@ -220,11 +244,5 @@ public async Task<IActionResult> Create(Tiket tiket, IFormFile gambarFile)
         public Guid id { get; set; }
         public string status { get; set; }
     }
-
-
-
-
-
-    
 }
 

@@ -8,6 +8,10 @@ using menyala.Hubs; // Sesuaikan namespace dengan nama proyek Anda
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
+
 // Konfigurasi autentikasi dan authorization
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -27,8 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Tambahkan layanan MemoryCache
 builder.Services.AddMemoryCache();
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -50,11 +53,13 @@ app.UseAuthentication();
 
 // Tambahkan middleware authorization
 app.UseAuthorization();
+// Tambahkan endpoint SignalR
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Akun}/{action=Login}/{id?}");
-
+// nnnn
 app.Run();
 app.UseEndpoints(endpoints =>
 {
