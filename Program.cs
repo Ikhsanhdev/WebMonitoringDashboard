@@ -43,6 +43,21 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowed((host) => true); // Adjust for specific origins if needed
+    });
+});
+
+app.UseCors("CorsPolicy");
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
