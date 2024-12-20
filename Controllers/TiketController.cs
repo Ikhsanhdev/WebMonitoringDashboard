@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SignalR;
 using menyala.Hubs; // Sesuaikan dengan namespace NotificationHub Anda
 using Microsoft.AspNetCore.Authorization;
 
@@ -16,16 +15,15 @@ public class TiketController : Controller
 {
     private readonly AppDbContext _context;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly IHubContext<NotificationHub> _hubContext;
+
   
 
 
     // Menyuntikkan IWebHostEnvironment dan IHubContext untuk notifikasi SignalR
-    public TiketController(AppDbContext context, IWebHostEnvironment webHostEnvironment, IHubContext<NotificationHub> hubContext)
+    public TiketController(AppDbContext context, IWebHostEnvironment webHostEnvironment)
     {
         _context = context;
         _webHostEnvironment = webHostEnvironment;
-        _hubContext = hubContext;
     }
 
 
@@ -114,14 +112,12 @@ public class TiketController : Controller
             _context.Add(tiket);
             await _context.SaveChangesAsync();
 
-            // Kirim notifikasi menggunakan SignalR
-            await _hubContext.Clients.All.SendAsync("SendNotification", "Tiket baru telah ditambahkan!");
+           
 
             // Set TempData untuk pesan sukses
             TempData["SuccessMessage"] = "Tiket berhasil dibuat!";
 
-            // Kirim notifikasi ke lonceng navbar
-            await _hubContext.Clients.All.SendAsync("SendNotification", "Tiket baru telah ditambahkan!");
+           
 
             return RedirectToAction("Index");
         }
@@ -209,8 +205,6 @@ public class TiketController : Controller
         // Dapatkan nomor urut antrian
         int nomorUrut = GetNextQueueNumber();
 
-        // Kirim notifikasi ke klien melalui SignalR
-        _hubContext.Clients.All.SendAsync("UpdateStatus", tiket.id, tiket.status);
 
         return Ok(new { nomorUrut });
     }
