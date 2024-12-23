@@ -884,3 +884,15 @@ button#sendButton:hover {
           max-width: 100%; /* Card lebih besar di layar kecil */
       }
   }
+  .uniform-button {
+    width: 110px; /* Sesuaikan lebar tombol */
+    height: 40px; /* Tinggi tombol ditambahkan */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.uniform-button i {
+    margin-right: 5px; /* Spasi antara ikon dan teks */
+}

@@ -5,6 +5,7 @@
 @model IEnumerable<Tiket>
 
 <main id="main" class="main" style="margin-top: 50px;">
+<div class="container-fluid">
     <!-- Judul Halaman -->
     <div class="pagetitle">
         <h1 style="color: white; margin-top: 10px; margin-left: 25px;">Detail Tickets</h1>
@@ -19,6 +20,7 @@
     <!-- Tabel Detail Ticket -->
     <div class="card my-4">
         <div class="card-body">
+        <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -45,7 +47,7 @@
                                 <td class="text-center">
                                     @if (!string.IsNullOrEmpty(tiket.gambar))
                                     {
-                                        <img src="@Url.Content(tiket.gambar)" alt="Gambar Tiket" style="width: 100px; height: auto;" />
+                                        <img src="@Url.Content(tiket.gambar)" alt="Gambar Tiket" class="img-fluid" style="width: 100px; height: auto;" />
                                     }
                                     else
                                     {
@@ -74,9 +76,11 @@
                         </tr>
                     }
                 </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
+</div>
 </main>
 
 @section Scripts {
