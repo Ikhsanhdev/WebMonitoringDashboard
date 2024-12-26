@@ -72,6 +72,7 @@ app.MapHub<NotificationHub>("/notificationHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Akun}/{action=Login}/{id?}");
+    //default routing
 // nnnn
 app.Run();
 app.UseEndpoints(endpoints =>
