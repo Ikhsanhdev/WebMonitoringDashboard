@@ -108,15 +108,6 @@
                 <p><strong>Deskripsi:</strong> <span id="ticketDeskripsi"></span></p>
                 <img id="ticketGambar" style="display: none; width: 100%; height: auto;" alt="Gambar Tiket"/>
             </div>
-            <div class="modal-footer">
-                <!-- Formulir untuk CSRF token -->
-                <form method="post" id="antrianForm">
-                    @Html.AntiForgeryToken()
-                    <button type="button" id="KirimAntrian" class="btn btn-primary send-queue-btn" data-id="">
-                        Kirim Antrian Tiket
-                    </button>
-                </form>
-            </div>
         </div>
     </div>
 </div>
@@ -147,22 +138,9 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+
 <script>
-    // Inisialisasi koneksi SignalR ke NotificationHub
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://live.higertech.com/NotificationHub")
-        .build();
-
-    connection.start().then(() => {
-        console.log("SignalR connected");
-        updateNotifications();
-    }).catch(err => console.error(err.toString()));
-
-    // Mendengarkan notifikasi baru dari server
-    connection.on("ReceiveNotification", () => {
-        updateNotifications();
-    });
+    updateNotifications();
 
     // Fungsi untuk mengambil data notifikasi dari server
     function updateNotifications() {
