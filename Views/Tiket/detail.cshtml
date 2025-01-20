@@ -8,11 +8,11 @@
 <div class="container-fluid">
     <!-- Judul Halaman -->
     <div class="pagetitle">
-        <h1 style="color: white; margin-top: 10px; margin-left: 25px;">Detail Tickets</h1>
+        <h1 style="color: white; margin-top: 10px; margin-left: 25px;">Complaint Details</h1>
         <nav>
             <ol class="breadcrumb" style="margin-left: 25px;">
                 <li class="breadcrumb-item"><a asp-controller="Api" asp-action="Index">Dashboard</a></li>
-                <li class="breadcrumb-item active">Detail Tickets</li>
+                <li class="breadcrumb-item active">Complaint Details</li>
             </ol>
         </nav>
     </div>
@@ -30,6 +30,7 @@
                         <th class="text-center">Deskripsi</th>
                         <th class="text-center">Gambar</th>
                         <th class="text-center">Status</th>
+                        <th class="text-center">Priority</th>
                         <th class="text-center">Aksi</th> <!-- Tambahkan kolom Aksi -->
                     </tr>
                 </thead>
@@ -60,10 +61,19 @@
                                         @(string.IsNullOrEmpty(tiket.status) ? "Pending" : tiket.status)
                                     </span>
                                 </td>
+                                <td class="text-center">
+                                    <span id="priority-badge-@tiket.id" class="badge 
+                                        @(tiket.priority == "High" ? "bg-danger" : tiket.priority == "Medium" ? "bg-warning" : tiket.priority == "Low" ? "bg-info" : "bg-secondary")">
+                                        @(string.IsNullOrEmpty(tiket.priority) ? "" : tiket.priority)
+                                    </span>
+                                </td>
                                    <td class="text-center">
                                         <!-- Tombol aksi -->
                                         <button class="btn btn-success btn-sm update-status" data-id="@tiket.id" data-status="Resolved">Resolved</button>
                                         <button class="btn btn-warning btn-sm update-status" data-id="@tiket.id" data-status="Processing">Processing</button>
+                                        <button class="btn btn-danger btn-sm update-priority" data-id="@tiket.id" data-priority="High">High</button>
+                                        <button class="btn btn-warning btn-sm update-priority" data-id="@tiket.id" data-priority="Medium">Medium</button>
+                                        <button class="btn btn-info btn-sm update-priority" data-id="@tiket.id" data-priority="Low">Low</button>
                                     </td>
                             </tr>
                             counter++; // Increment counter untuk nomor urut berikutnya
@@ -107,10 +117,10 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert(`Tiket berhasil diupdate menjadi ${newStatus}.`);
+                            alert(`Keluhan berhasil diupdate menjadi ${newStatus}.`);
                             location.reload(); // Refresh halaman untuk memperbarui tampilan
                         } else {
-                            alert("Gagal mengupdate tiket: " + data.message);
+                            alert("Gagal mengupdate Keluhan: " + data.message);
                         }
                     })
                     .catch(error => {
@@ -121,5 +131,37 @@
             });
         });
 </script>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const updatePriorityButtons = document.querySelectorAll(".update-priority");
 
+            updatePriorityButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const ticketId = this.getAttribute("data-id");
+                    const newPriority = this.getAttribute("data-priority");
+
+                    fetch(`/Tiket/UpdatePriority`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id: ticketId, priority: newPriority })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Keluhan berhasil diupdate menjadi ${newPriority}.`);
+                            location.reload(); // Refresh halaman untuk memperbarui tampilan
+                        } else {
+                            alert("Gagal mengupdate Keluhan: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Terjadi kesalahan.");
+                    });
+                });
+            });
+        });
+</script>
 }

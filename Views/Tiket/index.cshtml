@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket</title>
+    <title>Keluhan Pengguna</title>
     <!-- Bootstrap CSS versi 5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <!-- Link Font Awesome dari CDN -->
@@ -25,7 +25,7 @@
         <nav class="navbar navbar-expand navbar-custom fixed-top">
             <div class="container-fluid">
                 <!-- Logo atau nama aplikasi -->
-                <a class="navbar-brand" href="#" style="color: white; font-weight: bold;">Ticket App</a>
+                <a class="navbar-brand" href="#" style="color: white; font-weight: bold; padding-left: 15px;">Keluhan Pengguna</a>
                 
                 <!-- Navbar Konten -->
                 @if (User.Identity.IsAuthenticated)
@@ -49,9 +49,9 @@
         <!-- Section Header -->
         <div class="container-fluid px-3 mt-4 mb-3"style="padding-top: 50px;">
             <div class="d-flex align-items-center justify-content-between">
-                <h1 class="h5 m-0" style="padding-left: 10px;">Tickets</h1>
+                <h1 class="h5 m-0" style="padding-left: 10px;"></h1>
                 <div class="header-buttons d-flex align-items-center">
-                    <a href="/Tiket/Create" class="btn btn-primary btn-sm uniform-button">Create Ticket</a>
+                    <a href="/Tiket/Create" class="btn btn-primary btn-sm uniform-button">Report Issue</a>
                 <div class="dropdown">
                 <button class="btn btn-light btn-sm uniform-button d-flex align-items-center" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-filter me-2"></i> Filters
@@ -95,7 +95,7 @@
             <!-- Jika tidak ada data tiket -->
             <div class="text-center">
                 <img src="@Url.Content("~/assets/ikon/work.svg")" alt="No records found" style="max-width: 300px;">
-                <h4>No ticket found for this user </h4>
+                <h4>No complaint found for this user </h4>
                 <p>Try changing the filters, or rephrasing your search.</p>
             </div>
         }
@@ -107,7 +107,7 @@
             <div class="ticket-card" data-id="@tiket.id">
                 @if (!string.IsNullOrEmpty(tiket.gambar))
                 {
-                    <img src="@Url.Content(tiket.gambar)" alt="Gambar Tiket" />
+                    <img src="@Url.Content(tiket.gambar)" alt="Gambar Keluhan" />
                 }
                 else
                 {
@@ -127,6 +127,16 @@
                         @(string.IsNullOrEmpty(tiket.status) ? "Pending" : tiket.status)
                     </span>
                     </p>
+                    <p>
+                        <strong>Priority:</strong> 
+                        <span class="badge priority-badge 
+                            @(string.IsNullOrEmpty(tiket.priority) ? "" : 
+                                (tiket.priority == "High" ? "bg-danger" : 
+                                tiket.priority == "Medium" ? "bg-warning" : 
+                                tiket.priority == "Low" ? "bg-info" : "bg-secondary"))">
+                            @(string.IsNullOrEmpty(tiket.priority) ? "" : tiket.priority)
+                        </span>
+                    </p>
                     <button class="btn btn-primary view-detail-btn mt-2" 
                         data-instansi="@tiket.instansi" 
                         data-subject="@tiket.subject" 
@@ -145,7 +155,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow border-0 text-center" style="border-radius: 15px; background-color: #00d37b;">
             <div class="modal-body p-4">
-                <h5 class="text-success fw-bold">Tiket berhasil dibuat!</h5>
+                <h5 class="text-success fw-bold">Keluhan berhasil dibuat!</h5>
             </div>
         </div>
     </div>
@@ -155,7 +165,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ticketDetailModalLabel">Detail Tiket</h5>
+                    <h5 class="modal-title" id="ticketDetailModalLabel">Detail Keluhan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -163,7 +173,7 @@
                     <p><strong>Subject:</strong> <span id="detail-subject"></span></p>
                     <p><strong>Deskripsi:</strong> <span id="detail-deskripsi"></span></p>
                     <p><strong>Gambar:</strong></p>
-                    <img id="detail-gambar" src="" alt="Gambar Tiket" class="img-fluid" />
+                    <img id="detail-gambar" src="" alt="Gambar Keluhan" class="img-fluid" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

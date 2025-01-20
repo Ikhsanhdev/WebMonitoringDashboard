@@ -16,9 +16,6 @@ public class TiketController : Controller
     private readonly AppDbContext _context;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-//   mmmmmm
-
-
     // Menyuntikkan IWebHostEnvironment dan IHubContext untuk notifikasi SignalR
     public TiketController(AppDbContext context, IWebHostEnvironment webHostEnvironment)
     {
@@ -115,7 +112,7 @@ public class TiketController : Controller
            
 
             // Set TempData untuk pesan sukses
-            TempData["SuccessMessage"] = "Tiket berhasil dibuat!";
+            TempData["SuccessMessage"] = "Keluhan berhasil dibuat!";
 
            
 
@@ -216,14 +213,14 @@ public class TiketController : Controller
             var tiket = _context.Tikets.FirstOrDefault(t => t.id == request.id);
             if (tiket == null)
             {
-                return Json(new { success = false, message = "Tiket tidak ditemukan." });
+                return Json(new { success = false, message = "Keluhan tidak ditemukan." });
             }
 
             tiket.status = request.status; // Update status tiket
             _context.SaveChanges();
 
             // Kembalikan respons sukses
-            return Json(new { success = true, message = "Status tiket berhasil diupdate." });
+            return Json(new { success = true, message = "Keluhan  berhasil diupdate." });
         }
         catch (Exception ex)
         {
@@ -231,12 +228,41 @@ public class TiketController : Controller
             return Json(new { success = false, message = "Terjadi kesalahan: " + ex.Message });
         }
     }
+[HttpPost]
+public IActionResult UpdatePriority([FromBody] UpdatePriorityRequest request)
+{
+    try
+    {
+        // Cari tiket berdasarkan id
+        var tiket = _context.Tikets.FirstOrDefault(t => t.id == request.id);
+        if (tiket == null)
+        {
+            return Json(new { success = false, message = "Keluhan tidak ditemukan." });
+        }
 
+        // Perbarui prioritas tiket
+        tiket.priority = request.priority;
+        _context.SaveChanges();
+
+        // Kembalikan respons sukses
+        return Json(new { success = true, message = $"Prioritas Keluhan berhasil diupdate menjadi {request.priority}." });
+    }
+    catch (Exception ex)
+    {
+        // Tangani jika terjadi error
+        return Json(new { success = false, message = "Terjadi kesalahan: " + ex.Message });
+    }
+}
     // Model untuk request
     public class UpdateStatusRequest
     {
         public Guid id { get; set; }
         public string status { get; set; }
     }
+    public class UpdatePriorityRequest
+{
+    public Guid id { get; set; }
+    public string priority { get; set; }
+}
 }
 
