@@ -78,7 +78,7 @@ function initMap() {
     zoom: 5,
     center: initialLocation,
     gestureHandling: 'greedy', // Mengizinkan zoom menggunakan scroll
-    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    mapTypeId: google.maps.MapTypeId.HYBRID,
     mapTypeControlOptions: {
       style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
       position: google.maps.ControlPosition.BOTTOM_LEFT // Pindahkan ke bawah kiri
