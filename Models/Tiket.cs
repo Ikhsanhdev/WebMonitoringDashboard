@@ -8,4 +8,5 @@ public class Tiket
     public int read { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now; // Default ke waktu saat ini
     public string? status { get; set; } // Tambahkan tanda '?' untuk nullable
+    public string? priority { get; set; } // Tambahkan tanda '?' untuk nullable
 }
