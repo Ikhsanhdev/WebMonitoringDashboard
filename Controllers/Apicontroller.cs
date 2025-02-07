@@ -409,22 +409,22 @@ public async Task<IActionResult> GetList()
                                     break;
                             }
 
-                    // Tentukan lastReading berdasarkan kondisi
-                    if (!deviceReadingAt.HasValue) {
-                        // Jika readingAt null atau lebih dari 6 bulan yang lalu
-                        lastReading = "lebih dari 6 bulan";
-                    } else {
-                        // Konversi tanggal dan waktu jika ada readingAt
-                        lastReading = deviceReadingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
-                    }
+                            // Tentukan lastReading berdasarkan kondisi
+                            if (!deviceReadingAt.HasValue) {
+                                // Jika readingAt null atau lebih dari 6 bulan yang lalu
+                                lastReading = "lebih dari 6 bulan";
+                            } else {
+                                // Konversi tanggal dan waktu jika ada readingAt
+                                lastReading = deviceReadingAt.Value.ToLocalTime().ToString("dd/MM/yyyy, HH:mm:ss");
+                            }
 
-                    // Tambahkan informasi perangkat offline ke pesan
-                    msg += $"{i}. {device.slug} Alat tidak mengirim data sejak, {lastReading}\n";
-                    i++;
-                }
-            } else {
-                msg += "Keterangan : Alat Aktif Semua\n";
-            }
+                            // Tambahkan informasi perangkat offline ke pesan
+                            msg += $"{i}. {device.name} Alat tidak mengirim data sejak, {lastReading}\n";
+                            i++;
+                        }
+                    } else {
+                        msg += "Keterangan : Alat Aktif Semua\n";
+                    }
                 } else {
                     Console.WriteLine("Failed to cast data to List<Api>.");
                 }
