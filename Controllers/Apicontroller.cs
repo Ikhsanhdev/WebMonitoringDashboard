@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using menyala.Controllers;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 public class ApiController : Controller
 {
@@ -323,6 +324,72 @@ public async Task<IActionResult> GetList()
         var data = await GetDataApi(endPoint);
         return Json(data);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> SendMessageBpbdBdg(string deviceId, string number) {
+        string apiUrl = "https://wa.higertech.com/send/message";
+
+        try {
+            using(HttpClient client = new HttpClient()) {
+                string endPointData = $"LastReading/Device/{deviceId}";
+                var deviceData = await GetDataApi(endPointData);
+
+                if (string.IsNullOrEmpty(deviceData)) {
+                    return StatusCode(500, "Respons API kosong atau tidak valid");
+                }
+
+                var stationData = JObject.Parse(deviceData);
+                var result = stationData["data"];
+
+                if (result == null) {
+                    return StatusCode(500, "Data tidak ditemukan dalam respons API");
+                }
+
+                var lastReading = result["awlrLastReading"] as JObject;
+                if (lastReading == null) {
+                    return StatusCode(500, "Data 'awlrLastReading' tidak ditemukan dalam respons API");
+                }
+
+                string readingAtRaw = lastReading?["readingAt"]?.ToString();
+                string formattedDate = "Tidak tersedia";
+                if (!string.IsNullOrEmpty(readingAtRaw) && DateTime.TryParse(readingAtRaw, out DateTime readingAt)) {
+                    formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
+                }
+
+                string msg = $"⚠ *[Status: {lastReading?["warningStatus"]?.ToString() ?? "Tidak tersedia"}]* \n";
+                msg += "\n";
+                msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"Waktu : *{formattedDate} WIB* \n";
+                msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
+
+                msg = msg.Replace("\n", "\\n");
+
+                string jsonBody = $@"{{ 
+                    ""phone"" : ""{number}"",
+                    ""message"" : ""{msg}""
+                }}";
+
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                if(response.IsSuccessStatusCode) {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                } else {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+        } catch(Exception ex)  {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> SendMessageToApi(string orgCode, string number) {
         string apiUrl = "https://wa.higertech.com/send/message";
