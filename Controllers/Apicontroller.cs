@@ -356,38 +356,45 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                string msg = $"⚠ *[Status: {lastReading?["warningStatus"]?.ToString() ?? "Tidak tersedia"}]* \n";
-                msg += "\n";
-                msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
-                msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
-                msg += $"Waktu : *{formattedDate} WIB* \n";
-                msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
+                if(lastReading["waterLevel"] < result["siaga3"]) {
+                    Console.WriteLine("Tidak Ada Siaga !");
+                    return StatusCode(200, "Sukses tidak ada siaga !");
+                } else if(lastReading["waterLevel"] >= result["siaga3"]) {
+                    string msg = $"⚠ *[Status: {lastReading?["warningStatus"]?.ToString() ?? "Tidak tersedia"}]* \n";
+                    msg += "\n";
+                    msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                    msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                    msg += $"Waktu : *{formattedDate} WIB* \n";
+                    msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
 
-                msg = msg.Replace("\n", "\\n");
+                    msg = msg.Replace("\n", "\\n");
 
-                string jsonBody = $@"{{ 
-                    ""phone"" : ""{number}"",
-                    ""message"" : ""{msg}""
-                }}";
+                    string jsonBody = $@"{{ 
+                        ""phone"" : ""{number}"",
+                        ""message"" : ""{msg}""
+                    }}";
 
-                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
-                if(response.IsSuccessStatusCode) {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("API Response:");
-                    Console.WriteLine(apiResponse);
-                    return Ok(apiResponse);
-                } else {
-                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                    return StatusCode((int)response.StatusCode);
+                    if(response.IsSuccessStatusCode) {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("API Response:");
+                        Console.WriteLine(apiResponse);
+                        return Ok(apiResponse);
+                    } else {
+                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                        return StatusCode((int)response.StatusCode);
+                    }
                 }
             }
         } catch(Exception ex)  {
             Console.WriteLine($"An error occurred: {ex.Message}");
             return StatusCode(500, "An error occurred");
         }
+
+        return StatusCode(500, "Fatal Error !");
     }
 
     [HttpPost]
