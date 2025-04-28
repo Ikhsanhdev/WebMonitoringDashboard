@@ -493,7 +493,7 @@ public async Task<IActionResult> GetList()
                             }
 
                             // Tambahkan informasi perangkat offline ke pesan
-                            msg += $"{i}. {device.name} Alat tidak mengirim data sejak, {lastReading}\n";
+                            msg += $"{i}. {device.name} ({device.deviceId}) Alat tidak mengirim data sejak, {lastReading}\n";
                             i++;
                         }
                     } else {
