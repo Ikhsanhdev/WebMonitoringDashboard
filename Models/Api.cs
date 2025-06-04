@@ -20,8 +20,9 @@ public class Api
     public AwlrLastReading? awlrLastReading { get; set; }  // For "awlr" station type
     public AwsLastReading? awsLastReading { get; set; }    // For "aws" station type
     public AwlrArrLastReading? awlrArrLastReading { get; set; }  // For "awlrarr" station type
+    public WaterQualityLastReading? waterQualityLastReading { get; set; }
 
-    public string? unitDisplay {get; set;}
+    public string? unitDisplay { get; set; }
     public string? unitSensor {get; set;}
     public string? intensityLastHour {get; set;}
     public string? subDomainOld {get; set;}
@@ -79,12 +80,17 @@ public class AwlrArrLastReading
     public DateTime? readingAt { get; set; }
 }
 
-    public class Pic
-    {
-       
-        public Guid id { get; set; } // Pastikan tipe datanya Guid jika menggunakan UUID
-        public string orgCode { get; set; }
-        public string no_pic { get; set; }
-        public int pic { get; set; }
-        
-    }
+public class WaterQualityLastReading
+{
+    public string deviceId { get; set; }
+    public string deviceStatus { get; set; }
+    public DateTime? readingAt { get; set; }
+}
+
+public class Pic
+{
+    public Guid id { get; set; } // Pastikan tipe datanya Guid jika menggunakan UUID
+    public string orgCode { get; set; }
+    public string no_pic { get; set; }
+    public int pic { get; set; }
+}

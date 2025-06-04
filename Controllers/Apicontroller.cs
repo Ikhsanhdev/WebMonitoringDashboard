@@ -429,7 +429,8 @@ public async Task<IActionResult> GetList()
                         DateTime? readingAt = null;
 
                         // Tentukan readingAt berdasarkan tipe station
-                        switch (item.stationType) {
+                        switch (item.stationType)
+                        {
                             case "AWS":
                                 readingAt = item.awsLastReading?.readingAt;
                                 break;
@@ -441,6 +442,9 @@ public async Task<IActionResult> GetList()
                                 break;
                             case "AWLR_ARR":
                                 readingAt = item.awlrArrLastReading?.readingAt;
+                                break;
+                            case "WQ":
+                                readingAt = item.waterQualityLastReading?.readingAt;
                                 break;
                         }
 
@@ -468,7 +472,8 @@ public async Task<IActionResult> GetList()
                             
                             // Ambil readingAt yang sesuai
                             DateTime? deviceReadingAt = null;
-                            switch (device.stationType) {
+                            switch (device.stationType)
+                            {
                                 case "AWS":
                                     deviceReadingAt = device.awsLastReading?.readingAt;
                                     break;
@@ -480,6 +485,9 @@ public async Task<IActionResult> GetList()
                                     break;
                                 case "AWLR_ARR":
                                     deviceReadingAt = device.awlrArrLastReading?.readingAt;
+                                    break;
+                                case "WQ":
+                                    deviceReadingAt = device.waterQualityLastReading?.readingAt;
                                     break;
                             }
 
