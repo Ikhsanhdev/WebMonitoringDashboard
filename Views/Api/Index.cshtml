@@ -34,10 +34,10 @@
         <span class="count_top"><i class="fa fa-wifi"></i> Total Online</span>
         <div class="count" id="totalOnline"></div>
     </a>
-    <a href="/Api/TotalOffline" class="tile_stats tile-stats2">
+    @* <a href="/Api/TotalOffline" class="tile_stats tile-stats2">
         <span class="count_top"><i class="fa fa-times-circle"></i> Total Offline</span>
         <div class="count" id="totalOffline"></div>
-    </a>
+    </a> *@
     <div class="tile_stats tile-stats2">
         <span class="count_top"><i class="fa fa-map-marker-alt"></i> Total POS</span>
         <div class="count" id="totalPos"></div>
@@ -142,18 +142,18 @@
                     }
                 });
 
-                $.ajax({
-                    url: '/Api/GetTotalData',
-                    type: 'POST',
-                    data: { totalType: 'totalOffline' },
-                    success: function(response) {
-                        $('#totalOffline').text(response.total);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        $('#totalOffline').text('Error');
-                    }
-                });
+                //$.ajax({
+                    //url: '/Api/GetTotalData',
+                    //type: 'POST',
+                    //data: { totalType: 'totalOffline' },
+                    //success: function(response) {
+                        //$('#totalOffline').text(response.total);
+                   // },
+                    //error: function(xhr, status, error) {
+                       // console.error(error);
+                        //$('#totalOffline').text('Error');
+                    //}
+                //});
 
                 $.ajax({
                     url: '/Api/GetTotalData',

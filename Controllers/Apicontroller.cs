@@ -360,7 +360,23 @@ public async Task<IActionResult> GetList()
                     Console.WriteLine("Tidak Ada Siaga !");
                     return StatusCode(200, "Sukses tidak ada siaga !");
                 } else if(lastReading["waterLevel"] >= result["siaga3"]) {
-                    string msg = $"⚠ *[Status: {lastReading?["warningStatus"]?.ToString() ?? "Tidak tersedia"}]* \n";
+                    string siagaLogo = "";
+                    string ketSiaga = "";
+                    switch (lastReading["warningStatus"]) {
+                        case "Siaga 1":
+                            siagaLogo = "🔴";
+                            ketSiaga = "AWAS";
+                            break;
+                        case "Siaga 2":
+                            siagaLogo = "🟠";
+                            ketSiaga = "SIAGA";
+                            break;
+                        case "Siaga 3":
+                            siagaLogo = "🟡";
+                            ketSiaga = "WASPADA";
+                            break;
+                    }
+                    string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
                     msg += "\n";
                     msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
                     msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
