@@ -360,9 +360,10 @@ public async Task<IActionResult> GetList()
                     Console.WriteLine("Tidak Ada Siaga !");
                     return StatusCode(200, "Sukses tidak ada siaga !");
                 } else if(lastReading["waterLevel"] >= result["siaga3"]) {
+                    string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
                     string siagaLogo = "";
                     string ketSiaga = "";
-                    switch (lastReading["warningStatus"]) {
+                    switch (warningStatus) {
                         case "Siaga 1":
                             siagaLogo = "🔴";
                             ketSiaga = "AWAS";
