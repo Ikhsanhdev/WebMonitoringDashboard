@@ -79,11 +79,11 @@ function initMap() {
     center: initialLocation,
     gestureHandling: 'greedy', // Mengizinkan zoom menggunakan scroll
     mapTypeId: google.maps.MapTypeId.HYBRID,
-    mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-      position: google.maps.ControlPosition.BOTTOM_LEFT // Pindahkan ke bawah kiri
-  }
-
+    mapTypeControl: false
+    // mapTypeControlOptions: {
+    //   style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+    //   position: google.maps.ControlPosition.BOTTOM_LEFT
+    // }
   });
 
   const customMapTypeControl = new CustomMapTypeControl(map);
@@ -93,7 +93,7 @@ function initMap() {
   // Tambahkan legend di sini
   var legendDiv = document.createElement('div');
   legendDiv.innerHTML = `
-    <div style="background-color: white; padding: 10px;">
+    <div style="background-color: white; padding: 10px; margin-left: 20px;">
       <div style="display: flex; align-items: center;">
         <img src="/assets/img/duga.png" style="width: 20px; height: 25px; margin-right: 5px; border-radius: 50%;">
         <div style="font-weight: bold;">Pos Duga Air (PDA/AWLR)</div>
@@ -109,6 +109,14 @@ function initMap() {
       <div style="display: flex; align-items: center;">
         <img src="/assets/img/klimatologi.png" style="width: 20px; height: 25px; margin-right: 5px; border-radius: 50%;">
         <div style="font-weight: bold;">Pos Klimatologi (AWS)</div>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <img src="/assets/img/flowmeter.png" style="width: 20px; height: 25px; margin-right: 5px; border-radius: 50%;">
+        <div style="font-weight: bold;">Pos Flow Meter</div>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <img src="/assets/img/wqms.png" style="width: 20px; height: 25px; margin-right: 5px; border-radius: 50%;">
+        <div style="font-weight: bold;">Pos Kualitas Air (WQMS)</div>
       </div>
     </div>
   `;
@@ -152,6 +160,12 @@ async function GetDataStation(map) {
           case 'AWLR_ARR':
             iconUrl = '/assets/img/awlr.png'; // Ganti dengan URL ikon PDA & PCH
             break;
+          case 'FM':
+            iconUrl = '/assets/img/flowmeter.png';
+            break;
+          case 'WQ':
+            iconUrl = '/assets/img/wqms.png';
+            break;
           default:
             iconUrl = '/assets/img/default.png'; // Ikon default jika tipe tidak dikenali
             break;
@@ -193,7 +207,7 @@ async function GetDataStation(map) {
 
 function CustomMapTypeControl(map) {
   const controlDiv = document.createElement('div');
-  controlDiv.style.padding = '10px';
+  controlDiv.style.padding = '20px';
 
   const controlUI = document.createElement('div');
   controlUI.style.backgroundColor = '#fff';
@@ -201,7 +215,7 @@ function CustomMapTypeControl(map) {
   controlUI.style.boxShadow = '0 1px 4px -1px rgba(0,0,0,.3)';
   controlUI.style.cursor = 'pointer';
   controlUI.style.marginBottom = '22px';
-  controlUI.style.marginTop = '750px';
+  controlUI.style.marginTop = '10px';
   controlUI.style.textAlign = 'center';
   controlUI.style.height = '40px';
   controlUI.style.width = '250px';
@@ -242,6 +256,6 @@ function CustomMapTypeControl(map) {
       map.setMapTypeId('satellite');
       updateButtons('satellite');
   });
-
-  return controlDiv;
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(controlDiv);
+  // return controlDiv;
 }
