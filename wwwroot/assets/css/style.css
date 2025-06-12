@@ -244,7 +244,7 @@
   color: #000;
 }
 .fa-tint {
-  color: blue !important; /* Menambahkan !important */
+  color: #4a81d4 !important; /* Menambahkan !important */
 }
 .fa-cloud-showers-heavy {
   color: rgb(134, 203, 225) !important; /* Menambahkan !important */
@@ -264,7 +264,12 @@
 .fa-building {
   color: brown !important; /* Menambahkan !important */
 }
-
+.fa-gauge  {
+  color: #0000cd !important;
+}
+.fa-water {
+  color: #1976d2 !important;
+}
 
 /* Responsivitas */
 @media (max-width: 768px) {

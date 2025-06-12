@@ -21,6 +21,7 @@ public class Api
     public AwsLastReading? awsLastReading { get; set; }    // For "aws" station type
     public AwlrArrLastReading? awlrArrLastReading { get; set; }  // For "awlrarr" station type
     public WaterQualityLastReading? waterQualityLastReading { get; set; }
+    public FlowmeterLastReading? flowmeterLastReading { get; set; }
 
     public string? unitDisplay { get; set; }
     public string? unitSensor {get; set;}
@@ -81,6 +82,13 @@ public class AwlrArrLastReading
 }
 
 public class WaterQualityLastReading
+{
+    public string deviceId { get; set; }
+    public string deviceStatus { get; set; }
+    public DateTime? readingAt { get; set; }
+}
+
+public class FlowmeterLastReading
 {
     public string deviceId { get; set; }
     public string deviceStatus { get; set; }

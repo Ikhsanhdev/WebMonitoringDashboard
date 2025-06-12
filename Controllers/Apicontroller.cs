@@ -132,7 +132,9 @@ public async Task<IActionResult> GetList()
                     (p.stationType.ToLower() == "arr" && p.arrLastReading?.readingAt?.Date == today) ||
                     (p.stationType.ToLower() == "awlr" && p.awlrLastReading?.readingAt?.Date == today) ||
                     (p.stationType.ToLower() == "aws" && p.awsLastReading?.readingAt?.Date == today) ||
-                    (p.stationType.ToLower() == "awlr_arr" && p.awlrArrLastReading?.readingAt?.Date == today)
+                    (p.stationType.ToLower() == "awlr_arr" && p.awlrArrLastReading?.readingAt?.Date == today) ||
+                    (p.stationType.ToLower() == "wq" && p.waterQualityLastReading?.readingAt?.Date == today) ||
+                    (p.stationType.ToLower() == "fm" && p.flowmeterLastReading?.readingAt?.Date == today)
                 ),
 
                 // Hitung jumlahPosOffline berdasarkan readingAt
@@ -140,7 +142,9 @@ public async Task<IActionResult> GetList()
                     (p.stationType.ToLower() == "arr" && (p.arrLastReading?.readingAt == null || p.arrLastReading?.readingAt?.Date < today)) ||
                     (p.stationType.ToLower() == "awlr" && (p.awlrLastReading?.readingAt == null || p.awlrLastReading?.readingAt?.Date < today)) ||
                     (p.stationType.ToLower() == "aws" && (p.awsLastReading?.readingAt == null || p.awsLastReading?.readingAt?.Date < today)) ||
-                    (p.stationType.ToLower() == "awlr_arr" && (p.awlrArrLastReading?.readingAt == null || p.awlrArrLastReading?.readingAt?.Date < today))
+                    (p.stationType.ToLower() == "awlr_arr" && (p.awlrArrLastReading?.readingAt == null || p.awlrArrLastReading?.readingAt?.Date < today)) ||
+                    (p.stationType.ToLower() == "wq" && (p.waterQualityLastReading?.readingAt == null || p.waterQualityLastReading?.readingAt?.Date < today)) ||
+                    (p.stationType.ToLower() == "fm" && (p.flowmeterLastReading?.readingAt == null || p.flowmeterLastReading?.readingAt?.Date < today))
                 ),
             })
             .ToList();
@@ -235,6 +239,12 @@ public async Task<IActionResult> GetList()
                     break;
                 case "totalklimatologi":
                     total = apiResponse.Count(a => a.stationType == "AWS");
+                    break;
+                case "totalflowmeter":
+                    total = apiResponse.Count(a => a.stationType == "FM");
+                    break;
+                case "totalwqms":
+                    total = apiResponse.Count(a => a.stationType == "WQ");
                     break;
                 case "totalonline":
                     total = apiResponse.Count(a =>
@@ -356,54 +366,69 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                if(lastReading["waterLevel"] < result["siaga3"]) {
-                    Console.WriteLine("Tidak Ada Siaga !");
-                    return StatusCode(200, "Sukses tidak ada siaga !");
-                } else if(lastReading["waterLevel"] >= result["siaga3"]) {
-                    string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
-                    string siagaLogo = "";
-                    string ketSiaga = "";
-                    switch (warningStatus) {
-                        case "Siaga 1":
-                            siagaLogo = "🔴";
-                            ketSiaga = "AWAS";
-                            break;
-                        case "Siaga 2":
-                            siagaLogo = "🟠";
-                            ketSiaga = "SIAGA";
-                            break;
-                        case "Siaga 3":
-                            siagaLogo = "🟡";
-                            ketSiaga = "WASPADA";
-                            break;
+                if (result["siaga3"] != null || result["siaga3"] > 0)
+                {
+                    if (lastReading["waterLevel"] < result["siaga3"])
+                    {
+                        Console.WriteLine("Tidak Ada Siaga !");
+                        return StatusCode(200, "Sukses tidak ada siaga !");
                     }
-                    string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
-                    msg += "\n";
-                    msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
-                    msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
-                    msg += $"Waktu : *{formattedDate} WIB* \n";
-                    msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
+                    else if (lastReading["waterLevel"] >= result["siaga3"])
+                    {
+                        string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
+                        string siagaLogo = "";
+                        string ketSiaga = "";
+                        switch (warningStatus)
+                        {
+                            case "Siaga 1":
+                                siagaLogo = "🔴";
+                                ketSiaga = "AWAS";
+                                break;
+                            case "Siaga 2":
+                                siagaLogo = "🟠";
+                                ketSiaga = "SIAGA";
+                                break;
+                            case "Siaga 3":
+                                siagaLogo = "🟡";
+                                ketSiaga = "WASPADA";
+                                break;
+                        }
+                        string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
+                        msg += "\n";
+                        msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                        msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                        msg += $"Waktu : *{formattedDate} WIB* \n";
+                        msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
 
-                    msg = msg.Replace("\n", "\\n");
+                        msg = msg.Replace("\n", "\\n");
 
-                    string jsonBody = $@"{{ 
-                        ""phone"" : ""{number}"",
-                        ""message"" : ""{msg}""
-                    }}";
+                        string jsonBody = $@"{{ 
+                            ""phone"" : ""{number}"",
+                            ""message"" : ""{msg}""
+                        }}";
 
-                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                        var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                        HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
-                    if(response.IsSuccessStatusCode) {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("API Response:");
-                        Console.WriteLine(apiResponse);
-                        return Ok(apiResponse);
-                    } else {
-                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                        return StatusCode((int)response.StatusCode);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            Console.WriteLine("API Response:");
+                            Console.WriteLine(apiResponse);
+                            return Ok(apiResponse);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                            return StatusCode((int)response.StatusCode);
+                        }
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Tidak Ada Batas Siaga !");
+                    return StatusCode(200, "tidak ada batas siaga !");
                 }
             }
         } catch(Exception ex)  {
