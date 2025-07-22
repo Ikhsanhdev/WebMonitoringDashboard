@@ -9,95 +9,111 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = menyala
 build_property.RootNamespace = menyala
-build_property.ProjectDir = c:\Magang2\WebMonitoringDashboard\
+build_property.ProjectDir = C:\dotnet\WebMonitoringDashboard\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = c:\Magang2\WebMonitoringDashboard
+build_property.MSBuildProjectDirectory = C:\dotnet\WebMonitoringDashboard
 build_property._RazorSourceGeneratorDebug = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Akun/AccessDenied.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Akun/AccessDenied.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWt1blxBY2Nlc3NEZW5pZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Akun/Login.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Akun/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWt1blxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/Detail.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/Detail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXERldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/ErrorView.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/ErrorView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXEVycm9yVmlldy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/Index.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/JsonDetail.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/JsonDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXEpzb25EZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/Tabel.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/Tabel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXFRhYmVsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/TotalOffline.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/TotalOffline.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXFRvdGFsT2ZmbGluZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/TotalOnline.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/TotalOnline.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXFRvdGFsT25saW5lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Api/TotalPos.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Api/TotalPos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBpXFRvdGFsUG9zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Catering/Index.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Catering/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZXJpbmdcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Home/Index.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Home/MapGoogle.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Home/MapGoogle.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNYXBHb29nbGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Home/Privacy.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Home/Skemapalembang.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Home/Skemapalembang.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTa2VtYXBhbGVtYmFuZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Phone/Phones.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Pengguna/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVuZ2d1bmFcaW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/dotnet/WebMonitoringDashboard/Views/Phone/Phones.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhvbmVcUGhvbmVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Shared/Error.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/_ViewImports.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Tiket/create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlrZXRcY3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/dotnet/WebMonitoringDashboard/Views/Tiket/detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlrZXRcZGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/dotnet/WebMonitoringDashboard/Views/Tiket/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlrZXRcaW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/dotnet/WebMonitoringDashboard/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/_ViewStart.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Magang2/WebMonitoringDashboard/Views/Shared/_Layout.cshtml]
+[C:/dotnet/WebMonitoringDashboard/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-s3uc2tdsx3

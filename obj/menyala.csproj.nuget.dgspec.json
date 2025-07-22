@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Magang2\\WebMonitoringDashboard\\menyala.csproj": {}
+    "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj": {}
   },
   "projects": {
-    "C:\\Magang2\\WebMonitoringDashboard\\menyala.csproj": {
+    "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Magang2\\WebMonitoringDashboard\\menyala.csproj",
+        "projectUniqueName": "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
         "projectName": "menyala",
-        "projectPath": "C:\\Magang2\\WebMonitoringDashboard\\menyala.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Magang2\\WebMonitoringDashboard\\obj\\",
+        "projectPath": "C:\\dotnet\\WebMonitoringDashboard\\menyala.csproj",
+        "packagesPath": "C:\\Users\\ikhsa\\.nuget\\packages\\",
+        "outputPath": "C:\\dotnet\\WebMonitoringDashboard\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\ikhsa\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,9 +43,21 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
             "DataTables.AspNet.AspNetCore": {
               "target": "Package",
               "version": "[2.0.2, )"
+            },
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.1.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -99,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

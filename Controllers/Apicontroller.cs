@@ -378,21 +378,23 @@ public async Task<IActionResult> GetList()
                         string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
                         string siagaLogo = "";
                         string ketSiaga = "";
-                        switch (warningStatus)
+
+                        if (lastReading["waterLevel"] >= result["siaga3"] && lastReading["waterLevel"] < result["siaga2"])
                         {
-                            case "Siaga 1":
-                                siagaLogo = "🔴";
-                                ketSiaga = "AWAS";
-                                break;
-                            case "Siaga 2":
-                                siagaLogo = "🟠";
-                                ketSiaga = "SIAGA";
-                                break;
-                            case "Siaga 3":
-                                siagaLogo = "🟡";
-                                ketSiaga = "WASPADA";
-                                break;
+                            siagaLogo = "🟡";
+                            ketSiaga = "WASPADA";
                         }
+                        else if (lastReading["waterLevel"] >= result["siaga2"] && lastReading["waterLevel"] < result["siaga1"])
+                        {
+                            siagaLogo = "🟠";
+                            ketSiaga = "SIAGA";
+                        }
+                        else if (lastReading["waterLevel"] >= result["siaga1"])
+                        {
+                            siagaLogo = "🔴";
+                            ketSiaga = "AWAS";
+                        }
+                        
                         string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
                         msg += "\n";
                         msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
