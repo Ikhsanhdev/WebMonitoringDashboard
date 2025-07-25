@@ -72,7 +72,7 @@
                                         <br>
                                         <p class="text-center small">Silahkan login untuk mengakses aplikasi</p>
                                     </div>
-                                    <form class="row g-3 needs-validation" method="post" novalidate onsubmit="return validateRecaptcha()">
+                                    <form class="row g-3 needs-validation" method="post" novalidate>
                                         <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
                                         <div class="col-12">
                                             <label for="yourUsername" class="form-label fw-semibold">Username</label>
@@ -99,7 +99,7 @@
                                         </div>
 
                                         <!-- Elemen reCAPTCHA -->
-                                        <div class="g-recaptcha" data-sitekey="6LcSX2gqAAAAALGYscEU7wZa2oULJlI5gk1dxqaX"></div>
+                                        @* <div class="g-recaptcha" data-sitekey="6LcSX2gqAAAAALGYscEU7wZa2oULJlI5gk1dxqaX"></div> *@
                                         
                                         <div class="col-12">
                                             <!-- Menggunakan input type="submit" untuk submit form -->
@@ -148,14 +148,14 @@
         icon.classList.toggle('bi-eye-slash');
     });
 
-    function validateRecaptcha() {
-        var response = grecaptcha.getResponse();
-        if (response.length === 0) {
-            alert("Tolong verifikasi bahwa Anda bukan robot.");
-            return false;
-        }
-        return true;
-    }
+    //function validateRecaptcha() {
+      //  var response = grecaptcha.getResponse();
+        //if (response.length === 0) {
+          //  alert("Tolong verifikasi bahwa Anda bukan robot.");
+            //return false;
+        //}
+        //return true;
+    //}
 </script>
 </body>
 </html>
