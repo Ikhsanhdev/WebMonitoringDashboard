@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GQx+IwbUQz8hyKvefNL3CqpN8rrUAvxyLc1ekcTwOfs=",
+  "Hash": "kiRW9gLnTsUL9Pp7Nk9GqfmrnB0eHahDg4TyGjAuLTU=",
   "Source": "menyala",
   "BasePath": "_content/menyala",
   "Mode": "Default",
@@ -908,6 +908,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\favicon.png"
+    },
+    {
+      "Identity": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\flowmeter.png",
+      "SourceId": "menyala",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\",
+      "BasePath": "_content/menyala",
+      "RelativePath": "assets/img/flowmeter.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\flowmeter.png"
     },
     {
       "Identity": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\gallery\\gallery-1.jpg",
@@ -2447,6 +2466,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\user.png"
+    },
+    {
+      "Identity": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\wqms.png",
+      "SourceId": "menyala",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\",
+      "BasePath": "_content/menyala",
+      "RelativePath": "assets/img/wqms.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\wqms.png"
     },
     {
       "Identity": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\js\\app.js",

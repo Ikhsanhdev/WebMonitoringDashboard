@@ -185,6 +185,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\favicon.png"
     },
     {
+      "Id": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\flowmeter.png",
+      "PackagePath": "staticwebassets\\assets\\img\\flowmeter.png"
+    },
+    {
       "Id": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\gallery\\gallery-1.jpg",
       "PackagePath": "staticwebassets\\assets\\img\\gallery\\gallery-1.jpg"
     },
@@ -507,6 +511,10 @@
     {
       "Id": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\user.png",
       "PackagePath": "staticwebassets\\assets\\img\\user.png"
+    },
+    {
+      "Id": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\img\\wqms.png",
+      "PackagePath": "staticwebassets\\assets\\img\\wqms.png"
     },
     {
       "Id": "C:\\dotnet\\WebMonitoringDashboard\\wwwroot\\assets\\js\\app.js",
