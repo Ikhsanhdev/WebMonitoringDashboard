@@ -249,6 +249,9 @@
 .fa-cloud-showers-heavy {
   color: rgb(134, 203, 225) !important; /* Menambahkan !important */
 }
+.fa-cloud-showers-water {
+  color: rgb(192, 163, 0) !important;
+}
 .fa-cloud-sun {
   color: rgb(238, 211, 63) !important; /* Menambahkan !important */
 }
