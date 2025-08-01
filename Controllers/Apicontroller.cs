@@ -232,10 +232,13 @@ public async Task<IActionResult> GetList()
                     total = apiResponse.Select(a => a.subDomain).Distinct().Count();
                     break;
                 case "totaldugaair":
-                    total = apiResponse.Count(a => a.stationType == "AWLR" || a.stationType == "AWLR_ARR");
+                    total = apiResponse.Count(a => a.stationType == "AWLR");
                     break;
                 case "totalcurahhujan":
-                    total = apiResponse.Count(a => a.stationType == "ARR" || a.stationType == "AWLR_ARR");
+                    total = apiResponse.Count(a => a.stationType == "ARR");
+                    break;
+                case "totalawlrarr":
+                    total = apiResponse.Count(a => a.stationType == "AWLR_ARR");
                     break;
                 case "totalklimatologi":
                     total = apiResponse.Count(a => a.stationType == "AWS");

@@ -22,6 +22,10 @@
             <div class="count" id="totalCurahHujan"></div>
         </div>
         <div class="tile_stats tile-stats1">
+            <span class="count_top"><i class="fa fa-cloud-showers-water"></i> Pos Curah Hujan & Duga Air</span>
+            <div class="count" id="totalAwlrArr"></div>
+        </div>
+        <div class="tile_stats tile-stats1">
             <span class="count_top"><i class="fa fa-cloud-sun"></i> Pos Klimatologi</span>
             <div class="count" id="totalKlimatologi"></div>
         </div>
@@ -108,6 +112,19 @@
                     error: function(xhr, status, error) {
                         console.error(error);
                         $('#totalDugaAir').text('Error');
+                    }
+                });
+
+                $.ajax({
+                    url: '/Api/GetTotalData',
+                    type: 'POST',
+                    data: { totalType: 'totalAwlrArr' },
+                    success: function(response) {
+                        $('#totalAwlrArr').text(response.total);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        $('#totalAwlrArr').text('Error');
                     }
                 });
 
