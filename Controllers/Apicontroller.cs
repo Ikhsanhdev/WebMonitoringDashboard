@@ -387,19 +387,19 @@ public async Task<IActionResult> GetList()
 
                     if (lastReading?["intensity"]?.ToString() == "Hujan Ringan")
                     {
-                        siagaLogo = "🔵";
+                        siagaLogo = "🌦️";
                     }
                     else if (lastReading?["intensity"]?.ToString() == "Hujan Sedang")
                     {
-                        siagaLogo = "🟡";
+                        siagaLogo = "🌧️";
                     }
                     else if (lastReading?["intensity"]?.ToString() == "Hujan Lebat")
                     {
-                        siagaLogo = "🟠";
+                        siagaLogo = "🌩️";
                     }
                     else if (lastReading?["intensity"]?.ToString() == "Hujan Sangat Lebat")
                     {
-                        siagaLogo = "🔴";
+                        siagaLogo = "⛈️";
                     }
 
                     string msg = $"{siagaLogo} *[Status: {lastReading?["intensity"]?.ToString() ?? "Tidak tersedia"}]* \n";
