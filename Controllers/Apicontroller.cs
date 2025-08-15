@@ -554,7 +554,7 @@ public async Task<IActionResult> GetList()
                         string msg = $"{siagaLogo} *[Status: {data?.intensity_hour?.ToString() ?? "Tidak tersedia"}]* \n";
                         msg += "\n";
                         msg += $"Nama Pos : *{data?.name?.ToString() ?? "Tidak tersedia"}* \n";
-                        msg += $"Device : *{data?.brand_name?.ToString() ?? "Tidak tersedia"} - {data?.device_id?.ToString() ?? "Tidak tersedia"}* \n";
+                        msg += $"Device : *{data?.brand_name?.ToString() ?? "Tidak tersedia"} - {data?.device_id?.ToString() ?? "Tidak tersedia"} ({deviceId})* \n";
                         msg += $"DAS : *{data?.watershed_name?.ToString() ?? "Tidak tersedia"}* \n";
                         msg += $"Waktu : *{formattedDate} WIB* \n";
                         msg += $"CH Satu Jam Terakhir : *{data?.rainfall_hour?.ToString() ?? "Tidak tersedia"} mm*";
