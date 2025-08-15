@@ -481,16 +481,16 @@ public async Task<IActionResult> GetList()
     {
         var jsonString = (string)await GetDataCiliwung();
         var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
-        var data = readings.Where(r => r.type == "AWLR");
+        var data = readings.Where(r => r.type == "ARR" && r.status == "online" && r.intensity_hour != "Berawan");
 
-        // return Ok(data.Select(d => new
-        // {
-        //     d.name,
-        //     d.device_id,
-        //     d.brand_name
-        // }));
+        return Ok(data.Select(d => new
+        {
+            d.name,
+            d.device_id,
+            d.brand_name
+        }));
 
-        return Ok(data);
+        // return Ok(data.name);
     }
 
     [HttpPost]
@@ -517,14 +517,14 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                if (data?.status?.ToString() == "offline")
+                if (data.status == "offline")
                 {
                     Console.WriteLine("Sensor sedang offline !");
                     return StatusCode(200, "Sukses namun sensor sedang offline !");
                 }
                 else
                 {
-                    if (data?.intensity_hour?.ToString() == "Berawan")
+                    if (data.intensity_hour == "Berawan")
                     {
                         Console.WriteLine("Tidak Ada Siaga !");
                         return StatusCode(200, "Sukses tidak ada siaga !");
