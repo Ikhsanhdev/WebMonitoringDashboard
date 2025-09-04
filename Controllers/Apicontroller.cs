@@ -777,7 +777,7 @@ public async Task<IActionResult> GetList()
                         if (result?["organizationCode"]?.ToString() == "ORG023")
                         {
                             msg += "\n";
-                            msg += $"*PSDA BBWS CIMANUK CISANGGARUNG*";    
+                            msg += $"\n*PSDA BBWS CIMANUK CISANGGARUNG*";    
                         }
                         
                         msg = msg.Replace("\n", "\\n");
