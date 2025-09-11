@@ -657,12 +657,29 @@ public async Task<IActionResult> GetList()
                         siagaLogo = "⛈️";
                     }
 
+                    string loggerDevice = "";
+                    if (result?["organizationCode"]?.ToString() == "ORG023")
+                    {
+                        loggerDevice = $"Device : *{result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                    }
+                    else
+                    {
+                        loggerDevice = $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                    }
+
                     string msg = $"{siagaLogo} *[Status: {lastReading?["intensity"]?.ToString() ?? "Tidak tersedia"}]* \n";
                     msg += "\n";
                     msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
-                    msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                    msg += loggerDevice;
                     msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
                     msg += $"CH Satu Jam Terakhir : *{lastReading?["rainfallLastHour"]?.ToString() ?? "Tidak tersedia"} mm*";
+
+                    if (result?["organizationCode"]?.ToString() == "ORG023")
+                    {
+                        msg += "\n";
+                        msg += $"\n*PSDA BBWS CIMANUK CISANGGARUNG*";    
+                    }
+
                     msg = msg.Replace("\n", "\\n");
 
                     string jsonBody = $@"{{ 
