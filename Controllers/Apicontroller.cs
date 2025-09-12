@@ -283,7 +283,7 @@ public async Task<IActionResult> GetList()
 
     private async Task<dynamic> GetDataApi(string endPoint){
         
-        string apiUrl = $"http://localhost:5000/{endPoint}"; 
+        string apiUrl = $"http://103.217.145.53:5000/{endPoint}"; 
         string username = "m0n1tor_st4tion";
         string password = "H1gertech.1dua3";
 
@@ -630,78 +630,86 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                if (lastReading?["intensity"]?.ToString() == "Berawan")
+                if (result["isSendWaAlarm"] == true)
                 {
-                    Console.WriteLine("Tidak Ada Siaga !");
-                    return StatusCode(200, "Sukses tidak ada siaga !");
+                    if (lastReading?["intensity"]?.ToString() == "Berawan")
+                    {
+                        Console.WriteLine("Tidak Ada Siaga !");
+                        return StatusCode(200, "Sukses tidak ada siaga !");
+                    }
+                    else
+                    {
+                        string intensity = lastReading?["intensity"]?.ToString() ?? "";
+                        string siagaLogo = "";
+
+                        if (lastReading?["intensity"]?.ToString() == "Hujan Ringan")
+                        {
+                            siagaLogo = "🌦️";
+                        }
+                        else if (lastReading?["intensity"]?.ToString() == "Hujan Sedang")
+                        {
+                            siagaLogo = "🌧️";
+                        }
+                        else if (lastReading?["intensity"]?.ToString() == "Hujan Lebat")
+                        {
+                            siagaLogo = "🌩️";
+                        }
+                        else if (lastReading?["intensity"]?.ToString() == "Hujan Sangat Lebat")
+                        {
+                            siagaLogo = "⛈️";
+                        }
+
+                        string loggerDevice = "";
+                        if (result?["organizationCode"]?.ToString() == "ORG023")
+                        {
+                            loggerDevice = $"Device : *{result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                        }
+                        else
+                        {
+                            loggerDevice = $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                        }
+
+                        string msg = $"{siagaLogo} *[Status: {lastReading?["intensity"]?.ToString() ?? "Tidak tersedia"}]* \n";
+                        msg += "\n";
+                        msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                        msg += loggerDevice;
+                        msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
+                        msg += $"CH Satu Jam Terakhir : *{lastReading?["rainfallLastHour"]?.ToString() ?? "Tidak tersedia"} mm*";
+
+                        if (result?["organizationCode"]?.ToString() == "ORG023")
+                        {
+                            msg += "\n";
+                            msg += $"\n*PSDA BBWS CIMANUK CISANGGARUNG*";
+                        }
+
+                        msg = msg.Replace("\n", "\\n");
+
+                        string jsonBody = $@"{{ 
+                                ""phone"" : ""{number}"",
+                                ""message"" : ""{msg}""
+                            }}";
+
+                        var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                        HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            Console.WriteLine("API Response:");
+                            Console.WriteLine(apiResponse);
+                            return Ok(apiResponse);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                            return StatusCode((int)response.StatusCode);
+                        }
+                    }
                 }
                 else
                 {
-                    string intensity = lastReading?["intensity"]?.ToString() ?? "";
-                    string siagaLogo = "";
-
-                    if (lastReading?["intensity"]?.ToString() == "Hujan Ringan")
-                    {
-                        siagaLogo = "🌦️";
-                    }
-                    else if (lastReading?["intensity"]?.ToString() == "Hujan Sedang")
-                    {
-                        siagaLogo = "🌧️";
-                    }
-                    else if (lastReading?["intensity"]?.ToString() == "Hujan Lebat")
-                    {
-                        siagaLogo = "🌩️";
-                    }
-                    else if (lastReading?["intensity"]?.ToString() == "Hujan Sangat Lebat")
-                    {
-                        siagaLogo = "⛈️";
-                    }
-
-                    string loggerDevice = "";
-                    if (result?["organizationCode"]?.ToString() == "ORG023")
-                    {
-                        loggerDevice = $"Device : *{result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
-                    }
-                    else
-                    {
-                        loggerDevice = $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
-                    }
-
-                    string msg = $"{siagaLogo} *[Status: {lastReading?["intensity"]?.ToString() ?? "Tidak tersedia"}]* \n";
-                    msg += "\n";
-                    msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
-                    msg += loggerDevice;
-                    msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
-                    msg += $"CH Satu Jam Terakhir : *{lastReading?["rainfallLastHour"]?.ToString() ?? "Tidak tersedia"} mm*";
-
-                    if (result?["organizationCode"]?.ToString() == "ORG023")
-                    {
-                        msg += "\n";
-                        msg += $"\n*PSDA BBWS CIMANUK CISANGGARUNG*";    
-                    }
-
-                    msg = msg.Replace("\n", "\\n");
-
-                    string jsonBody = $@"{{ 
-                        ""phone"" : ""{number}"",
-                        ""message"" : ""{msg}""
-                    }}";
-
-                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("API Response:");
-                        Console.WriteLine(apiResponse);
-                        return Ok(apiResponse);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                        return StatusCode((int)response.StatusCode);
-                    }
+                    Console.WriteLine("Alat Disetting Disable !");
+                    return StatusCode(200, "Disable tidak mengirim !"); 
                 }
             }
         }
@@ -745,87 +753,92 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                if (result["siaga3"] != null || result["siaga3"] > 0)
-                {
-                    if (lastReading["waterLevel"] < result["siaga3"])
+                if (result["isSendWaAlarm"] == true) {
+                    if (result["siaga3"] != null || result["siaga3"] > 0)
                     {
-                        Console.WriteLine("Tidak Ada Siaga !");
-                        return StatusCode(200, "Sukses tidak ada siaga !");
-                    }
-                    else if (lastReading["waterLevel"] >= result["siaga3"])
-                    {
-                        string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
-                        string siagaLogo = "";
-                        string ketSiaga = "";
+                        if (lastReading["waterLevel"] < result["siaga3"])
+                        {
+                            Console.WriteLine("Tidak Ada Siaga !");
+                            return StatusCode(200, "Sukses tidak ada siaga !");
+                        }
+                        else if (lastReading["waterLevel"] >= result["siaga3"])
+                        {
+                            string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
+                            string siagaLogo = "";
+                            string ketSiaga = "";
 
-                        if (lastReading["waterLevel"] >= result["siaga3"] && lastReading["waterLevel"] < result["siaga2"])
-                        {
-                            siagaLogo = "🟡";
-                            ketSiaga = "WASPADA";
-                        }
-                        else if (lastReading["waterLevel"] >= result["siaga2"] && lastReading["waterLevel"] < result["siaga1"])
-                        {
-                            siagaLogo = "🟠";
-                            ketSiaga = "SIAGA";
-                        }
-                        else if (lastReading["waterLevel"] >= result["siaga1"])
-                        {
-                            siagaLogo = "🔴";
-                            ketSiaga = "AWAS";
-                        }
+                            if (lastReading["waterLevel"] >= result["siaga3"] && lastReading["waterLevel"] < result["siaga2"])
+                            {
+                                siagaLogo = "🟡";
+                                ketSiaga = "WASPADA";
+                            }
+                            else if (lastReading["waterLevel"] >= result["siaga2"] && lastReading["waterLevel"] < result["siaga1"])
+                            {
+                                siagaLogo = "🟠";
+                                ketSiaga = "SIAGA";
+                            }
+                            else if (lastReading["waterLevel"] >= result["siaga1"])
+                            {
+                                siagaLogo = "🔴";
+                                ketSiaga = "AWAS";
+                            }
 
-                        string loggerDevice = "";
-                        if (result?["organizationCode"]?.ToString() == "ORG023")
-                        {
-                            loggerDevice = $"Device : *{result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
-                        }
-                        else
-                        {
-                            loggerDevice = $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
-                        }
-                        
-                        string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
-                        msg += "\n";
-                        msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
-                        msg += loggerDevice;
-                        msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
-                        msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
+                            string loggerDevice = "";
+                            if (result?["organizationCode"]?.ToString() == "ORG023")
+                            {
+                                loggerDevice = $"Device : *{result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            }
+                            else
+                            {
+                                loggerDevice = $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            }
 
-                        if (result?["organizationCode"]?.ToString() == "ORG023")
-                        {
+                            string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
                             msg += "\n";
-                            msg += $"\n*PSDA BBWS CIMANUK CISANGGARUNG*";    
-                        }
-                        
-                        msg = msg.Replace("\n", "\\n");
+                            msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            msg += loggerDevice;
+                            msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
+                            msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
 
-                        string jsonBody = $@"{{ 
-                            ""phone"" : ""{number}"",
-                            ""message"" : ""{msg}""
-                        }}";
+                            if (result?["organizationCode"]?.ToString() == "ORG023")
+                            {
+                                msg += "\n";
+                                msg += $"\n*PSDA BBWS CIMANUK CISANGGARUNG*";
+                            }
 
-                        var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                            msg = msg.Replace("\n", "\\n");
 
-                        HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            string jsonBody = $@"{{ 
+                                ""phone"" : ""{number}"",
+                                ""message"" : ""{msg}""
+                            }}";
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            string apiResponse = await response.Content.ReadAsStringAsync();
-                            Console.WriteLine("API Response:");
-                            Console.WriteLine(apiResponse);
-                            return Ok(apiResponse);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                            return StatusCode((int)response.StatusCode);
+                            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string apiResponse = await response.Content.ReadAsStringAsync();
+                                Console.WriteLine("API Response:");
+                                Console.WriteLine(apiResponse);
+                                return Ok(apiResponse);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                                return StatusCode((int)response.StatusCode);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Tidak Ada Batas Siaga !");
-                    return StatusCode(200, "tidak ada batas siaga !");
+                    else
+                    {
+                        Console.WriteLine("Tidak Ada Batas Siaga !");
+                        return StatusCode(200, "tidak ada batas siaga !");
+                    }
+                } else {
+                    Console.WriteLine("Alat Disetting Disable !");
+                    return StatusCode(200, "Disable tidak mengirim !");
                 }
             }
         } catch(Exception ex)  {
