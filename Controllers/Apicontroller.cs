@@ -524,7 +524,7 @@ public async Task<IActionResult> GetList()
                 }
                 else
                 {
-                    if (data.intensity_hour == "Berawan")
+                    if (data.intensity_hour != "Hujan Sangat Lebat")
                     {
                         Console.WriteLine("Tidak Ada Siaga !");
                         return StatusCode(200, "Sukses tidak ada siaga !");
@@ -532,24 +532,24 @@ public async Task<IActionResult> GetList()
                     else
                     {
                         string intensity = data?.intensity_hour?.ToString() ?? "";
-                        string siagaLogo = "";
+                        // string siagaLogo = "";
 
-                        if (data?.intensity_hour?.ToString() == "Hujan Ringan")
-                        {
-                            siagaLogo = "🌦️";
-                        }
-                        else if (data?.intensity_hour?.ToString() == "Hujan Sedang")
-                        {
-                            siagaLogo = "🌧️";
-                        }
-                        else if (data?.intensity_hour?.ToString() == "Hujan Lebat")
-                        {
-                            siagaLogo = "🌩️";
-                        }
-                        else if (data?.intensity_hour?.ToString() == "Hujan Sangat Lebat")
-                        {
-                            siagaLogo = "⛈️";
-                        }
+                        // if (data?.intensity_hour?.ToString() == "Hujan Ringan")
+                        // {
+                        //     siagaLogo = "🌦️";
+                        // }
+                        // else if (data?.intensity_hour?.ToString() == "Hujan Sedang")
+                        // {
+                        //     siagaLogo = "🌧️";
+                        // }
+                        // else if (data?.intensity_hour?.ToString() == "Hujan Lebat")
+                        // {
+                        //     siagaLogo = "🌩️";
+                        // }
+                        // else if (data?.intensity_hour?.ToString() == "Hujan Sangat Lebat")
+                        // {
+                        string siagaLogo = "⛈️";
+                        //}
 
                         string msg = $"{siagaLogo} *[Status: {data?.intensity_hour?.ToString() ?? "Tidak tersedia"}]* \n";
                         msg += "\n";
