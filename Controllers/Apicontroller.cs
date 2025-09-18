@@ -391,22 +391,22 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                if (data?.status?.ToString() == "offline")
-                {
-                    Console.WriteLine("Sensor sedang offline!");
-                    return StatusCode(200, "Sukses namun sensor sedang offline!");
-                }
-                else
-                {
-                    if (data.siaga3 != null || data.siaga3 > 0)
-                    {
-                        if (data.water_level < data.siaga3)
-                        {
-                            Console.WriteLine("Tidak Ada Siaga!");
-                            return StatusCode(200, "Sukses Tidak Ada Siaga!");
-                        }
-                        else
-                        {
+                // if (data?.status?.ToString() == "offline")
+                // {
+                //     Console.WriteLine("Sensor sedang offline!");
+                //     return StatusCode(200, "Sukses namun sensor sedang offline!");
+                // }
+                // else
+                // {
+                    // if (data.siaga3 != null || data.siaga3 > 0)
+                    // {
+                        // if (data.water_level < data.siaga3)
+                        // {
+                        //     Console.WriteLine("Tidak Ada Siaga!");
+                        //     return StatusCode(200, "Sukses Tidak Ada Siaga!");
+                        // }
+                        // else
+                        // {
                             string warningStatus = data?.warning_status?.ToString() ?? "";
                             string siagaLogo = "";
                             string ketSiaga = "";
@@ -425,6 +425,11 @@ public async Task<IActionResult> GetList()
                             {
                                 siagaLogo = "🔴";
                                 ketSiaga = "AWAS";
+                            }
+                            else
+                            {
+                                siagaLogo = "🟢";
+                                ketSiaga = "NORMAL";
                             }
 
                             string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
@@ -457,14 +462,14 @@ public async Task<IActionResult> GetList()
                                 Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
                                 return StatusCode((int)response.StatusCode);
                             }
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Tidak Ada Batas Siaga !");
-                        return StatusCode(200, "tidak ada batas siaga !");
-                    }
-                }
+                        // }
+                    // }
+                    // else
+                    // {
+                    //     Console.WriteLine("Tidak Ada Batas Siaga !");
+                    //     return StatusCode(200, "tidak ada batas siaga !");
+                    // }
+                // }
             }
         }
         catch (Exception ex)
@@ -517,20 +522,20 @@ public async Task<IActionResult> GetList()
                     formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
                 }
 
-                if (data.status == "offline")
-                {
-                    Console.WriteLine("Sensor sedang offline !");
-                    return StatusCode(200, "Sukses namun sensor sedang offline !");
-                }
-                else
-                {
-                    if (data.intensity_hour != "Hujan Sangat Lebat")
-                    {
-                        Console.WriteLine("Tidak Ada Siaga !");
-                        return StatusCode(200, "Sukses tidak ada siaga !");
-                    }
-                    else
-                    {
+                // if (data.status == "offline")
+                // {
+                //     Console.WriteLine("Sensor sedang offline !");
+                //     return StatusCode(200, "Sukses namun sensor sedang offline !");
+                // }
+                // else
+                // {
+                    // if (data.intensity_hour != "Hujan Sangat Lebat")
+                    // {
+                    //     Console.WriteLine("Tidak Ada Siaga !");
+                    //     return StatusCode(200, "Sukses tidak ada siaga !");
+                    // }
+                    // else
+                    // {
                         string intensity = data?.intensity_hour?.ToString() ?? "";
                         // string siagaLogo = "";
 
@@ -548,7 +553,8 @@ public async Task<IActionResult> GetList()
                         // }
                         // else if (data?.intensity_hour?.ToString() == "Hujan Sangat Lebat")
                         // {
-                        string siagaLogo = "⛈️";
+                        // string siagaLogo = "⛈️";
+                        string siagaLogo = "⛅";
                         //}
 
                         string msg = $"{siagaLogo} *[Status: {data?.intensity_hour?.ToString() ?? "Tidak tersedia"}]* \n";
@@ -580,8 +586,8 @@ public async Task<IActionResult> GetList()
                             Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
                             return StatusCode((int)response.StatusCode);
                         }
-                    }
-                }
+                    // }
+                // }
             }
         }
         catch (Exception ex)
