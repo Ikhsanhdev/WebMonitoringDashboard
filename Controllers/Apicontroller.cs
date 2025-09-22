@@ -482,6 +482,91 @@ public async Task<IActionResult> GetList()
     }
 
     [HttpPost]
+    public async Task<IActionResult> SendAwlrCiliwungTimurDasBekasi(string number) {
+        string apiUrl = "https://wa.higertech.com/send/message";
+        try {
+            using(HttpClient client = new HttpClient()) {
+                var jsonString = (string) await GetDataCiliwung();
+
+                if(string.IsNullOrEmpty(jsonString)) {
+                    return StatusCode(500, "Respons API kosong atau tidak valid");
+                }
+
+                var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
+
+                var deviceIds = new List<string> { "leuwi karet", "sumurbatu", "ciketing udik", "HGT313", "cibongas", "HGT935", "mayor.oking", "cikeas nagrak", "bendung bekasi" };
+                var dataList = readings.Where(r => deviceIds.Contains(r.device_id)).ToList();
+
+                var dataAwlr = dataList.Where(r => r.type == "AWLR").ToList();
+                var dataArr = dataList.Where(r => r.type == "ARR").ToList();
+
+
+                string msg = "📢 *[UPDATE CURAH HUJAN & TMA] DAS BEKASI* \n";
+                msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
+                msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
+
+                msg += "\n";
+                msg += "🌧 Pos Curah Hujan (mm/jam) \n";
+
+                foreach(var arr in dataArr) {
+                    msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
+                        $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
+                        $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                }
+
+                msg += "\n";
+                msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) Hulu Ke Hilir \n";
+
+                foreach(var awlr in dataAwlr) {
+                    double? tmaCm = (awlr?.water_level ?? 0) * 100;
+                    msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
+                        $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
+                        $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                }
+
+                msg += "\n";
+                msg += "⚠ Catatan: Potensi kenaikan muka air di Hilir dalam 2-3 jam ke depan. \n";
+                msg+= "❕ Sumber: BBWS Ciliwung Cisadane";
+
+                msg = msg.Replace("\n", "\\n");
+
+                string jsonBody = $@"{{ 
+                    ""phone"" : ""{number}"",
+                    ""message"" : ""{msg}""
+                }}";
+
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                }
+                else
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+
+                // return Ok(new
+                // {
+                //     success = true,
+                //     count = dataAwlr.Count,
+                //     data = dataAwlr
+                // });
+            }
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+
+        return StatusCode(500, "Fatal Error !");
+    }
+
+    [HttpPost]
     public async Task<IActionResult> SendApiCiliwung()
     {
         var jsonString = (string)await GetDataCiliwung();
