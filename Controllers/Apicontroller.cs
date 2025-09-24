@@ -510,7 +510,9 @@ public async Task<IActionResult> GetList()
                     msg += "\n";
                     msg += "🌧 Pos Curah Hujan (mm/jam) \n";
 
-                    foreach(var arr in dataArr) {
+                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
+
+                    foreach(var arr in dataArrDesc) {
                         msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
                             $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
                             $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
@@ -600,7 +602,9 @@ public async Task<IActionResult> GetList()
                     msg += "\n";
                     msg += "🌧 Pos Curah Hujan (mm/jam) \n";
 
-                    foreach(var arr in dataArr) {
+                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
+
+                    foreach(var arr in dataArrDesc) {
                         msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
                             $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
                             $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
@@ -697,7 +701,9 @@ public async Task<IActionResult> GetList()
                     msg += "\n";
                     msg += "🌧 Pos Curah Hujan (mm/jam) \n";
 
-                    foreach(var arr in dataArr) {
+                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
+
+                    foreach(var arr in dataArrDesc) {
                         msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
                             $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
                             $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
