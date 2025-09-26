@@ -794,36 +794,44 @@ public async Task<IActionResult> GetList()
                 var dataAwlr = dataList.Where(r => r.type == "AWLR").ToList();
                 var dataArr = dataList.Where(r => r.type == "ARR").ToList();
 
+                var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
+                var dataAwlrDesc = dataAwlr.OrderByDescending(a => a?.water_level ?? 0).ToList();
+
                 string msg = $"📢 *[UPDATE CURAH HUJAN & TMA] {targetDas}* \n";
                 msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
                 msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
 
-                msg += "\n";
-                msg += "🌧 Pos Curah Hujan (mm/jam) \n";
+                if(dataArr.Any()) {
+                    msg += "\n";
+                    msg += "🌧 Pos Curah Hujan (mm/jam) \n";
 
-                var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
-                var dataAwlrDesc = dataAwlr.OrderByDescending(a => a?.water_level ?? 0).ToList();
-
-                foreach(var arr in dataArrDesc) {
-                    msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
-                        $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
-                        $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                    foreach(var arr in dataArrDesc) {
+                        msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
+                            $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
+                            $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                    }
+                } else {
+                    msg += "";
                 }
 
-                msg += "\n";
-                msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
+                if(dataAwlr.Any()) {
+                    msg += "\n";
+                    msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
 
-                foreach(var awlr in dataAwlrDesc) {
-                    double? tmaCm;
-                    if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
-                        tmaCm = (awlr?.water_level ?? 0) * 100;
-                    } else {
-                        tmaCm = awlr?.water_level ?? 0;
+                    foreach(var awlr in dataAwlrDesc) {
+                        double? tmaCm;
+                        if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
+                            tmaCm = (awlr?.water_level ?? 0) * 100;
+                        } else {
+                            tmaCm = awlr?.water_level ?? 0;
+                        }
+
+                        msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
+                            $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
+                            $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
                     }
-
-                    msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
-                        $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
-                        $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                } else {
+                    msg += "";
                 }
 
                 msg += "\n";
@@ -886,37 +894,45 @@ public async Task<IActionResult> GetList()
                 // bool siaga = dataAwlr.Any(awlr => awlr?.siaga3 != null && awlr?.water_level >= awlr.siaga3);
                 bool siaga = dataAwlr.Any(awlr => awlr?.water_level >= awlr?.siaga3);
 
+                var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
+                var dataAwlrDesc = dataAwlr.OrderByDescending(a => a?.water_level ?? 0).ToList();
+
                 if(hujanLebat || siaga) {
                     string msg = $"📢 *[UPDATE CURAH HUJAN & TMA] {targetDas}* \n";
                     msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
                     msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
 
-                    msg += "\n";
-                    msg += "🌧 Pos Curah Hujan (mm/jam) \n";
+                    if(dataArr.Any()) {
+                        msg += "\n";
+                        msg += "🌧 Pos Curah Hujan (mm/jam) \n";
 
-                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
-                    var dataAwlrDesc = dataAwlr.OrderByDescending(a => a?.water_level ?? 0).ToList();
-
-                    foreach(var arr in dataArrDesc) {
-                        msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
-                            $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
-                            $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                        foreach(var arr in dataArrDesc) {
+                            msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
+                                $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
+                                $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                        }
+                    } else {
+                        msg += "";
                     }
 
-                    msg += "\n";
-                    msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
+                    if(dataAwlr.Any()) {
+                        msg += "\n";
+                        msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
 
-                    foreach(var awlr in dataAwlrDesc) {
-                        double? tmaCm;
-                        if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
-                            tmaCm = (awlr?.water_level ?? 0) * 100;
-                        } else {
-                            tmaCm = awlr?.water_level ?? 0;
+                        foreach(var awlr in dataAwlrDesc) {
+                            double? tmaCm;
+                            if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
+                                tmaCm = (awlr?.water_level ?? 0) * 100;
+                            } else {
+                                tmaCm = awlr?.water_level ?? 0;
+                            }
+
+                            msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
+                                $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
+                                $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
                         }
-
-                        msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
-                            $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
-                            $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                    } else {
+                        msg += "";
                     }
 
                     msg += "\n";
