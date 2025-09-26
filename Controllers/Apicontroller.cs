@@ -482,7 +482,7 @@ public async Task<IActionResult> GetList()
     }
 
     [HttpPost]
-    public async Task<IActionResult> SendCiliwungBarat(string number, string das) {
+    public async Task<IActionResult> SendCiliwungTimurBendungBekasi(string number) {
         string apiUrl = "https://wa.higertech.com/send/message";
         try {
             using(HttpClient client = new HttpClient()) {
@@ -493,149 +493,49 @@ public async Task<IActionResult> GetList()
                 }
 
                 var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
-                string targetDas = $"DAS {das}";
-                var dataList = readings.Where(r => das.Contains(r.watershed_name)).ToList();
+                var data = readings.FirstOrDefault(r => r.device_id == "HGT935");
 
-                if (!dataList.Any()) {
-                    return NotFound($"Tidak ada data untuk {targetDas}");
+                if (data == null) {
+                    return NotFound("Tidak ada data untuk Bendung Bekasi");
                 }
 
-                // var das = new List<string> { "DAS CISADANE", "DAS ANGKE", "DAS CIMANCEURI" };
-                // var dataList = readings.Where(r => das.Contains(r.watershed_name)).ToList();
+                double? waterLevel = data?.water_level;
+                bool siaga = waterLevel.HasValue && waterLevel.Value >= 64.008;
 
-                var dataAwlr = dataList.Where(r => r.type == "AWLR").ToList();
-                var dataArr = dataList.Where(r => r.type == "ARR").ToList();
-
-                bool hujanLebat = dataArr.Any(arr => arr?.rainfall_hour >= 20);
-
-                if(hujanLebat) {
-                    string msg = $"📢 *[UPDATE CURAH HUJAN & TMA] {targetDas}* \n";
+                if(siaga) {
+                    string msg = "📢 *[UPDATE TMA] OPERASI BENDUNG BEKASI* \n";
                     msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
                     msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
-
-                    msg += "\n";
-                    msg += "🌧 Pos Curah Hujan (mm/jam) \n";
-
-                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
-                    var dataAwlrDesc = dataAwlr.OrderByDescending(a => a?.water_level ?? 0).ToList();
-
-                    foreach(var arr in dataArrDesc) {
-                        msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
-                            $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
-                            $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
-                    }
-
-                    msg += "\n";
-                    msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
-
-                    foreach(var awlr in dataAwlrDesc) {
-                        double? tmaCm;
-                        if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
-                            tmaCm = (awlr?.water_level ?? 0) * 100;
-                        } else {
-                            tmaCm = awlr?.water_level ?? 0;
-                        }
-
-                        msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
-                            $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
-                            $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
-                    }
-
-                    msg += "\n";
-                    msg += "⚠ Catatan: Potensi kenaikan muka air di wilayah barat dalam 2-3 jam ke depan. \n";
-                    msg+= "❕ Sumber: BBWS Ciliwung Cisadane";
-
-                    msg = msg.Replace("\n", "\\n");
-
-                    string jsonBody = $@"{{ 
-                        ""phone"" : ""{number}"",
-                        ""message"" : ""{msg}""
-                    }}";
-
-                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("API Response:");
-                        Console.WriteLine(apiResponse);
-                        return Ok(apiResponse);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                        return StatusCode((int)response.StatusCode);
-                    }
-                } else {
-                    Console.WriteLine("Tidak Ada Hujan !");
-                    return StatusCode(200, "Tidak Ada Hujan !");
-                }
-            }
-        } catch(Exception ex) {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            return StatusCode(500, "An error occurred");
-        }
-
-        return StatusCode(500, "Fatal Error !");
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> SendCiliwungTimurDasBekasi(string number) {
-        string apiUrl = "https://wa.higertech.com/send/message";
-        try {
-            using(HttpClient client = new HttpClient()) {
-                var jsonString = (string) await GetDataCiliwung();
-
-                if(string.IsNullOrEmpty(jsonString)) {
-                    return StatusCode(500, "Respons API kosong atau tidak valid");
-                }
-
-                var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
-
-                var deviceIds = new List<string> { "leuwi karet", "sumurbatu", "ciketing udik", "HGT313", "cibongas", "HGT935", "mayor.oking", "cikeas nagrak", "bendung bekasi" };
-                var dataList = readings.Where(r => deviceIds.Contains(r.device_id)).ToList();
-
-                var dataAwlr = dataList.Where(r => r.type == "AWLR").ToList();
-                var dataArr = dataList.Where(r => r.type == "ARR").ToList();
-
-                double? waterLevel;
-                bool hujanLebat = dataArr.Any(arr => arr?.rainfall_hour >= 20);
-
-                if(hujanLebat) {
-                    string msg = "📢 *[UPDATE CURAH HUJAN & TMA] DAS BEKASI* \n";
-                    msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
-                    msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
-
-                    msg += "\n";
-                    msg += "🌧 Pos Curah Hujan (mm/jam) \n";
-
-                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
-
-                    foreach(var arr in dataArrDesc) {
-                        msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
-                            $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
-                            $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
-                    }
 
                     msg += "\n";
                     msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) Hulu Ke Hilir \n";
 
-                    foreach(var awlr in dataAwlr) {
-                        double? tmaCm;
-                        if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
-                            tmaCm = (awlr?.water_level ?? 0) * 100;
-                        } else {
-                            tmaCm = awlr?.water_level ?? 0;
-                        }
-
-                        msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
-                            $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
-                            $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
-                    }
+                    msg += $"- {data?.name ?? "Tidak Tersedia"}: {(data?.water_level?.ToString() != null ? data?.water_level?.ToString() + " MDPL" : "Tidak Tersedia ")} \n";
 
                     msg += "\n";
-                    msg += "⚠ Catatan: Potensi kenaikan muka air di Hilir dalam 2-3 jam ke depan. \n";
+
+                    string note;
+                    if(waterLevel.Value >= 64.008 && waterLevel.Value <= 65.008) {
+                        note = "⚠ Catatan: Jika Tinggi Muka Air di Stasiun Cileungsi 1.2 meter (64.008 MDPL), " + 
+                            "maka pintu atas pada gate 1,2, dan 3 Bendung Bekasi diturunkan 1 meter. " + 
+                            "Apabila Tinggi Muka Air turun dibawah 1,2 meter (64.808 MDPL) maka pintu atas akan dinaikan Kembali 1 meter. \n";
+                    } else if(waterLevel.Value >= 65.009 && waterLevel.Value <= 66.208) {
+                        note = "⚠ Catatan: Jika Tinggi Muka Air di Stasiun Cileungsi 2.4meter (66.208 MDPL), " +
+                            "maka pintu atas pada gate 1,2, dan 3 Bendung Bekasi diturunkan 1.8 meter, total bukaan menjadi 2.8 meter. " +
+                            "Apabila Tinggi Muka Air di Stasiun Stasiun Cileungsi turun dibawah 2.4 meter (66.208 MDPL) maka pintu atas akan dinaikan kembali 1.8 meter menjadi 1 meter. \n";
+                    } else if(waterLevel.Value >= 66.209 && waterLevel.Value <= 66.808) {
+                        note = "⚠ Catatan: Jika Tinggi Muka Air di Stasiun Cileungsi 3 meter (66.808 MDPL), " +
+                            "maka pintu atas pada gate 1,2, dan 3 Bendung Bekasi diturunkan 0.8 meter, total bukaan menjadi 3.6 meter dan selanjutnya pintu bawah pada gate 1,2, dan 3 Bendung Bekasi dinaikan 2 meter. " +
+                            "Apabila Tinggi Muka Air turun dibawah 3 meter (66.808 MDPL) maka pintu bawah akan diturunkan 2 meter dan pintu atas akan dinaikan kembali 0.8 meter menjadi 3.6 meter. \n";
+                    } else if(waterLevel.Value > 66.808) {
+                        note = "⚠ Catatan: Jika Tinggi Muka Air di Stasiun Cileungsi >3 meter (>66.808 MDPL), " +
+                            "maka pintu atas dan pintu bawah pada gate 1,2, dan 3 Bendung Bekasi dinaikan secara bersamaan >3 meter. " +
+                            "Apabila tinggi Muka Air Stasiun Cileungsi <3 meter (<66.808 MDPL), maka pintu atas dan pintu bawah akan diturunkan bersamaan menjadi 2 meter. \n";
+                    } else {
+                        note = "";
+                    }
+
+                    msg += $"{note} \n";
                     msg+= "❕ Sumber: BBWS Ciliwung Cisadane";
 
                     msg = msg.Replace("\n", "\\n");
@@ -661,107 +561,8 @@ public async Task<IActionResult> GetList()
                         return StatusCode((int)response.StatusCode);
                     }
                 } else {
-                    Console.WriteLine("Tidak Ada Hujan !");
-                    return StatusCode(200, "Tidak Ada Hujan !");
-                }
-
-                // return Ok(new
-                // {
-                //     success = true,
-                //     count = dataAwlr.Count,
-                //     data = dataAwlr
-                // });
-            }
-        } catch(Exception ex) {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            return StatusCode(500, "An error occurred");
-        }
-
-        return StatusCode(500, "Fatal Error !");
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> SendCiliwungTengah(string number) {
-        string apiUrl = "https://wa.higertech.com/send/message";
-        try {
-            using(HttpClient client = new HttpClient()) {
-                var jsonString = (string) await GetDataCiliwung();
-
-                if(string.IsNullOrEmpty(jsonString)) {
-                    return StatusCode(500, "Respons API kosong atau tidak valid");
-                }
-
-                var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
-                
-                var das = new List<string> { "DAS CILIWUNG", "DAS KRUKUT", "DAS SUNTER" };
-                var dataList = readings.Where(r => das.Contains(r.watershed_name)).ToList();
-
-                var dataAwlr = dataList.Where(r => r.type == "AWLR").ToList();
-                var dataArr = dataList.Where(r => r.type == "ARR").ToList();
-
-                bool hujanLebat = dataArr.Any(arr => arr?.rainfall_hour >= 20);
-
-                if(hujanLebat) {
-                    string msg = "📢 *[UPDATE CURAH HUJAN & TMA] WILAYAH TENGAH* \n";
-                    msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
-                    msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
-
-                    msg += "\n";
-                    msg += "🌧 Pos Curah Hujan (mm/jam) \n";
-
-                    var dataArrDesc = dataArr.OrderByDescending(a => a?.rainfall_hour ?? 0).ToList();
-
-                    foreach(var arr in dataArrDesc) {
-                        msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
-                            $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
-                            $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
-                    }
-
-                    msg += "\n";
-                    msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
-
-                    foreach(var awlr in dataAwlr) {
-                        double? tmaCm;
-                        if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
-                            tmaCm = (awlr?.water_level ?? 0) * 100;
-                        } else {
-                            tmaCm = awlr?.water_level ?? 0;
-                        }
-
-                        msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
-                            $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
-                            $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
-                    }
-
-                    msg += "\n";
-                    msg += "⚠ Catatan: Potensi kenaikan muka air di wilayah tengah dalam 2-3 jam ke depan. \n";
-                    msg+= "❕ Sumber: BBWS Ciliwung Cisadane";
-
-                    msg = msg.Replace("\n", "\\n");
-
-                    string jsonBody = $@"{{ 
-                        ""phone"" : ""{number}"",
-                        ""message"" : ""{msg}""
-                    }}";
-
-                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("API Response:");
-                        Console.WriteLine(apiResponse);
-                        return Ok(apiResponse);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                        return StatusCode((int)response.StatusCode);
-                    }
-                } else {
-                    Console.WriteLine("Tidak Ada Hujan !");
-                    return StatusCode(200, "Tidak Ada Hujan !");
+                    Console.WriteLine("TMA Kurang dari 64.008 !");
+                    return StatusCode(200, "TMA Kurang dari 64.008 !");
                 }
             }
         } catch(Exception ex) {
