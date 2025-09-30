@@ -1100,6 +1100,8 @@ public async Task<IActionResult> GetList()
                                 string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
                                 msg += "\n";
                                 msg += $"Nama Pos : *{awlr?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                                msg += $"Kec : *{awlr?["districtName"]?.ToString() ?? "Tidak tersedia"}* \n";
+                                msg += $"Desa/Kel : *{awlr?["villageName"]?.ToString() ?? "Tidak tersedia"}* \n";
                                 msg += $"Device : *{awlr?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
                                 msg += $"Waktu : *{formattedDate} {awlr?["timeZone"]?.ToString()}* \n";
                                 msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m* \n";
@@ -1172,6 +1174,8 @@ public async Task<IActionResult> GetList()
                             string msg = $"{siagaLogo} *[Status: {lastReading?["intensity"]?.ToString() ?? "Tidak tersedia"}]* \n";
                             msg += "\n";
                             msg += $"Nama Pos : *{arr?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            msg += $"Kec : *{arr?["districtName"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            msg += $"Desa/Kel : *{arr?["villageName"]?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"Device : *{arr?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"Waktu : *{formattedDate} {arr?["timeZone"]?.ToString()}* \n";
                             msg += $"CH Satu Jam Terakhir : *{lastReading?["rainfallLastHour"]?.ToString() ?? "Tidak tersedia"} mm* \n";
