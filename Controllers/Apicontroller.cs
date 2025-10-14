@@ -438,7 +438,7 @@ public async Task<IActionResult> GetList()
                             msg += $"Device : *{data.brand_name?.ToString() ?? "Tidak tersedia"} - {data?.device_id?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"DAS : *{data?.watershed_name?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"Waktu : *{formattedDate} WIB* \n";
-                            msg += $"Tinggi Muka Air : *{data?.water_level?.ToString() ?? "Tidak tersedia"} m*";
+                            msg += $"Tinggi Muka Air : *{data?.water_level?.ToString() ?? "Tidak tersedia"} {data?.unit_display?.ToString() ?? "m"}*";
 
                             msg = msg.Replace("\n", "\\n");
 
@@ -822,7 +822,7 @@ public async Task<IActionResult> GetList()
                 }
                 else
                 {
-                    if (data.intensity_hour != "Hujan Sangat Lebat")
+                    if (data.rainfall_hour < 20)
                     {
                         Console.WriteLine("Tidak Ada Siaga !");
                         return StatusCode(200, "Sukses tidak ada siaga !");
@@ -830,24 +830,24 @@ public async Task<IActionResult> GetList()
                     else
                     {
                         string intensity = data?.intensity_hour?.ToString() ?? "";
-                        // string siagaLogo = "";
+                        string siagaLogo = "";
 
-                        // if (data?.intensity_hour?.ToString() == "Hujan Ringan")
-                        // {
-                        //     siagaLogo = "🌦️";
-                        // }
-                        // else if (data?.intensity_hour?.ToString() == "Hujan Sedang")
-                        // {
-                        //     siagaLogo = "🌧️";
-                        // }
-                        // else if (data?.intensity_hour?.ToString() == "Hujan Lebat")
-                        // {
-                        //     siagaLogo = "🌩️";
-                        // }
-                        // else if (data?.intensity_hour?.ToString() == "Hujan Sangat Lebat")
-                        // {
-                        string siagaLogo = "⛈️";
-                        //}
+                        if (data?.intensity_hour?.ToString() == "Hujan Ringan")
+                        {
+                            siagaLogo = "🌦️";
+                        }
+                        else if (data?.intensity_hour?.ToString() == "Hujan Sedang")
+                        {
+                            siagaLogo = "🌧️";
+                        }
+                        else if (data?.intensity_hour?.ToString() == "Hujan Lebat")
+                        {
+                            siagaLogo = "🌩️";
+                        }
+                        else if (data?.intensity_hour?.ToString() == "Hujan Sangat Lebat")
+                        {
+                            siagaLogo = "⛈️";
+                        }
 
                         string msg = $"{siagaLogo} *[Status: {data?.intensity_hour?.ToString() ?? "Tidak tersedia"}]* \n";
                         msg += "\n";
@@ -884,6 +884,148 @@ public async Task<IActionResult> GetList()
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+
+        return StatusCode(500, "Fatal Error !");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendAwlrCiliwungPagi(string deviceId, string number) {
+        string apiUrl = "https://wa.higertech.com/send/message";
+        try {
+            using(HttpClient client = new HttpClient()) {
+                var jsonString = (string)await GetDataCiliwung();
+                if (string.IsNullOrEmpty(jsonString)) {
+                    return StatusCode(500, "Respons API kosong atau tidak valid");
+                }
+
+                var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
+                var data = readings.FirstOrDefault(r => r.type == "AWLR" && r.device_id == deviceId);
+
+                string readingAtRaw = data?.reading_at?.ToString();
+                string formattedDate = "Tidak Tersedia";
+                if (!string.IsNullOrEmpty(readingAtRaw) && DateTime.TryParse(readingAtRaw, out DateTime readingAt)) {
+                    formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
+                }
+
+                string warningStatus = data?.warning_status?.ToString() ?? "";
+                string siagaLogo = "";
+                string ketSiaga = "";
+
+                if (data.water_level >= data.siaga3 && data.water_level < data.siaga2) {
+                    siagaLogo = "🟡";
+                    ketSiaga = "WASPADA";
+                } else if (data.water_level >= data.siaga2 && data.water_level < data.siaga1) {
+                    siagaLogo = "🟠";
+                    ketSiaga = "SIAGA";
+                } else if (data.water_level >= data.siaga1) {
+                    siagaLogo = "🔴";
+                    ketSiaga = "AWAS";
+                } else {
+                    siagaLogo = "🟢";
+                    ketSiaga = "NORMAL";
+                }
+
+                string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}] [{data?.status?.ToString().ToUpper() ?? "Tidak Tersedia"}]* \n";
+                msg += "\n";
+                msg += $"Nama Pos : *{data?.name?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"Device : *{data.brand_name?.ToString() ?? "Tidak tersedia"} - {data?.device_id?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"DAS : *{data?.watershed_name?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"Waktu : *{formattedDate} WIB* \n";
+                msg += $"Tinggi Muka Air : *{data?.water_level?.ToString() ?? "Tidak tersedia"} {data?.unit_display?.ToString() ?? "m"}*";
+
+                msg = msg.Replace("\n", "\\n");
+
+                string jsonBody = $@"{{ 
+                    ""phone"" : ""{number}"",
+                    ""message"" : ""{msg}""
+                }}";
+
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode) {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                } else {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+
+        return StatusCode(500, "Fatal Error !");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SendArrCiliwungPagi(string deviceId, string number) {
+        string apiUrl = "https://wa.higertech.com/send/message";
+        try {
+            using (HttpClient client = new HttpClient()) {
+                var jsonString = (string)await GetDataCiliwung();
+                if (string.IsNullOrEmpty(jsonString)) {
+                    return StatusCode(500, "Respons API kosong atau tidak valid");
+                }
+
+                var readings = JsonConvert.DeserializeObject<List<CiliwungResponse>>(jsonString);
+                var data = readings.FirstOrDefault(r => r.type == "ARR" && r.device_id == deviceId);
+
+                string readingAtRaw = data?.reading_at?.ToString();
+                string formattedDate = "Tidak Tersedia";
+                if (!string.IsNullOrEmpty(readingAtRaw) && DateTime.TryParse(readingAtRaw, out DateTime readingAt)) {
+                    formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
+                }
+
+                string intensity = data?.intensity_hour?.ToString() ?? "";
+                string siagaLogo = "";
+
+                if (data?.intensity_hour?.ToString() == "Hujan Ringan") {
+                    siagaLogo = "🌦️";
+                } else if (data?.intensity_hour?.ToString() == "Hujan Sedang") {
+                    siagaLogo = "🌧️";
+                } else if (data?.intensity_hour?.ToString() == "Hujan Lebat") {
+                    siagaLogo = "🌩️";
+                } else if (data?.intensity_hour?.ToString() == "Hujan Sangat Lebat") {
+                    siagaLogo = "⛈️";
+                } else {
+                    siagaLogo = "⛅";
+                }
+
+                string msg = $"{siagaLogo} *[Status: {data?.intensity_hour?.ToString() ?? "Tidak tersedia"}] [{data?.status?.ToString().ToUpper() ?? "Tidak Tersedia"}]* \n";
+                msg += "\n";
+                msg += $"Nama Pos : *{data?.name?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"Device : *{data?.brand_name?.ToString() ?? "Tidak tersedia"} - {data?.device_id?.ToString() ?? "Tidak tersedia"} ({deviceId})* \n";
+                msg += $"DAS : *{data?.watershed_name?.ToString() ?? "Tidak tersedia"}* \n";
+                msg += $"Waktu : *{formattedDate} WIB* \n";
+                msg += $"CH Satu Jam Terakhir : *{data?.rainfall_hour?.ToString() ?? "Tidak tersedia"} mm*";
+                msg = msg.Replace("\n", "\\n");
+
+                string jsonBody = $@"{{ 
+                    ""phone"" : ""{number}"",
+                    ""message"" : ""{msg}""
+                }}";
+
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode) {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
+                    return Ok(apiResponse);
+                } else {
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+        } catch (Exception ex) {
             Console.WriteLine($"An error occurred: {ex.Message}");
             return StatusCode(500, "An error occurred");
         }
