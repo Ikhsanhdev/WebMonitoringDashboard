@@ -703,34 +703,48 @@ public async Task<IActionResult> GetList()
                     msg += $"🗓 {DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"))} \n";
                     msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
 
-                    if(dataArr.Any()) {
+                    if (dataArr.Any()) {
                         msg += "\n";
                         msg += "🌧 Pos Curah Hujan (mm/jam) \n";
 
-                        foreach(var arr in dataArrDesc) {
-                            msg += $"- {arr?.name?.ToString() ?? "Tidak Tersedia"}: " +
-                                $"{(arr?.rainfall_hour?.ToString() != null ? arr?.rainfall_hour?.ToString() + " mm/jam" : "Tidak Tersedia")} " +
-                                $"{(arr?.intensity_hour?.ToString() != null ? "(" + arr?.intensity_hour?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                        foreach (var arr in dataArrDesc) {
+                            bool hujan = arr?.rainfall_hour >= 20; // threshold hujan lebat
+                            string namaPos = arr?.name?.ToString() ?? "Tidak Tersedia";
+                            string curah = arr?.rainfall_hour?.ToString() ?? "Tidak Tersedia";
+                            string intensitas = arr?.intensity_hour?.ToString() ?? "Tidak Tersedia";
+
+                            // jika hujan lebat → bold nama pos dan nilainya
+                            if (hujan) {
+                                msg += $"- *{namaPos}: {curah} mm/jam ({intensitas})* \n";
+                            } else {
+                                msg += $"- {namaPos}: {curah} mm/jam ({intensitas}) \n";
+                            }
                         }
                     } else {
                         msg += "";
                     }
 
-                    if(dataAwlr.Any()) {
+                    if (dataAwlr.Any()) {
                         msg += "\n";
                         msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) \n";
 
-                        foreach(var awlr in dataAwlrDesc) {
+                        foreach (var awlr in dataAwlrDesc) {
                             double? tmaCm;
-                            if(awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
+                            if (awlr.unit_display == "m" || awlr.unit_display == "mdpl") {
                                 tmaCm = (awlr?.water_level ?? 0) * 100;
                             } else {
                                 tmaCm = awlr?.water_level ?? 0;
                             }
 
-                            msg += $"- {awlr?.name ?? "Tidak Tersedia"}: " + 
-                                $"{(tmaCm?.ToString() != null ? tmaCm?.ToString() + " cm" : "Tidak Tersedia ")} " +
-                                $"{(awlr?.warning_status?.ToString() != null ? "(" + awlr?.warning_status?.ToString() + ")" : "(Tidak Tersedia)")} \n";
+                            bool siagaPos = awlr?.water_level >= awlr?.siaga3; // cek apakah pos ini siaga
+                            string namaPos = awlr?.name ?? "Tidak Tersedia";
+                            string status = awlr?.warning_status ?? "Tidak Tersedia";
+
+                            if (siagaPos) {
+                                msg += $"- *{namaPos}: {tmaCm} cm ({status})* \n";
+                            } else {
+                                msg += $"- {namaPos}: {tmaCm} cm ({status}) \n";
+                            }
                         }
                     } else {
                         msg += "";
