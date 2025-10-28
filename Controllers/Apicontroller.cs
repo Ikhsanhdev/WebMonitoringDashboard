@@ -1142,7 +1142,8 @@ public async Task<IActionResult> GetList()
                         msg = msg.Replace("\n", "\\n");
 
                         string jsonBody = $@"{{ 
-                                ""phone"" : ""{number}"",
+                                ""from"" : ""6281120217941"",
+                                ""to"" : ""{number}"",
                                 ""message"" : ""{msg}""
                             }}";
 
@@ -1343,7 +1344,8 @@ public async Task<IActionResult> GetList()
 
                             var payload = new
                             {
-                                phone = number,
+                                from = "6281120217941",
+                                to = number,
                                 message = msg
                             };
 
@@ -1457,7 +1459,8 @@ public async Task<IActionResult> GetList()
                             msg = msg.Replace("\n", "\\n");
 
                             string jsonBody = $@"{{ 
-                                ""phone"" : ""{number}"",
+                                ""from"" : ""6281120217941"",
+                                ""to"" : ""{number}"",
                                 ""message"" : ""{msg}""
                             }}";
 
