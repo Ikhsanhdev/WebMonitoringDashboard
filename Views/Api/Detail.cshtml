@@ -87,11 +87,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-     <script>
+    <script>
         $(document).ready(function () {
             var balaiName = '';
+            var table; // <--- TAMBAHKAN di sini supaya bisa diakses global
 
-            // Function to update card color and text based on filter status
             function updateCardStatus(status) {
                 var cardHeader = $(".card-header");
                 var cardTitle = $(".card-title");
@@ -108,7 +108,7 @@
                 }
             }
 
-            // Fetching data and initializing the table
+            // Fungsi ambil data
             var fetchData = function(organizationCode) {
                 return $.ajax({
                     url: '/Api/GetStationByOrgCode?orgCode=' + organizationCode,
@@ -120,11 +120,12 @@
             const urlParams = new URLSearchParams(window.location.search);
             const orgParam = urlParams.get('orgCode');
 
+            // Fetch data
             fetchData(orgParam).done(function(response) {
                 var result = JSON.parse(response);
                 const data = result.data;
 
-                //menampilkan nama balai
+                // Menampilkan nama balai
                 balaiName = data.length > 0 ? data[0].balaiName : "";
                 $("h1").text(balaiName);
 
@@ -140,12 +141,10 @@
                     row.append($("<td class='text-center'>").text(item.noGsm));
                     row.append($("<td class='text-center'>").text(""));
 
-                    // Default status offline and check last reading date
                     var status = 'offline';
                     var readingAt = '';
                     var today = moment().startOf('day');
 
-                    // Get the readingAt timestamp
                     if (item.arrLastReading && item.arrLastReading.readingAt) {
                         readingAt = item.arrLastReading.readingAt;
                     } else if (item.awlrLastReading && item.awlrLastReading.readingAt) {
@@ -156,7 +155,6 @@
                         readingAt = item.awlrArrLastReading.readingAt;
                     }
 
-                    // Determine online/offline status based on readingAt
                     if (readingAt && moment(readingAt).isSame(today, 'day')) {
                         status = 'online';
                     }
@@ -175,64 +173,82 @@
                     body.append(row);
                 });
 
-                // Set initial card status based on default filter values
+                // Inisialisasi DataTable
+                table = $('#offpos').DataTable({
+                    pageLength: 10,
+                    lengthChange: false,
+                    ordering: true,
+                    language: {
+                        search: "Cari:",
+                        zeroRecords: "Data tidak ditemukan",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                        infoEmpty: "Tidak ada data tersedia",
+                        infoFiltered: "(difilter dari total _MAX_ data)"
+                    },
+                    columnDefs: [
+                        { orderable: false, targets: 0 } // kolom No. tidak bisa di-sort
+                    ]
+                });
+
+                // 🔥 Update nomor urut setiap kali tabel di-filter atau di-sort
+                table.on('order.dt search.dt draw.dt', function () {
+                    let i = 1;
+                    table
+                        .cells(null, 0, { search: 'applied', order: 'applied' })
+                        .every(function () {
+                            this.data(i++);
+                        });
+                }).draw();
+
+                // Jalankan filter awal setelah DataTable siap
                 var defaultStatus = $("#statusFilter").val();
+                var defaultType = $("#tipeFilter").val();
+                filterData(defaultType, defaultStatus);
                 updateCardStatus(defaultStatus);
             });
 
-            // Event handler for export button
-            $('#exportBtn').click(function() {
-                const table = document.getElementById('offpos');
-                const ws = XLSX.utils.table_to_sheet(table);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Monitoring Data");
-                XLSX.writeFile(wb, `monitoring_data.xlsx`);
-            });
+            // ✅ Fungsi filter harus didefinisikan DI LUAR fetchData agar bisa dipakai di event
+            function filterData(type, status) {
+                if (!table) return; // kalau tabel belum siap, keluar
 
+                table.search('').columns().search('');
+
+                // Kolom ke-6: tipe
+                if (type !== 'semua') {
+                    table.column(6).search(type, true, false);
+                }
+
+                // Kolom ke-5: status
+                if (status !== 'all') {
+                    table.column(5).search(status, true, false);
+                }
+
+                table.draw();
+            }
+
+            // ✅ Event handler filter
             $("#statusFilter").change(function() {
                 var selectedStatus = $(this).val();
                 var selectedType = $("#tipeFilter").val();
                 filterData(selectedType, selectedStatus);
-                updateCardStatus(selectedStatus); // Update card status based on selected filter
+                updateCardStatus(selectedStatus);
             });
 
             $("#tipeFilter").change(function() {
                 var selectedType = $(this).val();
                 var selectedStatus = $("#statusFilter").val();
                 filterData(selectedType, selectedStatus);
-                updateCardStatus(selectedStatus); // Update card status based on selected filter
+                updateCardStatus(selectedStatus);
             });
 
-            function filterData(type, status) {
-                var rows = $("#offpos tbody tr");
-                rows.show();
-
-                if (type !== 'semua') {
-                    rows.filter(function() {
-                        var typeCell = $(this).find("td:eq(4)");
-                        return !typeCell.text().toLowerCase().includes(type.toLowerCase());
-                    }).hide();
-                }
-
-                // Filter by status
-                if (status !== 'all') {
-                    rows.filter(function() {
-                        var statusCell = $(this).find("td:eq(3)").text().toLowerCase();
-                        return statusCell !== status;
-                    }).hide();
-                }
-
-                // Update row numbers
-                rows.each(function(index) {
-                    $(this).find("td:eq(0)").text(index + 1);
-                });
-            }
-
-            // Initial filter application on page load
-            var defaultStatus = $("#statusFilter").val();
-            var defaultType = $("#tipeFilter").val();
-            filterData(defaultType, defaultStatus);
-            updateCardStatus(defaultStatus); // Update card status on initial load
+            // Export
+            $('#exportBtn').click(function() {
+                const tableEl = document.getElementById('offpos');
+                const ws = XLSX.utils.table_to_sheet(tableEl);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Monitoring Data");
+                XLSX.writeFile(wb, `monitoring_data.xlsx`);
+            });
         });
     </script>
 }
