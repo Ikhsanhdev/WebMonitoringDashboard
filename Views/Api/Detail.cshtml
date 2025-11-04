@@ -61,8 +61,10 @@
                     <thead>
                         <tr>
                             <th class="text-center">No.</th>
-                            <th class="text-center">Nama Pos</th>
+                            <th class="">Nama Pos</th>
                             <th class="text-center">Device ID</th>
+                            <th class="text-center">No GSM</th>
+                            <th class="text-center">Mulai Aktif GSM</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Tipe</th>
                             <th class="text-center">Reading At</th>
@@ -133,8 +135,10 @@
                 $.each(data, function(index, item) {
                     var row = $("<tr>");
                     row.append($("<td class='text-center'>").text(i++));
-                    row.append($("<td>").text(item.name));
+                    row.append($("<td>").css("text-align", "left").text(item.name));
                     row.append($("<td class='text-center'>").text(item.deviceId));
+                    row.append($("<td class='text-center'>").text(item.noGsm));
+                    row.append($("<td class='text-center'>").text(""));
 
                     // Default status offline and check last reading date
                     var status = 'offline';

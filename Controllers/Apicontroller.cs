@@ -183,7 +183,7 @@ public async Task<IActionResult> GetList()
 
     private async Task<List<Api>> GetDataFromApi()
     {
-        string apiUrl = "http://localhost:5000/LastReading/all";
+        string apiUrl = "http://103.183.75.71:5000/LastReading/all";
         string username = "m0n1tor_st4tion";
         string password = "H1gertech.1dua3";
 
