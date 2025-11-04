@@ -285,7 +285,13 @@
                 },
                 "columns": [
                     { "data": "nomor", "name": "Nomor", "autoWidth": true, "className": "text-center" },
-                    { "data": "balaiName", "name": "balaiName", "autoWidth": true },
+                    { 
+                        "data": "balaiName",
+                        "render": function(data, type, row) {
+                            return '<a href="/Api/Detail?orgCode=' + row.organizationCode + '" style="text-decoration: none;">' + data + '</a>';
+                        },
+                        "autoWidth": true 
+                    },
                     {
                         "data": "subDomain",
                         "render": function (data, type, row) {
@@ -296,7 +302,7 @@
                         "className": "text-center"
                     },
                     { "data": "jumlahPosOnline", "name": "JumlahPosOnline", "autoWidth": true, "className": "text-center" },
-                   {
+                    {
                         "data": "jumlahPosOffline",
                         "render": function (data, type, row) {
                             return '<a href="/Api/JsonDetail?orgCode=' + row.organizationCode + '" style="text-decoration: none;">' + data + '</a>';
