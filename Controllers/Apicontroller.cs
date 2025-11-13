@@ -509,7 +509,7 @@ public async Task<IActionResult> GetList()
                     msg += $"⏰ {DateTime.Now.ToString("HH:mm", new CultureInfo("id-ID"))} WIB \n";
 
                     msg += "\n";
-                    msg += "📏 Pos Duga Air/Tinggi Muka Air (cm) Hulu Ke Hilir \n";
+                    msg += "📏 Pos Duga Air/Tinggi Muka Air \n";
 
                     msg += $"- {data?.name ?? "Tidak Tersedia"}: {(data?.water_level?.ToString() != null ? data?.water_level?.ToString() + " MDPL" : "Tidak Tersedia ")} \n";
 
@@ -518,7 +518,7 @@ public async Task<IActionResult> GetList()
                     string note;
                     if(waterLevel.Value >= 64.008 && waterLevel.Value <= 65.008) {
                         note = "⚠ Catatan: Jika Tinggi Muka Air di Stasiun Cileungsi 1.2 meter (64.008 MDPL), " + 
-                            "maka pintu atas pada gate 1,2, dan 3 Bendung Bekasi diturunkan 1 meter. " + 
+                            "maka pintu atas pad    a gate 1,2, dan 3 Bendung Bekasi diturunkan 1 meter. " + 
                             "Apabila Tinggi Muka Air turun dibawah 1,2 meter (64.808 MDPL) maka pintu atas akan dinaikan Kembali 1 meter. \n";
                     } else if(waterLevel.Value >= 65.009 && waterLevel.Value <= 66.208) {
                         note = "⚠ Catatan: Jika Tinggi Muka Air di Stasiun Cileungsi 2.4meter (66.208 MDPL), " +
@@ -541,8 +541,9 @@ public async Task<IActionResult> GetList()
 
                     msg = msg.Replace("\n", "\\n");
 
-                    string jsonBody = $@"{{ 
-                        ""phone"" : ""{number}"",
+                    string jsonBody = $@"{{
+                        ""from"" : ""6281120026431"",
+                        ""to"" : ""{number}"",
                         ""message"" : ""{msg}""
                     }}";
 
