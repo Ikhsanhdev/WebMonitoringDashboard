@@ -755,7 +755,7 @@ public async Task<IActionResult> GetList()
                     msg += "\n";
                     msg += "⚠ Catatan: Potensi kenaikan muka air di wilayah barat dalam 2-3 jam ke depan. \n";
                     msg+= "❕ Sumber: BBWS Ciliwung Cisadane";
-                    msg = msg.Replace("\n", "\\n");
+                    // msg = msg.Replace("\n", "\\n");
 
                     string jsonBody = $@"{{ 
                         ""from"" : ""6281120026431"",
@@ -763,7 +763,15 @@ public async Task<IActionResult> GetList()
                         ""message"" : ""{msg}""
                     }}";
 
-                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                    var body = new
+                    {
+                        from = "6281120026431",
+                        to = number,
+                        message = msg
+                    };
+
+                    var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    // var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
                     if (response.IsSuccessStatusCode)
