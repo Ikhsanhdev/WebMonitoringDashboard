@@ -439,6 +439,9 @@ public async Task<IActionResult> GetList()
                             msg += $"DAS : *{data?.watershed_name?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"Waktu : *{formattedDate} WIB* \n";
                             msg += $"Tinggi Muka Air : *{data?.water_level?.ToString() ?? "Tidak tersedia"} {data?.unit_display?.ToString() ?? "m"}*";
+                            if(data?.change_status?.ToString() == "decrease") {
+                                msg += $"\n *TMA Menurun {data?.change_value?.ToString() ?? "0"} {data?.unit_display?.ToString() ?? "m"}*";
+                            }
 
                             msg = msg.Replace("\n", "\\n");
 
