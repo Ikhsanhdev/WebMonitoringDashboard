@@ -369,7 +369,7 @@ public async Task<IActionResult> GetList()
     [HttpPost]
     public async Task<IActionResult> SendAwlrCiliwung(string deviceId, string number)
     {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api1/send";
         try
         {
             using (HttpClient client = new HttpClient())
@@ -446,7 +446,6 @@ public async Task<IActionResult> GetList()
                             msg = msg.Replace("\n", "\\n");
 
                             string jsonBody = $@"{{ 
-                                ""from"" : ""6281120026431"",
                                 ""to"" : ""{number}"",
                                 ""message"" : ""{msg}""
                             }}";
@@ -487,7 +486,7 @@ public async Task<IActionResult> GetList()
 
     [HttpPost]
     public async Task<IActionResult> SendCiliwungTimurBendungBekasi(string number) {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api1/send";
         try {
             using(HttpClient client = new HttpClient()) {
                 var jsonString = (string) await GetDataCiliwung();
@@ -545,7 +544,6 @@ public async Task<IActionResult> GetList()
                     msg = msg.Replace("\n", "\\n");
 
                     string jsonBody = $@"{{
-                        ""from"" : ""6281120026431"",
                         ""to"" : ""{number}"",
                         ""message"" : ""{msg}""
                     }}";
@@ -676,7 +674,7 @@ public async Task<IActionResult> GetList()
 
     [HttpPost]
     public async Task<IActionResult> SendCiliwungWarning(string number, string das) {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api1/send";
         try {
             using(HttpClient client = new HttpClient()) {
                 var jsonString = (string) await GetDataCiliwung();
@@ -761,7 +759,6 @@ public async Task<IActionResult> GetList()
                     // msg = msg.Replace("\n", "\\n");
 
                     string jsonBody = $@"{{ 
-                        ""from"" : ""6281120026431"",
                         ""to"" : ""{number}"",
                         ""message"" : ""{msg}""
                     }}";
@@ -822,7 +819,7 @@ public async Task<IActionResult> GetList()
     [HttpPost]
     public async Task<IActionResult> SendArrCiliwung(string deviceId, string number)
     {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api1/send";
         try
         {
             using (HttpClient client = new HttpClient())
@@ -887,7 +884,6 @@ public async Task<IActionResult> GetList()
                         msg = msg.Replace("\n", "\\n");
 
                         string jsonBody = $@"{{ 
-                            ""from"" : ""6281120026431"",
                             ""to"" : ""{number}"",
                             ""message"" : ""{msg}""
                         }}";
@@ -1065,7 +1061,7 @@ public async Task<IActionResult> GetList()
     [HttpPost]
     public async Task<IActionResult> SendWarningArr(string deviceId, string number)
     {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api2/send";
         try
         {
             using (HttpClient client = new HttpClient())
@@ -1154,7 +1150,6 @@ public async Task<IActionResult> GetList()
                         msg = msg.Replace("\n", "\\n");
 
                         string jsonBody = $@"{{ 
-                                ""from"" : ""6281120217941"",
                                 ""to"" : ""{number}"",
                                 ""message"" : ""{msg}""
                             }}";
@@ -1194,7 +1189,7 @@ public async Task<IActionResult> GetList()
 
     [HttpPost]
     public async Task<IActionResult> SendCimanukWarning(string type, string number) {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api2/send";
         var responses = new List<string>();
         try {
             using(HttpClient client = new HttpClient()) {
@@ -1356,7 +1351,6 @@ public async Task<IActionResult> GetList()
 
                             var payload = new
                             {
-                                from = "6281120217941",
                                 to = number,
                                 message = msg
                             };
@@ -1386,7 +1380,7 @@ public async Task<IActionResult> GetList()
 
     [HttpPost]
     public async Task<IActionResult> SendMessageBpbdBdg(string deviceId, string number) {
-        string apiUrl = "https://wa.higertech.com/send/message";
+        string apiUrl = "https://wa.higertech.com/api2/send";
 
         try {
             using(HttpClient client = new HttpClient()) {
@@ -1471,7 +1465,6 @@ public async Task<IActionResult> GetList()
                             msg = msg.Replace("\n", "\\n");
 
                             string jsonBody = $@"{{ 
-                                ""from"" : ""6281120217941"",
                                 ""to"" : ""{number}"",
                                 ""message"" : ""{msg}""
                             }}";
