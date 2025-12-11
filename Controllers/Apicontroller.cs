@@ -1379,6 +1379,141 @@ public async Task<IActionResult> GetList()
     }
 
     [HttpPost]
+    public async Task<IActionResult> SendAwlrArrWarning(string deviceId, string number) {
+        string apiUrl = "https://wa.higertech.com/api2/send";
+
+        try {
+            using(HttpClient client = new HttpClient()) {
+                string endPointData = $"LastReading/Device/{deviceId}";
+                var deviceData = await GetDataApi(endPointData);
+
+                if (string.IsNullOrEmpty(deviceData)) {
+                    return StatusCode(500, "Respons API kosong atau tidak valid");
+                }
+
+                var stationData = JObject.Parse(deviceData);
+                var result = stationData["data"];
+
+                if (result == null) {
+                    return StatusCode(500, "Data tidak ditemukan dalam respons API");
+                }
+
+                var lastReading = result["awlrArrLastReading"] as JObject;
+                if (lastReading == null) {
+                    return StatusCode(500, "Data 'awlrArrLastReading' tidak ditemukan dalam respons API");
+                }
+
+                string readingAtRaw = lastReading?["readingAt"]?.ToString();
+                string formattedDate = "Tidak tersedia";
+                if (!string.IsNullOrEmpty(readingAtRaw) && DateTime.TryParse(readingAtRaw, out DateTime readingAt)) {
+                    formattedDate = readingAt.ToString("d MMMM yyyy HH:mm", new CultureInfo("id-ID"));
+                }
+
+                double waterLevel = lastReading["waterLevel"]?.ToObject<double>() ?? 0;
+                double rainfall = lastReading["rainfall"]?.ToObject<double>() ?? 0;
+                double siaga3 = result["siaga3"]?.ToObject<double>() ?? 0;
+
+                if(result["isSendWaAlarm"] == true) {
+                    if (result["siaga3"] != null || result["siaga3"] > 0) {
+                        if (waterLevel < siaga3 && rainfall <= 20) {
+                            Console.WriteLine("Tidak Ada Siaga atau Tidak Hujan !");
+                            return StatusCode(200, "Sukses tidak ada siaga atau tidak hujan !");
+                        } else if(waterLevel >= siaga3 || rainfall > 20) {
+                            string warningStatus = lastReading?["warningStatus"]?.ToString() ?? "";
+                            string siagaLogo = "";
+                            string ketSiaga = "";
+                            string hujanLogo = "";
+                            string ketHujan = "";
+
+                            if (lastReading["waterLevel"] >= result["siaga3"] && lastReading["waterLevel"] < result["siaga2"])
+                            {
+                                siagaLogo = "🟡";
+                                ketSiaga = "WASPADA";
+                            }
+                            else if (lastReading["waterLevel"] >= result["siaga2"] && lastReading["waterLevel"] < result["siaga1"])
+                            {
+                                siagaLogo = "🟠";
+                                ketSiaga = "SIAGA";
+                            }
+                            else if (lastReading["waterLevel"] >= result["siaga1"])
+                            {
+                                siagaLogo = "🔴";
+                                ketSiaga = "AWAS";
+                            } else if(lastReading["waterLevel"] < result["siaga3"]) {
+                                siagaLogo = "🟢";
+                                ketSiaga = "NORMAL";
+                            }
+
+                            var intensity = lastReading["intensity"]?.ToString();
+                            switch (intensity) {
+                                case "Berawan":
+                                    hujanLogo = "🌥️";
+                                    break;
+                                case "Hujan Ringan":
+                                    hujanLogo = "🌦️";
+                                    break;
+                                case "Hujan Sedang":
+                                    hujanLogo = "🌧️";
+                                    break;
+                                case "Hujan Lebat":
+                                    hujanLogo = "🌩️";
+                                    break;
+                                default:
+                                    hujanLogo = "⛈️";
+                                    break;
+                            }
+
+                            string msg = $"{siagaLogo} *[Status: {ketSiaga ?? "Tidak tersedia"}]* \n";
+                            msg += $"{hujanLogo} *[Status: {intensity ?? "Tidak tersedia"}]* \n";
+                            msg += "\n";
+                            msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
+                            msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
+                            msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
+                            msg += $"CH : *{lastReading?["rainfall"]?.ToString() ?? "Tidak tersedia"} mm*";
+
+                            msg = msg.Replace("\n", "\\n");
+
+                            string jsonBody = $@"{{ 
+                                ""to"" : ""{number}"",
+                                ""message"" : ""{msg}""
+                            }}";
+
+                            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string apiResponse = await response.Content.ReadAsStringAsync();
+                                Console.WriteLine("API Response:");
+                                Console.WriteLine(apiResponse);
+                                return Ok(apiResponse);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                                return StatusCode((int)response.StatusCode);
+                            }
+                        }
+                    } else {
+                        Console.WriteLine("Tidak Ada Batas Siaga !");
+                        return StatusCode(200, "tidak ada batas siaga !");
+                    }
+                } else {
+                    Console.WriteLine("Alat Disetting Disable !");
+                    return StatusCode(200, "Disable tidak mengirim !");
+                }
+            }
+        } catch(Exception ex) {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return StatusCode(500, "An error occurred");
+        }
+
+        return StatusCode(500, "Fatal Error !");
+    }
+
+    [HttpPost]
     public async Task<IActionResult> SendMessageBpbdBdg(string deviceId, string number) {
         string apiUrl = "https://wa.higertech.com/api2/send";
 
