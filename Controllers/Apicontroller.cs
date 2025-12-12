@@ -1469,7 +1469,7 @@ public async Task<IActionResult> GetList()
                             msg += $"Nama Pos : *{result?["name"]?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"Device : *{result?["brandName"]?.ToString() ?? "Tidak tersedia"} - {result?["deviceId"]?.ToString() ?? "Tidak tersedia"}* \n";
                             msg += $"Waktu : *{formattedDate} {result?["timeZone"]?.ToString()}* \n";
-                            msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m*";
+                            msg += $"Tinggi Muka Air : *{lastReading?["waterLevel"]?.ToString() ?? "Tidak tersedia"} m* \n";
                             msg += $"CH : *{lastReading?["rainfall"]?.ToString() ?? "Tidak tersedia"} mm*";
 
                             msg = msg.Replace("\n", "\\n");
